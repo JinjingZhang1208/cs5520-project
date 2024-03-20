@@ -2,6 +2,7 @@ import { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase-files/firebaseSetup";
+import ForgetPassword from "./ForgetPassword";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
@@ -9,6 +10,10 @@ export default function Login({ navigation }) {
 
   const signupHandler = () => {
     navigation.replace("Signup");
+  };
+
+  const forgetPasswordHandler = () => {
+    navigation.navigate('Forget Password'); 
   };
 
   const loginHandler = async () => {
@@ -21,9 +26,8 @@ export default function Login({ navigation }) {
       console.log(userCred);
       navigation.replace("Discover");
     } catch (err) {
-      console.log(err);
       if (err.code === "auth/invalid-credential") {
-        Alert.alert("No user found with this email");
+        Alert.alert("Invalid email address or password.");
       }
     }
   };  
@@ -50,6 +54,7 @@ export default function Login({ navigation }) {
         }}
       />
       <Button title="Login" onPress={loginHandler} />
+      <Button title="Forget the password?" onPress={forgetPasswordHandler} />
       <Button title="New User? Create An Account" onPress={signupHandler} />
     </View>
   );
@@ -58,18 +63,22 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "stretch",
     justifyContent: "center",
-  },
-  input: {
-    borderColor: "#552055",
-    borderWidth: 2,
-    width: "90%",
-    margin: 5,
-    padding: 5,
+    alignItems: "center",
+    backgroundColor: "#ffffff",
+    padding: 20,
   },
   label: {
-    marginLeft: 10,
+    fontSize: 18,
+    marginBottom: 5,
+  },
+  input: {
+    width: "100%",
+    height: 40,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    marginBottom: 10,
+    paddingHorizontal: 10,
   },
 });

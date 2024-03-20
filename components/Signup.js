@@ -13,6 +13,11 @@ export default function Signup({ navigation }) {
   };
 
   const signupHandler = async () => {
+    if (password.length < 6) {
+      Alert.alert("Please choose a password with at least 6 characters.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       Alert.alert("Passwords do not match.");
       return;

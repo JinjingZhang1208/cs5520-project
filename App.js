@@ -7,10 +7,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth, database } from "./firebase-files/firebaseSetup";
+import { auth } from "./firebase-files/firebaseSetup";
 import PressableButton from "./components/PressableButton";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import Profile from "./components/Profile";
+import ForgetPassword from "./components/ForgetPassword";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -84,6 +85,7 @@ export default function App() {
     component={Login}
     options={{ title: "Log In" }}
   />
+  <Stack.Screen name="Forget Password" component={ForgetPassword} />
   <Stack.Screen
     name="Profile"
     component={Profile}
