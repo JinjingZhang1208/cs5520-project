@@ -32,6 +32,69 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
+  const AuthStack = () => {
+    return (
+      <>
+        <Stack.Screen
+          name="Start"
+          component={Start}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Signup"
+          component={Signup}
+          options={{ title: "Sign Up" }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ title: "Log In" }}
+        />
+        <Stack.Screen name="Forget Password" component={ForgetPassword} />
+      </>
+    );
+  };
+
+  const AppStack = () => {
+    return (
+      <>
+        <Stack.Screen
+          options={({ navigation }) => ({
+            headerTitle: "Discover",
+            headerRight: () => (
+              <PressableButton
+                onPress={() => navigation.navigate("Profile")}
+                customStyle={styles.buttonStyle}
+              >
+                <Ionicons name="person" size={24} color="white" />
+              </PressableButton>
+            ),
+          })}
+          name="Discover"
+          component={Discover}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={Profile}
+          options={({ navigation }) => ({
+            headerRight: () => (
+              <PressableButton
+                onPress={() => {
+                  signOut(auth)
+                    .then(() => navigation.replace("Login"))
+                    .catch((error) => console.error("Error signing out:", error));
+                }}
+                customStyle={styles.buttonStyle}
+              >
+                <AntDesign name="logout" size={24} color="white" />
+              </PressableButton>
+            ),
+          })}
+        />
+      </>
+    );
+  };
+
   if (loading) {
     return (
       <View style={styles.container}>
@@ -43,74 +106,20 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-  screenOptions={{
-    headerStyle: { backgroundColor: "#929" },
-    headerTintColor: "white",
-  }}
->
-  {userLoggedIn ? (
-    <Stack.Screen
-      options={({ navigation }) => {
-        return {
-          headerTitle: "Discover",
-          headerRight: () => (
-            <PressableButton
-              onPress={() => {
-                navigation.navigate("Profile");
-              }}
-              customStyle={styles.buttonStyle}
-            >
-              <Ionicons name="person" size={24} color="white" />
-            </PressableButton>
-          ),
-        };
-      }}
-      name="Discover"
-      component={Discover}
-    />
-  ) : (
-    <Stack.Screen
-      name="Start"
-      component={Start}
-      options={{ headerShown: false }}
-    />
-  )}
-  <Stack.Screen
-    name="Signup"
-    component={Signup}
-    options={{ title: "Sign Up" }}
-  />
-  <Stack.Screen
-    name="Login"
-    component={Login}
-    options={{ title: "Log In" }}
-  />
-  <Stack.Screen name="Forget Password" component={ForgetPassword} />
-  <Stack.Screen
-    name="Profile"
-    component={Profile}
-    options={({ navigation }) => ({
-      headerRight: () => (
-        <PressableButton
-          onPress={() => {
-            signOut(auth)
-              .then(() => {
-                navigation.replace("Login");
-              })
-              .catch((error) => {
-                console.error("Error signing out:", error);
-              });
-          }}
-          customStyle={styles.buttonStyle}
-        >
-          <AntDesign name="logout" size={24} color="white" />
-        </PressableButton>
-      ),
-    })}
-  />
-   </Stack.Navigator>
-</NavigationContainer>
+        screenOptions={{
+          headerStyle: { backgroundColor: "#929" },
+          headerTintColor: "white",
+        }}
+      >
+        {userLoggedIn ? (
+          AppStack()
+        ) : (
+          AuthStack()
+        )}
+        
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-} 
+}
 
 const styles = StyleSheet.create({});
