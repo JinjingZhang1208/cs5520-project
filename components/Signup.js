@@ -40,8 +40,7 @@ export default function Signup({ navigation }) {
       setPassword("");
       setConfirmPassword("");
       Alert.alert("Signup successful", "You have successfully signed up!");
-      // Navigate the user to the login screen
-      navigation.replace("Login");
+
     } catch (err) {
       console.log(err.code);
       if (err.code === "auth/email-already-in-use") {
