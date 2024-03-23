@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.21.0",
+    "@react-navigation/bottom-tabs": "^6.5.20",
+    "@react-navigation/drawer": "^6.6.15",
     "@react-navigation/native": "^6.1.16",
-    "@react-navigation/native-stack": "^6.9.25",
+    "@react-navigation/native-stack": "^6.9.26",
     "expo": "~50.0.13",
     "expo-status-bar": "~1.11.1",
     "firebase": "^10.9.0",
