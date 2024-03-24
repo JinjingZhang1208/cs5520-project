@@ -9,7 +9,7 @@ export default function Signup({ navigation }) {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const loginHandler = () => {
-    navigation.replace("Login");
+    navigation.navigate("Login");
   };
 
   const signupHandler = async () => {
