@@ -13,7 +13,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./firebase-files/firebaseSetup";
 import PressableButton from "./components/PressableButton";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
-import Profile from "./components/Profile";
+import Profile from "./screens/Profile";
 import ForgetPassword from "./components/ForgetPassword";
 
 const Stack = createNativeStackNavigator();

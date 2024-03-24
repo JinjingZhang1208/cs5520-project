@@ -1,13 +1,14 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { auth } from "../firebase-files/firebaseSetup";
-import PressableButton from "./PressableButton";
+import PressableButton from "../components/PressableButton";
 import { signOut } from "firebase/auth";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function Profile() {
   return (
     <View>
+      
       <Text>{auth.currentUser.uid}</Text>
       <Text>{auth.currentUser.email}</Text>
       <PressableButton
