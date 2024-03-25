@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, Modal, TextInput, Button } from "react-native";
+import { View, Text, StyleSheet, Image, Modal, TextInput, Button, StatusBar } from "react-native";
 import React, { useState, useEffect } from "react";
 import { auth } from "../firebase-files/firebaseSetup";
 import PressableButton from "../components/PressableButton";
@@ -13,11 +13,13 @@ export default function Profile() {
   const [avatarUri, setAvatarUri] = useState(defaultAvatar);
   const [username, setUsername] = useState('');
   const [newUsername, setNewUsername] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
+  const [imageModalVisible, setImageModalVisible] = useState(false);
+  const [nameModalVisible, setNameModalVisible] = useState(false);
 
   const receiveImageURI = (imageURI) => {
     console.log("we are receiving", imageURI);
     setAvatarUri(imageURI);
+    setImageModalVisible(false); // Close the image modal after selecting an image
   };
 
   const generateRandomUsername = () => {
@@ -53,7 +55,7 @@ export default function Profile() {
   const handleUpdateUsername = async () => {
     setUsername(newUsername); // Update the local state with the new input
     setNewUsername(''); // Clear the input field
-    setModalVisible(false); // Close the modal
+    setNameModalVisible(false); // Close the modal
 
     const userId = auth.currentUser.uid;
     const email = auth.currentUser.email;
@@ -77,12 +79,30 @@ export default function Profile() {
   return (
     <View style={styles.container}>
 
+      <StatusBar translucent={true} backgroundColor="transparent" />
+
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}
+        visible={imageModalVisible}
         onRequestClose={() => {
-          setModalVisible(!modalVisible);
+          setImageModalVisible(!imageModalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Change Avatar</Text>
+            <ImageManager receiveImageURI={receiveImageURI} />
+            <Button title="Cancel" onPress={() => setImageModalVisible(!imageModalVisible)} />
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={nameModalVisible}
+        onRequestClose={() => {
+          setNameModalVisible(!nameModalVisible);
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -95,22 +115,20 @@ export default function Profile() {
             />
             <Button title="Update" onPress={() => {
               handleUpdateUsername();
-              setModalVisible(!modalVisible);
+              setNameModalVisible(!nameModalVisible);
             }} />
-            <Button title="Cancel" onPress={() => setModalVisible(!modalVisible)} />
+            <Button title="Cancel" onPress={() => setNameModalVisible(!nameModalVisible)} />
           </View>
         </View>
       </Modal>
 
       {/* Display the avatar image */}
       <Image source={avatarUri} style={styles.image} />
-
-      {/* ImageManager component for changing the avatar */}
-      <ImageManager receiveImageURI={receiveImageURI} />
+      <Button title="Change Avatar" onPress={() => setImageModalVisible(true)} />
 
       {/* Display the username and other profile info */}
       <Text style={styles.usernameText}>{username}</Text>
-      <Button title="Change Username" onPress={() => setModalVisible(true)} />
+      <Button title="Change Username" onPress={() => setNameModalVisible(true)} />
 
       <Text style={styles.emailText}>{auth.currentUser.email}</Text>
 
