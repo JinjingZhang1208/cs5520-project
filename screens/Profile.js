@@ -31,28 +31,34 @@ export default function Profile() {
     return `${adjective}${noun}${number}`;
   };
 
-  // fetch user name from database, if not exist, generate random username
+  // Fetch user data from Firestore and set the local state
   useEffect(() => {
-    const fetchAndSetUsername = async () => {
-      const userId = auth.currentUser.uid;
-      const userData = await fetchUserData(userId); // Await the async call
+    const fetchAndSetUserData = async () => {
+        const userId = auth.currentUser.uid;
+        const userData = await fetchUserData(userId); // Await the async call
 
-      const fetchedName = userData ? userData.username : null;
-      if (fetchedName) {
-        setUsername(fetchedName); // If a username exists, use it
-      } else {
-        const newGeneratedUsername = generateRandomUsername();
-        setUsername(newGeneratedUsername); // Set the new username in the local state
-        await updateUserProfile(userId, newGeneratedUsername, auth.currentUser.email); // Update Firebase
-      }
+        const fetchedName = userData ? userData.username : null;
+        const fetchedAvatarUri = userData ? userData.avatarUri : null;
+
+        if (fetchedName) {
+            setUsername(fetchedName); // If a username exists, use it
+        } else {
+            const newGeneratedUsername = generateRandomUsername();
+            setUsername(newGeneratedUsername); // Set the new username in the local state
+            await updateUserProfile(userId, newGeneratedUsername, auth.currentUser.email, fetchedAvatarUri); // Update Firebase
+        }
+
+        // Set the avatar URI to either the fetched avatar or the default avatar if it's null
+        setAvatarUri(fetchedAvatarUri ? fetchedAvatarUri : defaultAvatar);
     };
 
-    fetchAndSetUsername();
-  }, []);
+    fetchAndSetUserData();
+}, []);
+
 
 
   // a function to handle updating the username
-  const handleUpdateUsername = async () => {
+  const handleUpdateUserProfile = async () => {
     setUsername(newUsername); // Update the local state with the new input
     setNewUsername(''); // Clear the input field
     setNameModalVisible(false); // Close the modal
@@ -62,7 +68,7 @@ export default function Profile() {
 
     try {
       // Update user profile in Firestore
-      const result = await updateUserProfile(userId, newUsername, email);
+      const result = await updateUserProfile(userId, newUsername, email, avatarUri);
 
       // If the function returns a result, you can check it here
       if (result && result.status === 'success') {
@@ -91,7 +97,7 @@ export default function Profile() {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Change Avatar</Text>
-            <ImageManager receiveImageURI={receiveImageURI} />
+            <ImageManager receiveImageURI={receiveImageURI} updateProfile={handleUpdateUserProfile} />
             <Button title="Cancel" onPress={() => setImageModalVisible(!imageModalVisible)} />
           </View>
         </View>
@@ -114,7 +120,7 @@ export default function Profile() {
               placeholder="Enter new username"
             />
             <Button title="Update" onPress={() => {
-              handleUpdateUsername();
+              handleUpdateUserProfile();
               setNameModalVisible(!nameModalVisible);
             }} />
             <Button title="Cancel" onPress={() => setNameModalVisible(!nameModalVisible)} />
@@ -123,7 +129,8 @@ export default function Profile() {
       </Modal>
 
       {/* Display the avatar image */}
-      <Image source={avatarUri} style={styles.image} />
+      {console.log("Avatar URI:", avatarUri)}
+      <Image source={{ uri: avatarUri }} style={styles.image} />
       <Button title="Change Avatar" onPress={() => setImageModalVisible(true)} />
 
       {/* Display the username and other profile info */}

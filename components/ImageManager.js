@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import * as ImagePicker from 'expo-image-picker';
 import PressableButton from './PressableButton';
 
-const ImageManager = ({ receiveImageURI }) => {
+const ImageManager = ({ receiveImageURI, updateProfile }) => {
   const [status, requestPermission] = ImagePicker.useCameraPermissions();
   const [imageURI, setImage] = useState("");
 
@@ -47,6 +47,7 @@ const ImageManager = ({ receiveImageURI }) => {
 
       if (!result.canceled) {
         setImage(result.uri);
+        updateProfile(result.assets[0].uri);
       }
     } catch (e) {
       console.log(e);
@@ -75,6 +76,7 @@ const ImageManager = ({ receiveImageURI }) => {
 
       if (!result.canceled) {
         setImage(result.uri);
+        updateProfile(result.assets[0].uri);
       }
     } catch (e) {
       console.log(e);
