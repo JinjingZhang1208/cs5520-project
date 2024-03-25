@@ -4,6 +4,8 @@ import { auth } from "../firebase-files/firebaseSetup";
 import PressableButton from "../components/PressableButton";
 import { signOut } from "firebase/auth";
 import { Ionicons } from "@expo/vector-icons";
+import { fetchUserData, updateUserProfile } from "../firebase-files/databaseHelper";
+
 
 export default function Profile() {
   const [username, setUsername] = useState('');
@@ -19,66 +21,99 @@ export default function Profile() {
     return `${adjective}${noun}${number}`;
   };
 
-  const handleUpdateUsername = () => {
-    setUsername(newUsername); // Update the username with the new input
-    setNewUsername(''); // Clear the input field
-  };
+  // fetch user name from database, if not exist, generate random username
+  useEffect(() => {
+    const fetchAndSetUsername = async () => {
+      const userId = auth.currentUser.uid;
+      const userData = await fetchUserData(userId); // Await the async call
+  
+      const fetchedName = userData ? userData.username : null;
+      if (fetchedName) {
+        setUsername(fetchedName); // If a username exists, use it
+      } else {
+        const newGeneratedUsername = generateRandomUsername();
+        setUsername(newGeneratedUsername); // Set the new username in the local state
+        await updateUserProfile(userId, newGeneratedUsername, auth.currentUser.email); // Update Firebase
+      }
+    };
+  
+    fetchAndSetUsername();
+  }, []);
   
 
-  useEffect(() => {
-    // Generate username when component mounts
-    const generatedUsername = generateRandomUsername();
-    setUsername(generatedUsername);
-  }, []);
+// a function to handle updating the username
+const handleUpdateUsername = async () => {
+  setUsername(newUsername); // Update the local state with the new input
+  setNewUsername(''); // Clear the input field
+  setModalVisible(false); // Close the modal
 
-  return (
-    <View style={styles.container}>
+  const userId = auth.currentUser.uid;
+  const email = auth.currentUser.email;
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Change Username</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={setNewUsername}
-              value={newUsername}
-              placeholder="Enter new username"
-            />
-            <Button title="Update" onPress={() => {
-              handleUpdateUsername();
-              setModalVisible(!modalVisible);
-            }} />
-            <Button title="Cancel" onPress={() => setModalVisible(!modalVisible)} />
-          </View>
+  try {
+    // Update user profile in Firestore
+    const result = await updateUserProfile(userId, newUsername, email);
+
+    // If the function returns a result, you can check it here
+    if (result && result.status === 'success') {
+      console.log(result.message); // Or display a success message to the user
+    }
+  } catch (error) {
+    // Catch and handle any errors thrown during the update
+    console.error("Error updating user profile:", error);
+    // Display an error message to the user
+  }
+};
+
+
+return (
+  <View style={styles.container}>
+
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        setModalVisible(!modalVisible);
+      }}>
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>Change Username</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={setNewUsername}
+            value={newUsername}
+            placeholder="Enter new username"
+          />
+          <Button title="Update" onPress={() => {
+            handleUpdateUsername();
+            setModalVisible(!modalVisible);
+          }} />
+          <Button title="Cancel" onPress={() => setModalVisible(!modalVisible)} />
         </View>
-      </Modal>
+      </View>
+    </Modal>
 
-      {/* Image source later should be from user photo/camera */}
-      <Image source={{ uri: "https://upload.wikimedia.org/wikipedia/en/0/0f/Space_Invaders_flyer%2C_1978.jpg", }} style={styles.image} />
+    {/* Image source later should be from user photo/camera */}
+    <Image source={{ uri: "https://upload.wikimedia.org/wikipedia/en/0/0f/Space_Invaders_flyer%2C_1978.jpg", }} style={styles.image} />
 
-      {/* Use generated username instead of uid */}
-      <Text style={styles.usernameText}>{username}</Text>
+    {/* Use generated username instead of uid */}
+    <Text style={styles.usernameText}>{username}</Text>
     <Button title="Change Username" onPress={() => setModalVisible(true)} />
-    
+
     <Text style={styles.emailText}>{auth.currentUser.email}</Text>
 
-      <PressableButton
-        onPress={() => {
-          signOut(auth)
-            .catch((error) => console.error("Error signing out:", error));
-        }}
-        customStyle={styles.buttonStyle}
-      >
-        <Ionicons name="log-out-outline" size={24} color="white" />
-      </PressableButton>
-    </View>
-  );
+    <PressableButton
+      onPress={() => {
+        signOut(auth)
+          .catch((error) => console.error("Error signing out:", error));
+      }}
+      customStyle={styles.buttonStyle}
+    >
+      <Ionicons name="log-out-outline" size={24} color="white" />
+    </PressableButton>
+  </View>
+);
 }
 
 const styles = StyleSheet.create({
@@ -92,8 +127,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 0, 
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+    marginTop: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
     margin: 20,
@@ -117,29 +152,29 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   usernameText: {
-    fontSize: 20, 
-    color: '#333', 
-    fontWeight: 'bold', 
-    marginTop: 10, 
+    fontSize: 20,
+    color: '#333',
+    fontWeight: 'bold',
+    marginTop: 10,
   },
   emailText: {
-    fontSize: 16, 
-    color: '#555', 
-    marginTop: 5, 
+    fontSize: 16,
+    color: '#555',
+    marginTop: 5,
   },
   buttonStyle: {
     marginTop: 20,
     padding: 10,
     backgroundColor: 'tomato',
     borderRadius: 5,
-    width: 50, 
+    width: 50,
   },
   input: {
     height: 40,
     margin: 12,
     borderWidth: 1,
     padding: 10,
-    width: 200, 
+    width: 200,
   },
   modalText: {
     marginBottom: 15,
