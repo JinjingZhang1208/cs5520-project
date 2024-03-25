@@ -5,12 +5,20 @@ import PressableButton from "../components/PressableButton";
 import { signOut } from "firebase/auth";
 import { Ionicons } from "@expo/vector-icons";
 import { fetchUserData, updateUserProfile } from "../firebase-files/databaseHelper";
+import ImageManager from "../components/ImageManager";
+import defaultAvatar from "../assets/avatar.png";
 
 
 export default function Profile() {
+  const [avatarUri, setAvatarUri] = useState(defaultAvatar);
   const [username, setUsername] = useState('');
   const [newUsername, setNewUsername] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+
+  const receiveImageURI = (imageURI) => {
+    console.log("we are receiving", imageURI);
+    setAvatarUri(imageURI);
+  };
 
   const generateRandomUsername = () => {
     const adjectives = ["Quick", "Lazy", "Jolly", "Happy", "Bright", "Dark", "Light"];
@@ -26,7 +34,7 @@ export default function Profile() {
     const fetchAndSetUsername = async () => {
       const userId = auth.currentUser.uid;
       const userData = await fetchUserData(userId); // Await the async call
-  
+
       const fetchedName = userData ? userData.username : null;
       if (fetchedName) {
         setUsername(fetchedName); // If a username exists, use it
@@ -36,84 +44,87 @@ export default function Profile() {
         await updateUserProfile(userId, newGeneratedUsername, auth.currentUser.email); // Update Firebase
       }
     };
-  
+
     fetchAndSetUsername();
   }, []);
-  
 
-// a function to handle updating the username
-const handleUpdateUsername = async () => {
-  setUsername(newUsername); // Update the local state with the new input
-  setNewUsername(''); // Clear the input field
-  setModalVisible(false); // Close the modal
 
-  const userId = auth.currentUser.uid;
-  const email = auth.currentUser.email;
+  // a function to handle updating the username
+  const handleUpdateUsername = async () => {
+    setUsername(newUsername); // Update the local state with the new input
+    setNewUsername(''); // Clear the input field
+    setModalVisible(false); // Close the modal
 
-  try {
-    // Update user profile in Firestore
-    const result = await updateUserProfile(userId, newUsername, email);
+    const userId = auth.currentUser.uid;
+    const email = auth.currentUser.email;
 
-    // If the function returns a result, you can check it here
-    if (result && result.status === 'success') {
-      console.log(result.message); // Or display a success message to the user
+    try {
+      // Update user profile in Firestore
+      const result = await updateUserProfile(userId, newUsername, email);
+
+      // If the function returns a result, you can check it here
+      if (result && result.status === 'success') {
+        console.log(result.message); // Or display a success message to the user
+      }
+    } catch (error) {
+      // Catch and handle any errors thrown during the update
+      console.error("Error updating user profile:", error);
+      // Display an error message to the user
     }
-  } catch (error) {
-    // Catch and handle any errors thrown during the update
-    console.error("Error updating user profile:", error);
-    // Display an error message to the user
-  }
-};
+  };
 
 
-return (
-  <View style={styles.container}>
+  return (
+    <View style={styles.container}>
 
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => {
-        setModalVisible(!modalVisible);
-      }}>
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>Change Username</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={setNewUsername}
-            value={newUsername}
-            placeholder="Enter new username"
-          />
-          <Button title="Update" onPress={() => {
-            handleUpdateUsername();
-            setModalVisible(!modalVisible);
-          }} />
-          <Button title="Cancel" onPress={() => setModalVisible(!modalVisible)} />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Change Username</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setNewUsername}
+              value={newUsername}
+              placeholder="Enter new username"
+            />
+            <Button title="Update" onPress={() => {
+              handleUpdateUsername();
+              setModalVisible(!modalVisible);
+            }} />
+            <Button title="Cancel" onPress={() => setModalVisible(!modalVisible)} />
+          </View>
         </View>
-      </View>
-    </Modal>
+      </Modal>
 
-    {/* Image source later should be from user photo/camera */}
-    <Image source={{ uri: "https://upload.wikimedia.org/wikipedia/en/0/0f/Space_Invaders_flyer%2C_1978.jpg", }} style={styles.image} />
+      {/* Display the avatar image */}
+      <Image source={avatarUri} style={styles.image} />
 
-    {/* Use generated username instead of uid */}
-    <Text style={styles.usernameText}>{username}</Text>
-    <Button title="Change Username" onPress={() => setModalVisible(true)} />
+      {/* ImageManager component for changing the avatar */}
+      <ImageManager receiveImageURI={receiveImageURI} />
 
-    <Text style={styles.emailText}>{auth.currentUser.email}</Text>
+      {/* Display the username and other profile info */}
+      <Text style={styles.usernameText}>{username}</Text>
+      <Button title="Change Username" onPress={() => setModalVisible(true)} />
 
-    <PressableButton
-      onPress={() => {
-        signOut(auth)
-          .catch((error) => console.error("Error signing out:", error));
-      }}
-      customStyle={styles.buttonStyle}
-    >
-      <Ionicons name="log-out-outline" size={24} color="white" />
-    </PressableButton>
-  </View>
-);
+      <Text style={styles.emailText}>{auth.currentUser.email}</Text>
+
+      <PressableButton
+        onPress={() => {
+          signOut(auth)
+            .catch((error) => console.error("Error signing out:", error));
+        }}
+        customStyle={styles.buttonStyle}
+      >
+        <Ionicons name="log-out-outline" size={24} color="white" />
+      </PressableButton>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
