@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Button } from 'react-native'
+import { StyleSheet, Text, View, Button, Alert } from 'react-native'
 import React, {useState} from 'react'
 import * as ImagePicker from 'expo-image-picker';
 import PressableButton from './PressableButton';
