@@ -9,7 +9,7 @@ export default function Login({ navigation }) {
   const [password, setPassword] = useState("");
 
   const signupHandler = () => {
-    navigation.replace("Signup");
+    navigation.navigate("Signup");
   };
 
   const forgetPasswordHandler = () => {
@@ -24,7 +24,6 @@ export default function Login({ navigation }) {
       }
       const userCred = await signInWithEmailAndPassword(auth, email, password);
       console.log(userCred);
-      navigation.replace("Discover");
     } catch (err) {
       if (err.code === "auth/invalid-credential") {
         Alert.alert("Invalid email address or password.");
