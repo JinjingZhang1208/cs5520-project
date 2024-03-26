@@ -14,6 +14,7 @@ export default function RestaurantItem() {
       <View style={[CommonStyles.directionRow, {justifyContent:'space-between'}]}>
         <Text>Rating</Text>
         <Text>Comments</Text>
+        <Text>Price</Text>
       </View>
     </Card>
   )
