@@ -6,10 +6,11 @@ import { signOut } from "firebase/auth";
 import { Ionicons } from "@expo/vector-icons";
 import { fetchUserData, uploadImageAsync, saveImageURLToFirestore, updateUsername, setEmail } from "../firebase-files/databaseHelper";
 import ImageManager from "../components/ImageManager";
-import defaultAvatar from "../assets/default-avatar.png";
 
 
 export default function Profile() {
+  const defaultAvatar = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png";
+
   const [avatarUri, setAvatarUri] = useState(defaultAvatar);
   const [username, setUsername] = useState('');
   const [newUsername, setNewUsername] = useState('');
@@ -40,7 +41,7 @@ export default function Profile() {
       const userData = await fetchUserData(userId); // Await the async call
 
       const fetchedName = userData ? userData.username : null;
-      const fetchedAvatarUri = userData ? userData.avatarUri : null;
+      const fetchedAvatarUri = userData ? userData.avatarUrl : null;
 
       // Update username
       if (!fetchedName) {
@@ -138,9 +139,7 @@ export default function Profile() {
       </Modal>
 
       {/* Display the avatar image */}
-      {console.log("Avatar URI:", avatarUri)}
-      {/* <Image source={{ uri: avatarUri }} style={styles.image} /> */}
-      <Image style={styles.image} uri={avatarUri} />
+      <Image source={{uri:avatarUri}} style={styles.image} />
       <Button title="Change Avatar" onPress={() => setImageModalVisible(true)} />
 
       {/* Display the username and other profile info */}
