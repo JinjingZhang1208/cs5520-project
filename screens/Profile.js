@@ -4,9 +4,9 @@ import { auth } from "../firebase-files/firebaseSetup";
 import PressableButton from "../components/PressableButton";
 import { signOut } from "firebase/auth";
 import { Ionicons } from "@expo/vector-icons";
-import { fetchUserData, updateUserProfile } from "../firebase-files/databaseHelper";
+import { fetchUserData, uploadImageAsync, saveImageURLToFirestore, updateUsername, setEmail } from "../firebase-files/databaseHelper";
 import ImageManager from "../components/ImageManager";
-import defaultAvatar from "../assets/avatar.png";
+import defaultAvatar from "../assets/default-avatar.png";
 
 
 export default function Profile() {
@@ -34,50 +34,59 @@ export default function Profile() {
   // Fetch user data from Firestore and set the local state
   useEffect(() => {
     const fetchAndSetUserData = async () => {
-        const userId = auth.currentUser.uid;
-        const userData = await fetchUserData(userId); // Await the async call
+      const userId = auth.currentUser.uid;
+      const userEmail = auth.currentUser.email;
 
-        const fetchedName = userData ? userData.username : null;
-        const fetchedAvatarUri = userData ? userData.avatarUri : null;
+      const userData = await fetchUserData(userId); // Await the async call
 
-        if (fetchedName) {
-            setUsername(fetchedName); // If a username exists, use it
-        } else {
-            const newGeneratedUsername = generateRandomUsername();
-            setUsername(newGeneratedUsername); // Set the new username in the local state
-            await updateUserProfile(userId, newGeneratedUsername, auth.currentUser.email, fetchedAvatarUri); // Update Firebase
-        }
+      const fetchedName = userData ? userData.username : null;
+      const fetchedAvatarUri = userData ? userData.avatarUri : null;
 
-        // Set the avatar URI to either the fetched avatar or the default avatar if it's null
-        setAvatarUri(fetchedAvatarUri ? fetchedAvatarUri : defaultAvatar);
+      // Update username
+      if (!fetchedName) {
+        const newGeneratedUsername = generateRandomUsername();
+        setUsername(newGeneratedUsername); // Set the new username in the local state
+        await updateUsername(userId, newGeneratedUsername);
+      } else {
+        setUsername(fetchedName);
+      }
+
+      // Set the avatar URI 
+      setAvatarUri(fetchedAvatarUri ? fetchedAvatarUri : defaultAvatar);
+
+      // Set the email
+      await setEmail(userId, userEmail);
     };
 
     fetchAndSetUserData();
-}, []);
+  }, []);
+
+
+  // a function to handle updating the avatar
+  const updateAvatarHandler = async (imageURI) => {
+    try {
+      const userId = auth.currentUser.uid;
+      const imageUrl = await uploadImageAsync(imageURI); // Upload image and get URL
+      await saveImageURLToFirestore(userId, imageUrl); // Save image URL to Firestore
+      setAvatarUri(imageUrl); // Update local state
+      console.log("Avatar updated successfully.");
+    } catch (error) {
+      console.error("Error updating avatar:", error);
+    }
+  };
 
 
 
   // a function to handle updating the username
-  const handleUpdateUserProfile = async () => {
-    setUsername(newUsername); // Update the local state with the new input
-    setNewUsername(''); // Clear the input field
-    setNameModalVisible(false); // Close the modal
-
+  const updateUsernameHandler = async () => {
     const userId = auth.currentUser.uid;
-    const email = auth.currentUser.email;
-
     try {
-      // Update user profile in Firestore
-      const result = await updateUserProfile(userId, newUsername, email, avatarUri);
-
-      // If the function returns a result, you can check it here
-      if (result && result.status === 'success') {
-        console.log(result.message); // Or display a success message to the user
-      }
+      await updateUsername(userId, newUsername.trim()); // Update username in Firestore
+      setUsername(newUsername.trim()); // Update local state
+      setNewUsername(''); // Reset the newUsername field
+      console.log("Username updated successfully.");
     } catch (error) {
-      // Catch and handle any errors thrown during the update
-      console.error("Error updating user profile:", error);
-      // Display an error message to the user
+      console.error("Error updating username:", error);
     }
   };
 
@@ -97,7 +106,7 @@ export default function Profile() {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Change Avatar</Text>
-            <ImageManager receiveImageURI={receiveImageURI} updateProfile={handleUpdateUserProfile} />
+            <ImageManager receiveImageURI={receiveImageURI} updateAvatar={updateAvatarHandler} />
             <Button title="Cancel" onPress={() => setImageModalVisible(!imageModalVisible)} />
           </View>
         </View>
@@ -120,7 +129,7 @@ export default function Profile() {
               placeholder="Enter new username"
             />
             <Button title="Update" onPress={() => {
-              handleUpdateUserProfile();
+              updateUsernameHandler();
               setNameModalVisible(!nameModalVisible);
             }} />
             <Button title="Cancel" onPress={() => setNameModalVisible(!nameModalVisible)} />
@@ -130,7 +139,8 @@ export default function Profile() {
 
       {/* Display the avatar image */}
       {console.log("Avatar URI:", avatarUri)}
-      <Image source={{ uri: avatarUri }} style={styles.image} />
+      {/* <Image source={{ uri: avatarUri }} style={styles.image} /> */}
+      <Image style={styles.image} uri={avatarUri} />
       <Button title="Change Avatar" onPress={() => setImageModalVisible(true)} />
 
       {/* Display the username and other profile info */}
