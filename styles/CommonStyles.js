@@ -11,4 +11,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         marginTop:'5%',
     },
+
+    directionRow: {
+        flexDirection: "row",
+      },
 })

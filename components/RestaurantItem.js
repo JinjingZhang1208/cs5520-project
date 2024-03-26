@@ -1,11 +1,21 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-export default function Restaurant() {
+import Card from './Card';
+import CommonStyles from '../styles/CommonStyles';
+
+export default function RestaurantItem() {
   return (
-    <View>
-      <Text>Restaurant</Text>
-    </View>
+    <Card cardStyle={CommonStyles.card}>
+      <Text>Restaurant Name</Text>
+      {/* <Image 
+        source={require('../assets/restaurant.jpg')} 
+        style={{width: 200, height: 100}} /> */}
+      <View style={[CommonStyles.directionRow, {justifyContent:'space-between'}]}>
+        <Text>Rating</Text>
+        <Text>Comments</Text>
+      </View>
+    </Card>
   )
 }
 
