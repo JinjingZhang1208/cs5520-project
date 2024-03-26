@@ -23,18 +23,40 @@ export const fetchUserData = async (userId) => {
 };
 
 
-// Function to upload image
-export const uploadImageAsync = async (uri) => {
-    const storage = getStorage();
-    const imageName = `profile_${new Date().getTime()}`; // A unique image name
-    const storageRef = ref(storage, `images/${imageName}`);
-
+// Function to convert local file URI to a Blob
+const uriToBlob = async (uri) => {
     const response = await fetch(uri);
     const blob = await response.blob();
+    return blob;
+};
 
-    await uploadBytes(storageRef, blob);
-    const downloadURL = await getDownloadURL(storageRef);
-    return downloadURL; // This URL can be used to access the image
+
+// Function to upload a Blob to Firebase Storage
+const uploadImage = async (blob) => {
+    const storage = getStorage();
+    const storageRef = ref(storage, `images/${Date.now()}.jpeg`); // Creates a unique name for each image
+
+    return uploadBytes(storageRef, blob).then((snapshot) => {
+        console.log('Uploaded blob!');
+        return snapshot.ref; // You might want to return the reference for further use, e.g., getting the download URL
+    });
+};
+
+
+// Combined function to upload an image from a local URI
+export const uploadImageAsync = async (imageUri) => {
+    try {
+        const blob = await uriToBlob(imageUri);
+        const snapshotRef = await uploadImage(blob);
+        blob.close(); // Free up memory after blob is uploaded
+
+        // Optionally, get the download URL
+        const downloadURL = await getDownloadURL(snapshotRef);
+        console.log('File available at', downloadURL);
+        return downloadURL;
+    } catch (error) {
+        console.error("Error uploading image: ", error);
+    }
 };
 
 
@@ -45,7 +67,6 @@ export const saveImageURLToFirestore = async (userId, imageUrl) => {
 
     await setDoc(userRef, { avatarUrl: imageUrl }, { merge: true });
 };
-
 
 export const updateUsername = async (userId, newUsername) => {
     try {
@@ -62,6 +83,7 @@ export const updateUsername = async (userId, newUsername) => {
         throw error; // This will reject the promise with the error
     }
 };
+
 
 // Function to set the email in Firestore, only if it is not already set
 export const setEmail = async (userId) => {
