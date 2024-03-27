@@ -1,4 +1,4 @@
-import { collection, addDoc, getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, addDoc, deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { database } from "./firebaseSetup";
 import { auth } from "./firebaseSetup";
@@ -105,7 +105,12 @@ export const setEmail = async (userId) => {
 export async function writeToDB (data, collectionName, id, subCollection) {
     try {
         if (id) {
-            await addDoc(collection(database, collectionName, id, subCollection), data);
+            if (subCollection == 'reviews'){
+                await addDoc(collection(database, collectionName, id, subCollection), data);
+            }
+            if (subCollection == 'wishlists'){
+                await setDoc(doc(database, collectionName, id, subCollection, data.restaurantId), data);
+            }
         } else {
             await addDoc(collection(database, collectionName), data);
         }
