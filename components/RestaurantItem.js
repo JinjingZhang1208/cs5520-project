@@ -8,14 +8,14 @@ import PressableButton from './PressableButton';
 export default function RestaurantItem({item}) {
   return (
     <PressableButton>
-      <Card cardStyle={CommonStyles.card}>
+      <Card>
         <Text>{item.name}</Text>
         <Image 
           source={require('../assets/restaurant.jpeg')} 
-          style={{width: 200, height: 100}} />
-        <View style={[CommonStyles.directionRow, {justifyContent:'space-between'}]}>
-          <Text>{item.rating}</Text>
-          <Text>{item.numOfComments}</Text>
+          style={{width: 325, height: 100}} />
+        <View style={[CommonStyles.directionRow, {justifyContent:'start'}]}>
+          <Text>ratings: {item.rating} </Text>
+          <Text>comments: {item.numOfComments}</Text>
         </View>
       </Card>
     </PressableButton>
