@@ -15,9 +15,10 @@ import PressableButton from "./components/PressableButton";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import Profile from "./screens/Profile";
 import ForgetPassword from "./components/ForgetPassword";
+import RestaurantDetail from "./screens/RestaurantDetail";
 
 const Stack = createNativeStackNavigator();
-const BottomTab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
@@ -48,8 +49,11 @@ export default function App() {
 
   const AppTabsScreen = () => {
     return (
-      <BottomTab.Navigator screenOptions={{ headerShown: false, tabBarActiveTintColor: "tomato", tabBarInactiveTintColor: "gray" }}>
-        <BottomTab.Screen 
+      <Tab.Navigator 
+        screenOptions={{
+          tabBarActiveTintColor: "tomato", 
+          tabBarInactiveTintColor: "gray" }}>
+        <Tab.Screen 
           name="Discover" 
           component={Discover} 
           options={{
@@ -58,7 +62,7 @@ export default function App() {
             ),
           }}
         />
-        <BottomTab.Screen
+        <Tab.Screen
           name="Find"
           component={Find}
           options={{
@@ -67,7 +71,7 @@ export default function App() {
             ),
           }}
         />
-        <BottomTab.Screen
+        <Tab.Screen
           name="WishList"
           component={WishList}
           options={{
@@ -76,7 +80,7 @@ export default function App() {
             ),
           }}
         />
-        <BottomTab.Screen 
+        <Tab.Screen 
           name="Profile"
           component={Profile}
           options={{
@@ -86,7 +90,14 @@ export default function App() {
 
           }}
         />
-      </BottomTab.Navigator>
+        {/* <Tab.Screen
+          name="Restaurant"
+          component={RestaurantDetail}
+          options={{
+            tabBarShowLabel: true, // Hide the bottom tab bar for this screen
+          }}
+        /> */}
+      </Tab.Navigator>
     );
   };
   
@@ -101,14 +112,17 @@ export default function App() {
 
   return (
     <NavigationContainer>
-
         {userLoggedIn ? (
-          AppTabsScreen()
+          <Stack.Navigator>
+            <Stack.Screen name="Home" component={AppTabsScreen} options={{ headerShown: false }} />
+            <Stack.Screen 
+              name="Restaurant" 
+              component={RestaurantDetail}
+              options={({ route }) => ({ title: route.params.name })} />
+          </Stack.Navigator>
         ) : (
           AuthStack()
         )}
-        
-
     </NavigationContainer>
   );
 }
