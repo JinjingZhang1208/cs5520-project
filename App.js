@@ -90,13 +90,6 @@ export default function App() {
 
           }}
         />
-        {/* <Tab.Screen
-          name="Restaurant"
-          component={RestaurantDetail}
-          options={{
-            tabBarShowLabel: true, // Hide the bottom tab bar for this screen
-          }}
-        /> */}
       </Tab.Navigator>
     );
   };
