@@ -48,7 +48,10 @@ export default function App() {
 
   const AppTabsScreen = () => {
     return (
-      <BottomTab.Navigator screenOptions={{ headerShown: false, tabBarActiveTintColor: "tomato", tabBarInactiveTintColor: "gray" }}>
+      <BottomTab.Navigator 
+        screenOptions={{
+          tabBarActiveTintColor: "tomato", 
+          tabBarInactiveTintColor: "gray" }}>
         <BottomTab.Screen 
           name="Discover" 
           component={Discover} 
