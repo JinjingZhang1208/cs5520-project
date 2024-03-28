@@ -9,12 +9,14 @@ export default function Discover({ navigation }) {
   const [restaurants, setRestaurants] = useState([]);
 
   useEffect(() => {
+    // Fetch and prepare restaurants from Yelp
     const getRestaurants = async () => {
       try {
         const newYelpData = await fetchAndPrepareRestaurants();
         const existingRestaurants = await fetchAllRestaurantsFromDB();
         const existingRestaurantNames = new Set(existingRestaurants.map(r => r.name.toLowerCase()));
 
+        // if the restaurant is not in the database, write it
         for (const restaurant of newYelpData) {
           if (!existingRestaurantNames.has(restaurant.name.toLowerCase())) {
             await writeToDB(restaurant, 'restaurants');
