@@ -19,6 +19,7 @@ export default function Review({navigation, route}) {
             navigation.goBack();
         }
     }
+
     return (
         <View style={CommonStyles.container}>
             <View style={{marginTop:10}}>   
