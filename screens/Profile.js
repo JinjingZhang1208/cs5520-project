@@ -8,7 +8,7 @@ import { fetchUserData, uploadImageAsync, saveImageURLToFirestore, updateUsernam
 import ImageManager from "../components/ImageManager";
 
 
-export default function Profile() {
+export default function Profile({navigation, route}) {
   const defaultAvatar = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png";
 
   const [avatarUri, setAvatarUri] = useState(defaultAvatar);
@@ -156,6 +156,11 @@ export default function Profile() {
         customStyle={styles.buttonStyle}
       >
         <Ionicons name="log-out-outline" size={24} color="white" />
+      </PressableButton>
+
+      <PressableButton
+        onPress={() => {navigation.navigate('MyReviews')}}>
+        <Text>My Reviews</Text>
       </PressableButton>
     </View>
   );

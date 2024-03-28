@@ -144,3 +144,15 @@ export async function deleteFromDB (collectionName, id, subCollection, subId) {
         console.error(err);
     }
  }
+
+ export async function updateDB (data, collectionName, id, subCollection, subId) {
+    try {
+        if(subCollection){
+            await setDoc(doc(database, collectionName, id, subCollection, subId), data);
+        } else {
+            await setDoc(doc(database, collectionName, id), data);
+        }
+    } catch (err) {
+        console.error(err);
+    }
+ }

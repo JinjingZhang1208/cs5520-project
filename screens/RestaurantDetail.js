@@ -77,15 +77,20 @@ export default function RestaurantDetail({ navigation, route }) {
     }, [bookmark]);
 
     return (
-        <View style={[{ marginTop: 10 }, CommonStyles.container]}>
+        <View style={[{ marginTop: 10 }, CommonStyles.restaurantContainer]}>
             <Card>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
                 <Image
                     source={{ uri: route.params.item.image_url }}
                     style={{ width: 325, height: 100 }} />
-                <View style={[CommonStyles.directionRow, { justifyContent: 'start' }]}>
+                </View>
+                <View style={[CommonStyles.directionRow, { justifyContent: 'center' }]}>
                     <Text>Ratings: {route.params.item.rating}   </Text>
                     <Text>Reviews: {route.params.item.review_count}</Text>
                 </View>
+                <PressableButton onPress={() => {navigation.navigate('Add My Review', {item: route.params.item})}}>
+                <Text>Add my Review</Text>
+                </PressableButton>
             </Card>
         </View>
     )
