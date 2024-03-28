@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import Discover from "./screens/Discover";
 import Start from "./screens/Start";
 import Find from "./screens/Find";
@@ -9,16 +9,19 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase-files/firebaseSetup";
-import PressableButton from "./components/PressableButton";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import Profile from "./screens/Profile";
 import ForgetPassword from "./components/ForgetPassword";
 import RestaurantDetail from "./screens/RestaurantDetail";
+import Notifications from "./components/Notifications";
+import AboutUs from "./screens/AboutUs";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
 export default function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
@@ -26,11 +29,7 @@ export default function App() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserLoggedIn(true);
-      } else {
-        setUserLoggedIn(false);
-      }
+      setUserLoggedIn(!!user);
       setLoading(false); // Set loading to false once auth state is determined
     });
 
@@ -47,53 +46,43 @@ export default function App() {
     </Stack.Navigator>
   );
 
-  const AppTabsScreen = () => {
-    return (
-      <Tab.Navigator 
-        screenOptions={{
-          tabBarActiveTintColor: "tomato", 
-          tabBarInactiveTintColor: "gray" }}>
-        <Tab.Screen 
-          name="Discover" 
-          component={Discover} 
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="home" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Find"
-          component={Find}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="search" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="WishList"
-          component={WishList}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="heart" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tab.Screen 
-          name="Profile"
-          component={Profile}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="person" size={size} color={color} />
-            ),
-
-          }}
-        />
-      </Tab.Navigator>
-    );
-  };
-  
+  const AppTabsScreen = () => (
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: "tomato",
+        tabBarInactiveTintColor: "gray",
+      }}
+    >
+      <Tab.Screen
+        name="Discover"
+        component={Discover}
+        options={{
+          tabBarIcon: ({ color, size }) => <Ionicons name="home" size={size} color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="Find"
+        component={Find}
+        options={{
+          tabBarIcon: ({ color, size }) => <Ionicons name="search" size={size} color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="WishList"
+        component={WishList}
+        options={{
+          tabBarIcon: ({ color, size }) => <Ionicons name="heart" size={size} color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarIcon: ({ color, size }) => <Ionicons name="person" size={size} color={color} />,
+        }}
+      />
+    </Tab.Navigator>
+  );
 
   if (loading) {
     return (
@@ -105,17 +94,14 @@ export default function App() {
 
   return (
     <NavigationContainer>
-        {userLoggedIn ? (
-          <Stack.Navigator>
-            <Stack.Screen name="Home" component={AppTabsScreen} options={{ headerShown: false }} />
-            <Stack.Screen 
-              name="Restaurant" 
-              component={RestaurantDetail}
-              options={({ route }) => ({ title: route.params.item.name })} />
-          </Stack.Navigator>
-        ) : (
-          AuthStack()
-        )}
+      {userLoggedIn ? (
+        <Drawer.Navigator>
+          <Drawer.Screen name="Home" component={AppTabsScreen} />
+          <Drawer.Screen name="Notifications" component={Notifications} />
+        </Drawer.Navigator>
+      ) : (
+        <AuthStack />
+      )}
     </NavigationContainer>
   );
 }
