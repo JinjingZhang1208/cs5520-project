@@ -1,21 +1,40 @@
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CommonStyles from '../styles/CommonStyles'
 import PressableButton from '../components/PressableButton'
-import { writeToDB } from '../firebase-files/databaseHelper';
+import { updateDB, writeToDB } from '../firebase-files/databaseHelper';
 import { auth } from '../firebase-files/firebaseSetup';
 
 export default function Review({navigation, route}) {
-    const [review, setReview] = useState('');
+    const [reviewContent, setReviewContent] = useState('');
 
+    const {mode, review} = route.params || {};
+
+    // Set initial values for edit mode
+    useEffect(() => {
+        if (mode === 'edit') {
+            setReviewContent(review.review);
+        }
+    }, [mode, review]);
 
     async function submitHandler() {
         // code to submit review
         const currentUser = auth.currentUser;
         if (currentUser) {
             const userId = currentUser.uid;
-            let newReview = {review: review, restaurantId: route.params.item.id, restaurantName: route.params.item.name};
+            let newReview = {review: reviewContent, restaurantId: route.params.item.id, restaurantName: route.params.item.name};
             writeToDB(newReview, 'users', userId, 'reviews');
+            navigation.goBack();
+        }
+    }
+
+    async function editHandler() {
+        // code to edit review
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+            const userId = currentUser.uid;
+            let updatedReview = {review: reviewContent, restaurantId: route.params.review.restaurantId, restaurantName: route.params.review.restaurantName};
+            updateDB(updatedReview, 'users', userId, 'reviews', route.params.review.id);
             navigation.goBack();
         }
     }
@@ -26,10 +45,12 @@ export default function Review({navigation, route}) {
                 <TextInput 
                     placeholder='Enter your review'
                     style={CommonStyles.reviewInput}
-                    value={review}
-                    onChangeText={setReview}/>
-                {/* <Text>{route.params.item.name}</Text> */}
-                <PressableButton onPress={submitHandler}>
+                    value={reviewContent}
+                    onChangeText={setReviewContent}/>
+                {mode == 'edit'? <Text>{route.params.review.restaurantName}</Text> :
+                    <Text>{route.params.item.name}</Text>}
+                <PressableButton 
+                    onPress={mode == 'edit'? editHandler:submitHandler}>
                     <Text>Submit</Text>
                 </PressableButton>
             </View>
