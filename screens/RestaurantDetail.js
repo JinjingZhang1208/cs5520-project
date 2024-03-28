@@ -75,9 +75,12 @@ export default function RestaurantDetail({navigation, route}) {
 
     return (
         <View style={[{marginTop: 10}, CommonStyles.container]}>
-        <Image 
-            source={require('../assets/restaurant.jpeg')} 
-            style={{width: 325, height: 100}} />
+            <Image 
+                source={require('../assets/restaurant.jpeg')} 
+                style={{width: 325, height: 100}} />
+            <PressableButton onPress={() => {navigation.navigate('Add My Review', {item: route.params.item})}}>
+                <Text>Add my Review</Text>
+            </PressableButton>
         </View>
     )
 }

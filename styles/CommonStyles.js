@@ -15,9 +15,9 @@ const CommonStyles = StyleSheet.create({
 
     container: {
         flex: 1,
-        flexDirection:'row',
-        justifyItem:'start',
-        justifyContent:'center',
+        flexDirection:'column',
+        alignItems:'center',
+        justifyContent:'start',
     },
 
     centeredContainer: {
@@ -30,6 +30,18 @@ const CommonStyles = StyleSheet.create({
         fontSize: 20,
         color: 'purple',
     },
+
+    reviewInput: {
+        width: 300,
+        height: 100,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 5,
+        marginTop: 10,
+        marginBottom: 10,
+        paddingHorizontal: 10,
+        textAlign: 'left',
+      },
 })
 
 export default CommonStyles;
