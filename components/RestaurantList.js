@@ -4,13 +4,14 @@ import React, { useState, useEffect } from 'react'
 import {collection, onSnapshot, query, where, getDocs} from 'firebase/firestore';
 import { database } from '../firebase-files/firebaseSetup';
 import RestaurantItem from './RestaurantItem';
+import CommonStyles from '../styles/CommonStyles';
 
-export default function RestaurantList() {
+export default function RestaurantList({collectionName}) {
     const [restaurants, setRestaurants] = useState([]);
 
     useEffect(() => {
         let q;
-        q = query(collection(database, 'restaurants'));
+        q = query(collection(database, collectionName));
         const unsub = onSnapshot(q, (querySnapshot) => {
             let items = [];
             querySnapshot.forEach((doc) => {
@@ -20,6 +21,22 @@ export default function RestaurantList() {
         });
         return () => unsub();
     },[]);
+
+    if (restaurants.length === 0) {
+        if (collectionName === 'restaurants') {
+            return (
+                <View style={CommonStyles.centeredContainer}>
+                    <Text style={CommonStyles.centeredText}>No restaurants found.</Text>
+                </View>
+            )
+        }  else {
+            return (
+                <View style={CommonStyles.centeredContainer}>
+                    <Text style={CommonStyles.centeredText}>No restaurants in your wishlist.</Text>
+                </View>
+            )
+        }
+    }
 
     return (
         <View>

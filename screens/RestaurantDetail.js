@@ -19,7 +19,7 @@ export default function RestaurantDetail({navigation, route}) {
         const currentUser = auth.currentUser;
         if (currentUser) {
             const userId = currentUser.uid;
-            const restaurantId = route.params.id;
+            const restaurantId = route.params.item.id;
             const docRef = doc(database, 'users', userId, 'wishlists', restaurantId);
             const docSnap = await getDoc(docRef);
 
@@ -38,7 +38,7 @@ export default function RestaurantDetail({navigation, route}) {
         const currentUser = auth.currentUser;
         if (currentUser) {
             const userId = currentUser.uid;
-            const restaurantId = route.params.id;
+            const restaurantId = route.params.item.id;
 
             try {
                 if (bookmark)  {
@@ -46,7 +46,11 @@ export default function RestaurantDetail({navigation, route}) {
                     setBookmark(false);
                     Alert.alert('Removed from Wishlist');
                 } else {
-                    let res = {restaurantId: restaurantId, name: route.params.name};
+                    let res = {
+                        restaurantId: restaurantId, 
+                        name: route.params.item.name,
+                        rating: route.params.item.rating,
+                        numOfComments: route.params.item.numOfComments,};
                     await writeToDB(res, 'users', userId, 'wishlists');
                     setBookmark(true);
                     Alert.alert('Added to Wishlist');

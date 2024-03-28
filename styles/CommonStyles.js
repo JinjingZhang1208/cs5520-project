@@ -19,6 +19,17 @@ const CommonStyles = StyleSheet.create({
         justifyItem:'start',
         justifyContent:'center',
     },
+
+    centeredContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    centeredText: {
+        fontSize: 20,
+        color: 'purple',
+    },
 })
 
 export default CommonStyles;

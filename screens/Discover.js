@@ -7,7 +7,7 @@ export default function Discover({ navigation }) {
   return (
     <View style={CommonStyles.container}>
       <View style={{marginTop:10}}>
-        <RestaurantList />
+        <RestaurantList collectionName='restaurants'/>
       </View>
     </View>
   );
