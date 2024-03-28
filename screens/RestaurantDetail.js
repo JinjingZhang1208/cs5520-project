@@ -51,7 +51,7 @@ export default function RestaurantDetail({ navigation, route }) {
                         restaurantId: restaurantId,
                         name: route.params.item.name,
                         rating: route.params.item.rating,
-                        numOfComments: route.params.item.numOfComments,
+                        review_count: route.params.item.review_count,
                     };
                     await writeToDB(res, 'users', userId, 'wishlists');
                     setBookmark(true);
