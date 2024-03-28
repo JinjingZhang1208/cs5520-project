@@ -1,12 +1,30 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import React, { useState, useEffect } from 'react'
 
-import {collection, onSnapshot, query, where, getDocs} from 'firebase/firestore';
+import { collection, onSnapshot, query, where, getDocs } from 'firebase/firestore';
 import { database } from '../firebase-files/firebaseSetup';
 import RestaurantItem from './RestaurantItem';
 import CommonStyles from '../styles/CommonStyles';
 
-export default function RestaurantList({collectionName}) {
+// Render the list of restaurants
+function renderRestaurantsList(restaurants) {
+    return (
+        <View>
+            <FlatList
+            data={restaurants}
+            renderItem={({item}) => (
+                <RestaurantItem item={item}/>
+            )} />
+        </View>
+    );
+}
+
+export default function RestaurantList({ fetchedRestaurants = [], collectionName }) {
+    // If restaurants are passed as a prop, use them directly
+    if (fetchedRestaurants.length > 0) {
+        return renderRestaurantsList(fetchedRestaurants);
+    }
+
     const [restaurants, setRestaurants] = useState([]);
 
     useEffect(() => {
@@ -15,12 +33,12 @@ export default function RestaurantList({collectionName}) {
         const unsub = onSnapshot(q, (querySnapshot) => {
             let items = [];
             querySnapshot.forEach((doc) => {
-                items.push({...doc.data(), id: doc.id});
+                items.push({ ...doc.data(), id: doc.id });
             });
             setRestaurants(items);
         });
         return () => unsub();
-    },[]);
+    }, []);
 
     if (restaurants.length === 0) {
         if (collectionName === 'restaurants') {
@@ -29,7 +47,7 @@ export default function RestaurantList({collectionName}) {
                     <Text style={CommonStyles.centeredText}>No restaurants found.</Text>
                 </View>
             )
-        }  else {
+        } else {
             return (
                 <View style={CommonStyles.centeredContainer}>
                     <Text style={CommonStyles.centeredText}>No restaurants in your wishlist.</Text>
@@ -41,10 +59,10 @@ export default function RestaurantList({collectionName}) {
     return (
         <View>
             <FlatList
-            data={restaurants}
-            renderItem={({item}) => (
-                <RestaurantItem item={item}/>
-            )} />
+                data={restaurants}
+                renderItem={({ item }) => (
+                    <RestaurantItem item={item} />
+                )} />
         </View>
     )
 }
