@@ -19,10 +19,11 @@ export const fetchAndPrepareRestaurants = async (location = 'Vancouver') => {
       const data = await response.json();
   
       // Extract and prepare data for each restaurant
-      const preparedData = data.businesses.map(({name, rating, review_count}) => ({
+      const preparedData = data.businesses.map(({name, rating, review_count, image_url}) => ({
         name,
         rating,
         review_count,
+        image_url
       }));
   
       return preparedData; // This is an array of objects, each containing only name, rating, review_count
