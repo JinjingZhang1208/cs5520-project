@@ -20,6 +20,13 @@ const CommonStyles = StyleSheet.create({
         justifyContent:'start',
     },
 
+    restaurantContainer: {
+        flex: 1,
+        flexDirection:'column',
+        alignItems:'center',
+        justifyContent:'start',
+    },
+
     centeredContainer: {
         flex: 1,
         justifyContent: 'center',
