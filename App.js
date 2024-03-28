@@ -111,7 +111,7 @@ export default function App() {
             <Stack.Screen 
               name="Restaurant" 
               component={RestaurantDetail}
-              options={({ route }) => ({ title: route.params.name })} />
+              options={({ route }) => ({ title: route.params.item.name })} />
           </Stack.Navigator>
         ) : (
           AuthStack()
