@@ -8,7 +8,7 @@ export const fetchAndPrepareRestaurants = async (location = 'Vancouver') => {
       const parameters = new URLSearchParams({
         term: 'restaurants',
         location: location,
-        limit: 10, // Limit the number of results to 20
+        limit: 20, // Limit the number of results to 20
       });
   
       const response = await fetch(`${yelpUrl}?${parameters}`, {

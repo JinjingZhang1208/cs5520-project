@@ -3,6 +3,7 @@ import { View, Text, Button, Alert } from 'react-native';
 import RestaurantList from '../components/RestaurantList';
 import CommonStyles from '../styles/CommonStyles';
 import { fetchAndPrepareRestaurants } from '../services/YelpService';
+import { writeToDB, fetchAllRestaurantsFromDB } from '../firebase-files/databaseHelper';
 
 export default function Discover({ navigation }) {
   const [restaurants, setRestaurants] = useState([]);
@@ -10,21 +11,31 @@ export default function Discover({ navigation }) {
   useEffect(() => {
     const getRestaurants = async () => {
       try {
-        const data = await fetchAndPrepareRestaurants();
-        setRestaurants(data);
+        const newYelpData = await fetchAndPrepareRestaurants();
+        const existingRestaurants = await fetchAllRestaurantsFromDB();
+        const existingRestaurantNames = new Set(existingRestaurants.map(r => r.name.toLowerCase()));
+
+        for (const restaurant of newYelpData) {
+          if (!existingRestaurantNames.has(restaurant.name.toLowerCase())) {
+            await writeToDB(restaurant, 'restaurants');
+            existingRestaurantNames.add(restaurant.name.toLowerCase());
+          }
+        }
+
+        setRestaurants([...existingRestaurants, ...newYelpData.filter(r => existingRestaurantNames.has(r.name.toLowerCase()))]);
       } catch (error) {
-        Alert.alert('Error', 'Unable to fetch restaurants.');
+        Alert.alert('Error', 'Unable to fetch or write restaurants.');
         console.error(error);
       }
     };
 
     getRestaurants();
   }, []);
-  
+
   return (
     <View style={CommonStyles.container}>
-      <View style={{marginTop:10}}>
-        <RestaurantList fetchedRestaurants={restaurants} collectionName='restaurants'/>
+      <View style={{ marginTop: 10 }}>
+        <RestaurantList fetchedRestaurants={restaurants} collectionName='restaurants' />
       </View>
     </View>
   );

@@ -1,4 +1,4 @@
-import { collection, addDoc, deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, deleteDoc, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { database } from "./firebaseSetup";
 import { auth } from "./firebaseSetup";
@@ -101,6 +101,20 @@ export const setEmail = async (userId) => {
         throw error; // This will reject the promise with the error
     }
 }
+
+export const fetchAllRestaurantsFromDB = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(database, 'restaurants'));
+      const restaurantList = [];
+      querySnapshot.forEach((doc) => {
+        restaurantList.push({ ...doc.data(), id: doc.id });
+      });
+      return restaurantList;
+    } catch (error) {
+      console.error("Error fetching restaurants from DB:", error);
+      throw new Error('Failed to fetch restaurants');
+    }
+  };
 
 export async function writeToDB (data, collectionName, id, subCollection) {
     try {
