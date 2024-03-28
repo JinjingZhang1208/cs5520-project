@@ -15,11 +15,11 @@ export default function RestaurantItem({item}) {
       <Card>
         <Text>{item.name}</Text>
         <Image 
-          source={require('../assets/restaurant.jpeg')} 
+          source={{uri: item.image_url}}
           style={{width: 325, height: 100}} />
         <View style={[CommonStyles.directionRow, {justifyContent:'start'}]}>
-          <Text>ratings: {item.rating}   </Text>
-          <Text>comments: {item.numOfComments}</Text>
+          <Text>Ratings: {item.rating}   </Text>
+          <Text>Reviews: {item.review_count}</Text>
         </View>
       </Card>
     </PressableButton>
