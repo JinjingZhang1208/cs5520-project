@@ -90,13 +90,6 @@ export default function App() {
 
           }}
         />
-        {/* <Tab.Screen
-          name="Restaurant"
-          component={RestaurantDetail}
-          options={{
-            tabBarShowLabel: true, // Hide the bottom tab bar for this screen
-          }}
-        /> */}
       </Tab.Navigator>
     );
   };
@@ -118,7 +111,7 @@ export default function App() {
             <Stack.Screen 
               name="Restaurant" 
               component={RestaurantDetail}
-              options={({ route }) => ({ title: route.params.name })} />
+              options={({ route }) => ({ title: route.params.item.name })} />
           </Stack.Navigator>
         ) : (
           AuthStack()

@@ -1,4 +1,4 @@
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, addDoc, deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { database } from "./firebaseSetup";
 import { auth } from "./firebaseSetup";
@@ -101,3 +101,32 @@ export const setEmail = async (userId) => {
         throw error; // This will reject the promise with the error
     }
 }
+
+export async function writeToDB (data, collectionName, id, subCollection) {
+    try {
+        if (id) {
+            if (subCollection == 'reviews'){
+                await addDoc(collection(database, collectionName, id, subCollection), data);
+            }
+            if (subCollection == 'wishlists'){
+                await setDoc(doc(database, collectionName, id, subCollection, data.restaurantId), data);
+            }
+        } else {
+            await addDoc(collection(database, collectionName), data);
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+export async function deleteFromDB (collectionName, id, subCollection, subId) {
+    try {
+        if (subCollection) {
+            await deleteDoc(doc(database, collectionName, id, subCollection, subId));
+        } else {
+            await deleteDoc(doc(database, collectionName, id));
+        }
+    } catch (err) {
+        console.error(err);
+    }
+ }

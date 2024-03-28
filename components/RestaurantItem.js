@@ -11,7 +11,7 @@ export default function RestaurantItem({item}) {
   const navigation = useNavigation();
 
   return (
-    <PressableButton onPress={() => {navigation.navigate('Restaurant', {name: item.name})}}>
+    <PressableButton onPress={() => {navigation.navigate('Restaurant', {item: item})}}>
       <Card>
         <Text>{item.name}</Text>
         <Image 
