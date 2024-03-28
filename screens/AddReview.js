@@ -28,7 +28,7 @@ export default function Review({navigation, route}) {
                     style={CommonStyles.reviewInput}
                     value={review}
                     onChangeText={setReview}/>
-                <Text>{route.params.item.name}</Text>
+                {/* <Text>{route.params.item.name}</Text> */}
                 <PressableButton onPress={submitHandler}>
                     <Text>Submit</Text>
                 </PressableButton>

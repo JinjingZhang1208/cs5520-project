@@ -4,16 +4,16 @@ import { useNavigation } from '@react-navigation/native';
 import PressableButton from './PressableButton';
 import { AntDesign } from '@expo/vector-icons';
 
-export default function ReviewItem({item}) {
+export default function ReviewItem({review}) {
 
     const navigation = useNavigation();
 
     const reviewPressHandler = () => {
-        navigation.navigate('Edit My Review', {review: item});
+        navigation.navigate('Edit My Review', {review: review});
     }
 
     const deleteHandler = () => {
-        console.log("Delete review with id: ", item.id);
+        console.log("Delete review with id: ", review.id);
     }
     
     return (
@@ -21,8 +21,8 @@ export default function ReviewItem({item}) {
             style={({pressed})=> [styles.textContainer,pressed && styles.pressed]}
             onPress={reviewPressHandler} andriod_ripple={{color:'#e9e'}}>
             <View style={{flexDirection: 'column'}}>
-                <Text style={{fontWeight: 'bold'}}>{item.restaurantName}</Text>
-                <Text style={styles.text}>{item.review}</Text>
+                <Text style={{fontWeight: 'bold'}}>{review.restaurantName}</Text>
+                <Text style={styles.text}>{review.review}</Text>
             </View>
             <PressableButton onPressFunc={deleteHandler}>
                 <AntDesign name="delete" size={24} color="black" />

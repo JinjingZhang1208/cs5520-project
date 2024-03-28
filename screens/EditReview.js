@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import AddReview from './AddReview'
 
 export default function EditReview() {
   return (
     <View>
-      <Text>EditReview</Text>
+      <AddReview />
     </View>
   )
 }

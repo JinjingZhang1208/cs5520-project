@@ -21,7 +21,6 @@ export default function ReviewList() {
                 items.push({...doc.data(), id: doc.id});
             });
             setReviews(items);
-            console.log(items);
         });
         return () => unsub();
     },[]);
@@ -31,7 +30,7 @@ export default function ReviewList() {
             <FlatList
             data={reviews}
             renderItem={({item}) => (
-                <ReviewItem item={item}/>
+                <ReviewItem review={item}/>
             )} />
         </View>
     )
