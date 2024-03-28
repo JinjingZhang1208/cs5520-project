@@ -16,7 +16,9 @@ import { Ionicons, AntDesign } from "@expo/vector-icons";
 import Profile from "./screens/Profile";
 import ForgetPassword from "./components/ForgetPassword";
 import RestaurantDetail from "./screens/RestaurantDetail";
-import Review from "./screens/Review";
+import AddReview from "./screens/AddReview";
+import EditReview from "./screens/EditReview";
+import MyReviews from "./screens/MyReviews";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -113,7 +115,9 @@ export default function App() {
               name="Restaurant" 
               component={RestaurantDetail}
               options={({ route }) => ({ title: route.params.item.name })} />
-            <Stack.Screen name="Add My Review" component={Review} />
+            <Stack.Screen name="Add My Review" component={AddReview} />
+            <Stack.Screen name="Edit My Review" component={EditReview} />
+            <Stack.Screen name="MyReviews" component={MyReviews} />
           </Stack.Navigator>
         ) : (
           AuthStack()
