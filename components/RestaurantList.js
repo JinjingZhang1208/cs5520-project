@@ -22,7 +22,6 @@ function renderRestaurantsList(restaurants) {
 export default function RestaurantList({ fetchedRestaurants = [], collectionName }) {
     // If restaurants are passed as a prop, use them directly
     if (fetchedRestaurants.length > 0) {
-        console.log('fetchedRestaurants:', fetchedRestaurants);
         return renderRestaurantsList(fetchedRestaurants);
     }
 

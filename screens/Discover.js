@@ -24,7 +24,8 @@ export default function Discover({ navigation }) {
           }
         }
 
-        setRestaurants([...existingRestaurants, ...newYelpData.filter(r => existingRestaurantNames.has(r.name.toLowerCase()))]);
+        // setRestaurants([...existingRestaurants, ...newYelpData.filter(r => existingRestaurantNames.has(r.name.toLowerCase()))]);
+        setRestaurants(existingRestaurantNames);
       } catch (error) {
         Alert.alert('Error', 'Unable to fetch or write restaurants.');
         console.error(error);
