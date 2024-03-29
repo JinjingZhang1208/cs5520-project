@@ -78,7 +78,7 @@ This collection stores information about restaurants that users can interact wit
 
 ## WishList
 - Users can find the restaurants they bookmarked.
-<img src="images/add_to_wishlists.png" alt="Add to wishlist" width="375">
+<img src="images/add_to_wishlists.png" alt="Add to wishlist" width="300">
 
 
 ## Profile
