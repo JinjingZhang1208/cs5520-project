@@ -135,7 +135,10 @@ export default function App() {
     <NavigationContainer>
         {userLoggedIn ? (
           <Stack.Navigator>
-            <Stack.Screen name="DrawerHome" component={DrawerWithTabs} options={{ headerShown: false }} />
+            <Stack.Screen 
+              name="DrawerHome" 
+              component={DrawerWithTabs} 
+              options= {({ route }) => ({ title: "Back"})} />
             <Stack.Screen 
               name="Restaurant" 
               component={RestaurantDetail}
