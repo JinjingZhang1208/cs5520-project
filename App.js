@@ -19,9 +19,13 @@ import RestaurantDetail from "./screens/RestaurantDetail";
 import AddReview from "./screens/AddReview";
 import EditReview from "./screens/EditReview";
 import MyReviews from "./screens/MyReviews";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import Notification from "./screens/Notification";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
+
 
 export default function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
@@ -96,6 +100,17 @@ export default function App() {
       </Tab.Navigator>
     );
   };
+
+  // Function to return the App Tabs Screen with Drawer Navigation
+  const DrawerWithTabs = () => {
+    return (
+      <Drawer.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+        <Drawer.Screen name="Home" component={AppTabsScreen} /> 
+        <Drawer.Screen name="Notifications" component={Notification} />
+      </Drawer.Navigator>
+    );
+  };
+
   
 
   if (loading) {
@@ -110,7 +125,7 @@ export default function App() {
     <NavigationContainer>
         {userLoggedIn ? (
           <Stack.Navigator>
-            <Stack.Screen name="Home" component={AppTabsScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="DrawerHome" component={DrawerWithTabs} options={{ headerShown: false }} />
             <Stack.Screen 
               name="Restaurant" 
               component={RestaurantDetail}
