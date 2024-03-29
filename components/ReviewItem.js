@@ -31,7 +31,8 @@ export default function ReviewItem({review}) {
             style={({pressed})=> [styles.textContainer,pressed && styles.pressed]}
             onPress={reviewPressHandler} andriod_ripple={{color:'#e9e'}}>
             <View style={{flexDirection: 'column'}}>
-                <Text style={{fontWeight: 'bold'}}>{review.restaurantName}</Text>
+            <Text style={styles.boldText}>{review.restaurantName}</Text>
+
                 <Text style={styles.text}>{review.review}</Text>
             </View>
             <PressableButton onPress={deleteHandler}>
@@ -45,12 +46,37 @@ const styles = StyleSheet.create({
     pressed: {
         opacity: 0.5,
     },
-
     textContainer: {
         borderRadius: 10,
-        backgroundColor: "#aaa",
+        backgroundColor: "#FFF", 
+        width: "80%",
         marginTop: 15,
+        marginBottom: 5, 
+        padding: 10, 
         flexDirection: "row",
-        alignItems: "start",
-      },
-})
+        alignItems: "center", 
+        justifyContent: "space-between",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 1, 
+    },
+    text: {
+        color: "#333", 
+        fontSize: 16, 
+        marginRight: 10, 
+    },
+    
+    boldText: {
+        fontWeight: 'bold',
+        fontSize: 18, 
+        color: "#000", 
+    },
+    deleteButton: {
+        padding: 8, 
+    },
+});
