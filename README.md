@@ -87,7 +87,7 @@ This collection stores information about restaurants that users can interact wit
 
 # Group Member Contribution
 
-## Yang He
+**Yang He**
 - Discover Page:
   - Implemented restaurant list page
 - Individual Restaurant Page:
@@ -102,7 +102,7 @@ This collection stores information about restaurants that users can interact wit
   - Implemented view of my review page
   - Allow users to update and delete my review function
 
-## Jinjing Zhang
+**Jinjing Zhang**
 - Navigation:
   - Implemented the drawer navigation
   - Implemented the stack navigation
@@ -110,7 +110,7 @@ This collection stores information about restaurants that users can interact wit
   - Implemented the login and register screen using Firebase authentication with email and password
   - Added the forget password function in the login screen
 
-## Yue Zhang
+**Yue Zhang**
 - Navigator:
   - Implemented Bottom Navigator
   - Fixed error for Drawer Navigator
