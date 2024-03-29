@@ -69,23 +69,38 @@ This collection stores information about restaurants that users can interact wit
 
 ## Auth Stack Screens
 - Login, Sign up, and reset password.
+<img src="images/start.png" width="300">
+<img src="images/log_in.png" width="300">
+<img src="images/sign_up.png" width="300">
+<img src="images/forgot_password.png" width="300">
 
 ## Discover
 - Users can find our recommended restaurants here.
+<img src="images/discover_home.png" width="300">
 
 ## Find
 - Users can find restaurants based on their preference.
+<img src="images/find.png" width="300">
 
 ## WishList
 - Users can find the restaurants they bookmarked.
-<img src="images/add_to_wishlists.png" alt="Add to wishlist" width="300">
-
+<img src="images/wishlists.png" width="300">
+<img src="images/view_wishlists.png" width="300">
+<img src="images/add_to_wishlists.png" width="300">
+<img src="images/remove_from_wishlists.png" width="300">
 
 ## Profile
 - Users can update user name and avatar, and find their reviews. Also, users can quit the app from here.
+<img src="images/profile.png" width="300">
+<img src="images/change_avatar.png" width="300">
+<img src="images/change_name.png" width="300">
+
+## Review
+<img src="images/write_review.png" width="300">
 
 ## Drawer and Notification
 - Users can find pushed notifications here.
+<img src="images/drawer.png" width="300">
 
 # Group Member Contribution
 
