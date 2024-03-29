@@ -7,6 +7,7 @@ const CommonStyles = StyleSheet.create({
         width:'100%',
         justifyContent: 'center',
         marginTop: '2%',
+        borderRadius: 12,
     },
 
     directionRow: {
@@ -49,6 +50,11 @@ const CommonStyles = StyleSheet.create({
         paddingHorizontal: 10,
         textAlign: 'left',
       },
+    restauntName: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    },
 })
 
 export default CommonStyles;

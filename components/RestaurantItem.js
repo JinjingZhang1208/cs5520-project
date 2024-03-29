@@ -13,10 +13,10 @@ export default function RestaurantItem({item}) {
   return (
     <PressableButton onPress={() => {navigation.navigate('Restaurant', {item: item})}}>
       <Card>
-        <Text>{item.name}</Text>
+        <Text style={[CommonStyles.restauntName]}>{item.name}</Text>
         <Image 
           source={{uri: item.image_url}}
-          style={{width: 325, height: 100}} />
+          style={{width: 325, height: 150}} />
         <View style={[CommonStyles.directionRow, {justifyContent:'start'}]}>
           <Text>Ratings: {item.rating}   </Text>
           <Text>Reviews: {item.review_count}</Text>

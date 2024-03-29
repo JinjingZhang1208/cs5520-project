@@ -58,6 +58,8 @@ export default function App() {
     return (
       <Tab.Navigator 
         screenOptions={{
+          headerStyle: { backgroundColor: "tomato" },
+          headerTintColor: "white",
           tabBarActiveTintColor: "tomato", 
           tabBarInactiveTintColor: "gray" }}>
         <Tab.Screen 
@@ -104,7 +106,15 @@ export default function App() {
   // Function to return the App Tabs Screen with Drawer Navigation
   const DrawerWithTabs = () => {
     return (
-      <Drawer.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+      <Drawer.Navigator initialRouteName="Home" 
+        screenOptions={{ headerShown: false,
+          drawerStyle: {
+            backgroundColor: "white",
+            width: 240,
+          },
+          drawerActiveTintColor: "tomato",
+          drawerInactiveTintColor: "gray",
+        }} >
         <Drawer.Screen name="Home" component={AppTabsScreen} /> 
         <Drawer.Screen name="Notifications" component={Notification} />
       </Drawer.Navigator>

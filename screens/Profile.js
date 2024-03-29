@@ -146,7 +146,10 @@ export default function Profile({navigation, route}) {
       <Text style={styles.usernameText}>{username}</Text>
       <Button title="Change Username" onPress={() => setNameModalVisible(true)} />
 
-      <Text style={styles.emailText}>{auth.currentUser.email}</Text>
+      <PressableButton
+        onPress={() => {navigation.navigate('MyReviews')}}>
+        <Text style={styles.goToReviews}>Go to My Reviews 👉</Text>
+      </PressableButton>
 
       <PressableButton
         onPress={() => {
@@ -156,11 +159,6 @@ export default function Profile({navigation, route}) {
         customStyle={styles.buttonStyle}
       >
         <Ionicons name="log-out-outline" size={24} color="white" />
-      </PressableButton>
-
-      <PressableButton
-        onPress={() => {navigation.navigate('MyReviews')}}>
-        <Text>My Reviews</Text>
       </PressableButton>
     </View>
   );
@@ -230,4 +228,10 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center"
   },
+  goToReviews: {
+    fontSize: 20,
+    color: 'tomato',
+    fontWeight: 'bold',
+    marginTop: 10,
+  }
 });

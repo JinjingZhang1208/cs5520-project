@@ -4,7 +4,7 @@ import React from 'react'
 const Find = () => {
   return (
     <View>
-      <Text>Find</Text>
+      <Text>Search restaurants here!</Text>
     </View>
   )
 }
