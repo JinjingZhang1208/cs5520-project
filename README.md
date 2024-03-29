@@ -3,9 +3,9 @@
 - Jinjing Zhang
 - Yue Zhang
 
-## Data Models and 4 Collections
+# Data Models and 4 Collections
 
-### Collection 1: Users Collection
+## Collection 1: Users Collection
 
 This collection stores information about users who interact with the app.
 
@@ -20,7 +20,7 @@ This collection stores information about users who interact with the app.
 - Update: Allows updating user information, such as username, email, or profile details.
 - Delete: Permits the removal of a user account from the system.
 
-### Collection 2: Reviews Collection (Subcollection of Users)
+## Collection 2: Reviews Collection (Subcollection of Users)
 
 This collection stores user reviews for various restaurants.
 
@@ -36,7 +36,7 @@ This collection stores user reviews for various restaurants.
 - Update: Allows users to update their existing reviews.
 - Delete: Permits users to remove their own reviews.
 
-### Collection 3: Wishlists Collection (Subcollection of Users)
+## Collection 3: Wishlists Collection (Subcollection of Users)
 
 This subcollection stores the list of restaurants that users have added to their wishlist.
 
@@ -50,7 +50,7 @@ This subcollection stores the list of restaurants that users have added to their
 - Read: Enables fetching wishlist information based on wishlist ID or user ID.
 - Delete: Permits users to delete their wishlist.
 
-### Collection 4: Restaurants Collection
+## Collection 4: Restaurants Collection
 
 This collection stores information about restaurants that users can interact with.
 
@@ -65,29 +65,29 @@ This collection stores information about restaurants that users can interact wit
 - Create: Allows adding a new restaurant to the list.
 - Read: Enables fetching restaurant information based on restaurant ID or other identifiers.
 
-## Screens
+# Screens
 
-### Auth Stack Screens
+## Auth Stack Screens
 - Login, Sign up, and reset password.
 
-### Discover
+## Discover
 - Users can find our recommended restaurants here.
 
-### Find
+## Find
 - Users can find restaurants based on their preference.
 
-### WishList
+## WishList
 - Users can find the restaurants they bookmarked.
 
-### Profile
+## Profile
 - Users can update user name and avatar, and find their reviews. Also, users can quit the app from here.
 
-### Drawer and Notification
+## Drawer and Notification
 - Users can find pushed notifications here.
 
-## Group Member Contribution
+# Group Member Contribution
 
-### He Yang
+## Yang He
 - Discover Page:
   - Implemented restaurant list page
 - Individual Restaurant Page:
@@ -102,7 +102,7 @@ This collection stores information about restaurants that users can interact wit
   - Implemented view of my review page
   - Allow users to update and delete my review function
 
-### Jinjing Zhang
+## Jinjing Zhang
 - Navigation:
   - Implemented the drawer navigation
   - Implemented the stack navigation
@@ -110,7 +110,7 @@ This collection stores information about restaurants that users can interact wit
   - Implemented the login and register screen using Firebase authentication with email and password
   - Added the forget password function in the login screen
 
-### Yue Zhang
+## Yue Zhang
 - Navigator:
   - Implemented Bottom Navigator
   - Fixed error for Drawer Navigator
