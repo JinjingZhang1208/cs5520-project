@@ -70,39 +70,51 @@ This collection stores information about restaurants that users can interact wit
 ## Auth Stack Screens
 - Login, Sign up, and reset password.
 <div style="display:flex; flex-direction:row;">
-<img src="images/start.png" width="300">
-<img src="images/log_in.png" width="300">
-<img src="images/sign_up.png" width="300">
-<img src="images/forgot_password.png" width="300">
+  <img src="images/start.png" width="300">
+  <img src="images/log_in.png" width="300">
+  <img src="images/sign_up.png" width="300">
+  <img src="images/forgot_password.png" width="300">
 </div>
 
 ## Discover
 - Users can find our recommended restaurants here.
-<img src="images/discover_home.png" width="300">
+<div style="display:flex; flex-direction:row;">
+  <img src="images/discover_home.png" width="300">
+</div>
 
 ## Find
 - Users can find restaurants based on their preference.
-<img src="images/find.png" width="300">
+<div style="display:flex; flex-direction:row;">
+  <img src="images/find.png" width="300">
+</div>
 
 ## WishList
 - Users can find the restaurants they bookmarked.
-<img src="images/wishlists.png" width="300">
-<img src="images/view_wishlists.png" width="300">
-<img src="images/add_to_wishlists.png" width="300">
-<img src="images/remove_from_wishlists.png" width="300">
+<div style="display:flex; flex-direction:row;">
+  <img src="images/wishlists.png" width="300">
+  <img src="images/view_wishlists.png" width="300">
+  <img src="images/add_to_wishlists.png" width="300">
+  <img src="images/remove_from_wishlists.png" width="300">
+</div>
 
 ## Profile
 - Users can update user name and avatar, and find their reviews. Also, users can quit the app from here.
-<img src="images/profile.png" width="300">
-<img src="images/change_avatar.png" width="300">
-<img src="images/change_name.png" width="300">
+<div style="display:flex; flex-direction:row;">
+  <img src="images/profile.png" width="300">
+  <img src="images/change_avatar.png" width="300">
+  <img src="images/change_name.png" width="300">
+</div>
 
 ## Review
+<div style="display:flex; flex-direction:row;">
 <img src="images/write_review.png" width="300">
+</div>
 
 ## Drawer and Notification
 - Users can find pushed notifications here.
-<img src="images/drawer.png" width="300">
+<div style="display:flex; flex-direction:row;">
+  <img src="images/drawer.png" width="300">
+</div>
 
 # Group Member Contribution
 
