@@ -78,6 +78,7 @@ This collection stores information about restaurants that users can interact wit
 
 ## WishList
 - Users can find the restaurants they bookmarked.
+![Add to Wishlists](images/add_to_wishlists.png)
 
 ## Profile
 - Users can update user name and avatar, and find their reviews. Also, users can quit the app from here.
