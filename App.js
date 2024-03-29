@@ -21,6 +21,7 @@ import EditReview from "./screens/EditReview";
 import MyReviews from "./screens/MyReviews";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Notification from "./screens/Notification";
+import 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -135,6 +136,7 @@ export default function App() {
     <NavigationContainer>
         {userLoggedIn ? (
           <Stack.Navigator>
+            {/* <Stack.Screen name="Home" component={AppTabsScreen} options={{ headerShown: false }} /> */}
             <Stack.Screen 
               name="DrawerHome" 
               component={DrawerWithTabs} 
