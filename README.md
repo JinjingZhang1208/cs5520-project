@@ -69,10 +69,12 @@ This collection stores information about restaurants that users can interact wit
 
 ## Auth Stack Screens
 - Login, Sign up, and reset password.
+<div style="display:flex; flex-direction:row;">
 <img src="images/start.png" width="300">
 <img src="images/log_in.png" width="300">
 <img src="images/sign_up.png" width="300">
 <img src="images/forgot_password.png" width="300">
+</div>
 
 ## Discover
 - Users can find our recommended restaurants here.
