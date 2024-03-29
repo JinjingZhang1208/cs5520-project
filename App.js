@@ -138,7 +138,7 @@ export default function App() {
             <Stack.Screen 
               name="DrawerHome" 
               component={DrawerWithTabs} 
-              options= {({ route }) => ({ title: "Back"})} />
+              options={{ headerShown: false, title: "Back" }} />
             <Stack.Screen 
               name="Restaurant" 
               component={RestaurantDetail}
