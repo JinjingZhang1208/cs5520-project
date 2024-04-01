@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import PressableButton from '../components/PressableButton';
-import Delicious from '../images/delicious.png';
+import Delicious from '../assets/delicious.png';
 
 const Start = ({ navigation }) => {
   return (
@@ -10,7 +10,7 @@ const Start = ({ navigation }) => {
       <Text style={styles.title}>Chinese Restaurants Finder</Text>
       <View style={styles.buttonsContainer}>
         <PressableButton onPress={() => navigation.navigate('Login')} customStyle={styles.button}>
-          <Text style={styles.buttonText}>Log In</Text>
+          <Text style={styles.buttonText}>Login</Text>
         </PressableButton>
         <PressableButton onPress={() => navigation.navigate('Signup')} customStyle={styles.button}>
           <Text style={styles.buttonText}>Sign Up</Text>
