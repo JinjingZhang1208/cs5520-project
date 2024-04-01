@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../firebase-files/firebaseSetup";
 
@@ -26,8 +26,14 @@ export default function ForgotPassword({ navigation }) {
         keyboardType="email-address"
         autoCapitalize="none"
       />
-      <Button title="Reset Password" onPress={handleResetPassword} />
-      <Button title="Back to Login" onPress={() => navigation.goBack()} />
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.button} onPress={handleResetPassword}>
+          <Text style={styles.buttonText}>Reset Password</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
+          <Text style={styles.buttonText}>Back to Login</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -38,6 +44,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   title: {
     fontSize: 24,
@@ -52,5 +62,17 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 20,
+  },
+  button: {
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    borderRadius: 8,
+    backgroundColor: '#453F78',
+    marginLeft: 30,
+    marginRight: 35,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });
