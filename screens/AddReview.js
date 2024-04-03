@@ -4,6 +4,7 @@ import CommonStyles from '../styles/CommonStyles'
 import PressableButton from '../components/PressableButton'
 import { updateDB, writeToDB } from '../firebase-files/databaseHelper';
 import { auth } from '../firebase-files/firebaseSetup';
+import LocationManager from '../components/LocationManager';
 
 export default function Review({navigation, route}) {
     const [reviewContent, setReviewContent] = useState('');
@@ -49,6 +50,7 @@ export default function Review({navigation, route}) {
                     onChangeText={setReviewContent}/>
                 {mode == 'edit'? <Text>{route.params.review.restaurantName}</Text> :
                     <Text>{route.params.item.name}</Text>}
+                <LocationManager />
                 <PressableButton 
                     onPress={mode == 'edit'? editHandler:submitHandler}>
                     <Text>Submit</Text>
