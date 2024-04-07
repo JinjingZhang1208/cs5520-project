@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase-files/firebaseSetup";
 import ForgetPassword from "./ForgetPassword";
@@ -52,9 +52,17 @@ export default function Login({ navigation }) {
           setPassword(changedText);
         }}
       />
-      <Button title="Login" onPress={loginHandler} />
-      <Button title="Forget the password?" onPress={forgetPasswordHandler} />
-      <Button title="New User? Create An Account" onPress={signupHandler} />
+      <View style={styles.buttonRow}>
+        <TouchableOpacity style={[styles.button]} onPress={loginHandler}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={signupHandler}>
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
+      </View>
+      <TouchableOpacity style={styles.forgetButton} onPress={forgetPasswordHandler}>
+        <Text style={styles.forgetButtonText}>Forget Password?</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -79,5 +87,34 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
     paddingHorizontal: 10,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 10,
+    marginRight: 40,
+    marginLeft: 40,
+  },
+  button: {
+    backgroundColor: '#795458',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    backgroundColor: '#453F78',
+    marginLeft: 40,
+    marginRight: 35,
+    marginTop: 20,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  forgetButton: {
+    marginTop: 10,
+  },
+  forgetButtonText: {
+    color: '#795458',
+    fontSize: 16,
+    marginTop: 20,
   },
 });

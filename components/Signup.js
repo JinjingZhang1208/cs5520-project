@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase-files/firebaseSetup"; // Import your Firebase auth instance
+import { auth } from "../firebase-files/firebaseSetup"; 
 
 export default function Signup({ navigation }) {
   const [email, setEmail] = useState("");
@@ -78,8 +78,14 @@ export default function Signup({ navigation }) {
         value={confirmPassword}
         onChangeText={(changedText) => setConfirmPassword(changedText)}
       />
-      <Button title="Register" onPress={signupHandler} />
-      <Button title="Already Registered? Login" onPress={loginHandler} />
+      <View style={styles.buttonRow}>
+        <TouchableOpacity style={styles.button} onPress={signupHandler}>
+          <Text style={styles.buttonText}>Register</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={loginHandler}>
+          <Text style={styles.buttonText}>Already Registered?</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -103,5 +109,26 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
     paddingHorizontal: 10,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 10,
+    marginRight: 40,
+    marginLeft: 40,
+  },
+  button: {
+    backgroundColor: '#795458',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    backgroundColor: '#453F78',
+    marginLeft: 35,
+    marginRight: 10,
+    marginTop: 20,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });
