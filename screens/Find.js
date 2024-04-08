@@ -26,13 +26,14 @@ const Find = () => {
       <View style={styles.horizontal}>
         <Text style={styles.text}>Sort by Rating </Text>
         <TextInput
-          // style={styles.TextInput}
+          style={styles.textInputforPicker}
           placeholder='Rating'
           onChangeText={setSearchRating}
           value={searchRating}
           onFocus={() => setShowRatingPicker(true)}
           onBlur={() => setShowRatingPicker(false)}
         />
+        <Text style={styles.text}> Stars</Text>
         {showRatingPicker && (
           <Picker
             selectedValue={searchRating}
@@ -54,13 +55,14 @@ const Find = () => {
       <View style={styles.horizontal}>
         <Text style={styles.text}>Sort by Distance </Text>
         <TextInput
-          // style={styles.TextInput}
+          style={styles.textInputforPicker}
           placeholder='Distance in km'
           onChangeText={setSearchDistance}
           value={searchDistance}
           onFocus={() => setShowDistancePicker(true)}
           onBlur={() => setShowDistancePicker(false)}
         />
+        <Text style={styles.text}> km</Text>
         {showDistancePicker && (
           <Picker
             selectedValue={searchDistance}
@@ -110,11 +112,17 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginRight: 30,
     marginBottom: 10,
+    fontSize: 18,
+    fontWeight: 'bold',
     height: 60,
     padding: 15,
-    borderRadius: 3,
+    borderRadius: 5,
     borderWidth: 2,
     borderColor: 'tomato',
+  },
+  textInputforPicker: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   text: {
     fontSize: 15,
@@ -129,7 +137,7 @@ const styles = StyleSheet.create({
   },
   pickerStyle: {
     height: 20, 
-    width: '50%',
+    width: '60%',
     alignSelf: 'center',
   },
   buttonContainer: {
