@@ -176,6 +176,7 @@ const styles = StyleSheet.create({
     width: '70%',
     paddingVertical: 10,
     paddingHorizontal: 20,
+    backgroundColor: 'tomato',
     color: 'white',
     fontSize: 20,
     borderRadius: 20,

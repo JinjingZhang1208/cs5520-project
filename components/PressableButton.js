@@ -29,10 +29,10 @@ export default function PressableButton({
 
 const styles = StyleSheet.create({
   defaultStyle: {
-    borderRadius: 10,
+    borderRadius: 5,
     justifyContent: "center", 
     alignItems: "center", 
-    backgroundColor: "tomato",
+    padding: 2,
   },
   buttonText: {
     color: "white",

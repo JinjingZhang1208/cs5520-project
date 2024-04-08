@@ -88,7 +88,9 @@ export default function RestaurantDetail({ navigation, route }) {
                     <Text>Ratings: {route.params.item.rating}   </Text>
                     <Text>Reviews: {route.params.item.review_count}</Text>
                 </View>
-                <PressableButton onPress={() => {navigation.navigate('Add My Review', {item: route.params.item})}}>
+                <PressableButton 
+                    customStyle = {{backgroundColor: 'tomato', padding: 7, borderRadius: 10, marginTop: 5, width: 200, alignSelf: 'center'}}
+                    onPress={() => {navigation.navigate('Add My Review', {item: route.params.item})}}>
                 <Text>Add my Review</Text>
                 </PressableButton>
             </Card>
