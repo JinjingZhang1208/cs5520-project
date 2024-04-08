@@ -1,9 +1,9 @@
-// save apiKey later to .env
+import { YELP_API_KEY } from '@env';
 
 // New function to fetch restaurant data and prepare it
 export const fetchAndPrepareRestaurants = async (location = 'Vancouver', term = 'restaurants', radius = 5000, minRating = 0) => {
   try {
-    const apiKey = 'zFKOmWXnptRNIBcfosQ4-muwe0jNSauD4t8ECqs9V6Mmg_5bife_xgPlxIDWh9ChaJKPcQcCQ0I9KnSzSkWSL2YvI0ceIQTClb07UMfc4fdUpFb8MJGF_Qg6SPYEZnYx';
+    const apiKey = YELP_API_KEY;
     const yelpUrl = 'https://api.yelp.com/v3/businesses/search';
     const parameters = new URLSearchParams({
       term: term,
