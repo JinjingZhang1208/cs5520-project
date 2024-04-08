@@ -22,6 +22,7 @@ import MyReviews from "./screens/MyReviews";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Notification from "./screens/Notification";
 import 'react-native-gesture-handler';
+import SearchResults from "./screens/SearchResults";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -145,6 +146,7 @@ export default function App() {
               name="Restaurant" 
               component={RestaurantDetail}
               options={({ route }) => ({ title: route.params.item.name })} />
+            <Stack.Screen name="Search Results" component={SearchResults} />
             <Stack.Screen name="Add My Review" component={AddReview} />
             <Stack.Screen name="Edit My Review" component={EditReview} />
             <Stack.Screen name="MyReviews" component={MyReviews} />

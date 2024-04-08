@@ -3,30 +3,34 @@ import React, { useState } from 'react';
 import PressableButton from '../components/PressableButton';
 import { Picker } from '@react-native-picker/picker';
 import { fetchAndPrepareRestaurants } from '../services/YelpService';
+import { useNavigation } from '@react-navigation/native';
 
 const Find = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [searchDistance, setSearchDistance] = useState("5");
+  const [searchDistance, setSearchDistance] = useState("3");
   const [searchRating, setSearchRating] = useState("4");
   const [showDistancePicker, setShowDistancePicker] = useState(false);
   const [showRatingPicker, setShowRatingPicker] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+
+  const navigation = useNavigation();
 
   const search = async () => {
     const radius = searchDistance * 1000; // Convert km to meters
 
     try {
       const restaurants = await fetchAndPrepareRestaurants(
-        'Burnaby, British Columbia, Canada', // late change the location
+        'Burnaby, British Columbia, Canada', // later change the location
         searchKeyword,
         radius,
         searchRating
       );
 
-      setSearchResults(restaurants);
       console.log('Search results:', restaurants);
+      setSearchResults(restaurants);
+  
+      navigation.navigate('Search Results', { results: restaurants }); // Navigate and pass results
 
-      
     } catch (error) {
       console.error('Error fetching or preparing restaurant data:', error);
     }
