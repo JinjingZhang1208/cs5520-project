@@ -50,6 +50,7 @@ export default function Review({navigation, route}) {
                 {mode == 'edit'? <Text>{route.params.review.restaurantName}</Text> :
                     <Text>{route.params.item.name}</Text>}
                 <PressableButton 
+                    customStyle={styles.pressableButtonStyle}
                     onPress={mode == 'edit'? editHandler:submitHandler}>
                     <Text>Submit</Text>
                 </PressableButton>
@@ -58,4 +59,13 @@ export default function Review({navigation, route}) {
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    pressableButtonStyle: {
+        backgroundColor: 'tomato',
+        padding: 7,
+        borderRadius: 10,
+        marginTop: 5,
+        width: 200,
+        alignSelf: 'center'
+    }
+})
