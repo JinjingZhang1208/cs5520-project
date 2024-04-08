@@ -35,9 +35,12 @@ export default function ReviewItem({review}) {
 
                 <Text style={styles.text}>{review.review}</Text>
             </View>
-            <PressableButton onPress={deleteHandler}>
-                <AntDesign name="delete" size={24} color="black" />
-            </PressableButton>
+
+            {userId == review.owner && ( // only show delete button if the review belongs to the current user
+                <PressableButton onPress={deleteHandler}>
+                    <AntDesign name="delete" size={24} color="black" />
+                </PressableButton>
+            )}
         </Pressable>
     )
 }
