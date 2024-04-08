@@ -89,7 +89,7 @@ export default function RestaurantDetail({ navigation, route }) {
                     <Text>Reviews: {route.params.item.review_count}</Text>
                 </View>
                 <PressableButton 
-                    customStyle = {{backgroundColor: 'tomato', padding: 7, borderRadius: 10, marginTop: 5, width: 200, alignSelf: 'center'}}
+                    customStyle = {styles.pressableButtonStyle}
                     onPress={() => {navigation.navigate('Add My Review', {item: route.params.item})}}>
                 <Text>Add my Review</Text>
                 </PressableButton>
@@ -98,4 +98,14 @@ export default function RestaurantDetail({ navigation, route }) {
     )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    pressableButtonStyle: {
+        backgroundColor: 'tomato', 
+        padding: 7, 
+        borderRadius: 10, 
+        marginTop: 5, 
+        width: 200, 
+        alignSelf: 'center'
+        
+    }
+})

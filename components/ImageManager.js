@@ -84,7 +84,7 @@ const ImageManager = ({ receiveImageURI, updateAvatar }) => {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <PressableButton onPress={takeImageHandler} customStyle={styles.button}>
         Take Image
       </PressableButton>
@@ -100,12 +100,17 @@ export default ImageManager
 const styles = StyleSheet.create({
   container: {
       marginVertical: 10,
+      flexDirection: 'row'
   },
   image: {
       width: 100,
       height: 100
   },
   button: {
-    marginVertical: 10,
+    backgroundColor: 'tomato', 
+    padding: 7, 
+    borderRadius: 10, 
+    margin: 5, 
+    alignSelf: 'center'
   },
 })
