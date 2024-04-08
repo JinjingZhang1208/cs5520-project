@@ -79,19 +79,19 @@ export default function RestaurantDetail({ navigation, route }) {
     return (
         <View style={[{ marginTop: 10 }, CommonStyles.restaurantContainer]}>
             <Card>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                <Image
-                    source={{ uri: route.params.item.image_url }}
-                    style={{ width: 325, height: 150 }} />
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <Image
+                        source={{ uri: route.params.item.image_url }}
+                        style={{ width: 325, height: 150 }} />
                 </View>
                 <View style={[CommonStyles.directionRow, { justifyContent: 'center' }]}>
                     <Text>Ratings: {route.params.item.rating}   </Text>
                     <Text>Reviews: {route.params.item.review_count}</Text>
                 </View>
-                <PressableButton 
-                    customStyle = {styles.pressableButtonStyle}
-                    onPress={() => {navigation.navigate('Add My Review', {item: route.params.item})}}>
-                <Text>Add my Review</Text>
+                <PressableButton
+                    customStyle={styles.pressableButtonStyle}
+                    onPress={() => { navigation.navigate('Add My Review', { item: route.params.item }) }}>
+                    <Text>Add my Review</Text>
                 </PressableButton>
             </Card>
         </View>
@@ -100,12 +100,12 @@ export default function RestaurantDetail({ navigation, route }) {
 
 const styles = StyleSheet.create({
     pressableButtonStyle: {
-        backgroundColor: 'tomato', 
-        padding: 7, 
-        borderRadius: 10, 
-        marginTop: 5, 
-        width: 200, 
+        backgroundColor: 'tomato',
+        padding: 7,
+        borderRadius: 10,
+        marginTop: 5,
+        width: 200,
         alignSelf: 'center'
-        
+
     }
 })
