@@ -7,9 +7,14 @@ import { auth, database } from '../firebase-files/firebaseSetup';
 import { writeToDB, deleteFromDB } from '../firebase-files/databaseHelper';
 import { doc, getDoc } from "firebase/firestore";
 import Card from '../components/Card';
+import { fetchReviews } from '../services/YelpService';
+
 
 export default function RestaurantDetail({ navigation, route }) {
     const [bookmark, setBookmark] = useState(false);
+    const [reviews, setReviews] = useState([]);
+
+    restaurantId = route.params.item.bussiness_id;
 
     //check if the restaurant is in the wishlist
     useEffect(() => {
@@ -20,7 +25,6 @@ export default function RestaurantDetail({ navigation, route }) {
         const currentUser = auth.currentUser;
         if (currentUser) {
             const userId = currentUser.uid;
-            const restaurantId = route.params.item.id;
             const docRef = doc(database, 'users', userId, 'wishlists', restaurantId);
             const docSnap = await getDoc(docRef);
 
@@ -39,7 +43,6 @@ export default function RestaurantDetail({ navigation, route }) {
         const currentUser = auth.currentUser;
         if (currentUser) {
             const userId = currentUser.uid;
-            const restaurantId = route.params.item.id;
 
             try {
                 if (bookmark) {
