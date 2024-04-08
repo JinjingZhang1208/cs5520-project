@@ -23,7 +23,7 @@ export default function Review({navigation, route}) {
         if (currentUser) {
             const userId = currentUser.uid;
             let newReview = {review: reviewContent, restaurantId: route.params.item.id, restaurantName: route.params.item.name, owner: userId};
-            writeToDB(newReview, 'users', userId, 'reviews'); // write to user's reviews
+            // writeToDB(newReview, 'users', userId, 'reviews'); // write to user's reviews
             writeToDB(newReview, 'allReviews'); // write to all reviews
             navigation.goBack();
         }
