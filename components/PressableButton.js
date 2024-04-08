@@ -32,10 +32,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: "center", 
     alignItems: "center", 
+    backgroundColor: "tomato",
   },
   buttonText: {
-    color: "black",
-    fontSize: 16,
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
   },
   pressed: {
     opacity: 0.5,

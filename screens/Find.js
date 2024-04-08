@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
 import React, { useState } from 'react';
 import PressableButton from '../components/PressableButton';
 import { Picker } from '@react-native-picker/picker'; // Import Picker
@@ -77,6 +77,16 @@ const Find = () => {
           </Picker>
         )}
       </View>
+      
+      <View style={styles.buttonContainer}>
+        <PressableButton
+          onPress={() => console.log('Searching...')}
+          customStyle={styles.searchButton}
+        >
+          Search
+        </PressableButton>
+      </View>
+
 
     </View>
   )
@@ -118,8 +128,22 @@ const styles = StyleSheet.create({
     // textAlign: 'center',
   },
   pickerStyle: {
-    height: 20, // Adjusted for better visibility
+    height: 20, 
     width: '50%',
     alignSelf: 'center',
-  }
+  },
+  buttonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center', 
+    marginTop: 20,
+  },
+  searchButton: {
+    width: '70%',
+    paddingVertical: 10, 
+    paddingHorizontal: 20, 
+    color: 'white',
+    fontSize: 20,
+    borderRadius: 20,
+  },
+
 })
