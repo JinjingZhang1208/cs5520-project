@@ -87,7 +87,7 @@ export default function RestaurantDetail({ navigation, route }) {
             setReviews(reviews);
         }
         fetchReviewsData();
-    }, []);
+    }, [reviews]);
 
     console.log('reviews:', reviews);
 
