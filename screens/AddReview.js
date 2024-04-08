@@ -34,8 +34,14 @@ export default function Review({navigation, route}) {
         const currentUser = auth.currentUser;
         if (currentUser) {
             const userId = currentUser.uid;
-            let updatedReview = {review: reviewContent, restaurantId: route.params.review.restaurantId, restaurantName: route.params.review.restaurantName};
-            updateDB(updatedReview, 'users', userId, 'reviews', route.params.review.id);
+            let updatedReview = {
+                review: reviewContent, 
+                restaurantId: route.params.review.restaurantId, 
+                restaurantName: route.params.review.restaurantName,
+                owner: userId
+            };
+            // updateDB(updatedReview, 'users', userId, 'reviews', route.params.review.id);// update user's review
+            updateDB(updatedReview, 'allReviews', route.params.review.id); // update all reviews
             navigation.goBack();
         }
     }
