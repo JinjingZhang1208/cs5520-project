@@ -8,6 +8,7 @@ import { writeToDB, deleteFromDB, readAllReviewsFromDB } from '../firebase-files
 import { doc, getDoc } from "firebase/firestore";
 import Card from '../components/Card';
 import { fetchReviews } from '../services/YelpService';
+import ReviewList from '../components/ReviewList';
 
 
 export default function RestaurantDetail({ navigation, route }) {
@@ -109,6 +110,9 @@ export default function RestaurantDetail({ navigation, route }) {
                     <Text>Add my Review</Text>
                 </PressableButton>
             </Card>
+
+            <ReviewList allReviews={reviews} />
+
         </View>
     )
 }
