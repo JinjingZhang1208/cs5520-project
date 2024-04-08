@@ -4,7 +4,7 @@ import CommonStyles from '../styles/CommonStyles'
 import PressableButton from '../components/PressableButton'
 import { MaterialIcons } from '@expo/vector-icons';
 import { auth, database } from '../firebase-files/firebaseSetup';
-import { writeToDB, deleteFromDB } from '../firebase-files/databaseHelper';
+import { writeToDB, deleteFromDB, readAllReviewsFromDB } from '../firebase-files/databaseHelper';
 import { doc, getDoc } from "firebase/firestore";
 import Card from '../components/Card';
 import { fetchReviews } from '../services/YelpService';
@@ -78,6 +78,18 @@ export default function RestaurantDetail({ navigation, route }) {
             )
         });
     }, [bookmark]);
+
+    //fetch reviews for the restaurant use readAllReviewsFromDB
+    useEffect(() => {
+        async function fetchReviewsData() {
+            const reviews = await readAllReviewsFromDB(route.params.item.id);
+            setReviews(reviews);
+        }
+        fetchReviewsData();
+    }, []);
+
+    console.log('reviews:', reviews);
+
 
     return (
         <View style={[{ marginTop: 10 }, CommonStyles.restaurantContainer]}>
