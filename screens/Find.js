@@ -1,7 +1,8 @@
 import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
 import React, { useState } from 'react';
 import PressableButton from '../components/PressableButton';
-import { Picker } from '@react-native-picker/picker'; // Import Picker
+import { Picker } from '@react-native-picker/picker';
+import { fetchAndPrepareRestaurants } from '../services/YelpService';
 
 const Find = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -9,6 +10,28 @@ const Find = () => {
   const [searchRating, setSearchRating] = useState("4");
   const [showDistancePicker, setShowDistancePicker] = useState(false);
   const [showRatingPicker, setShowRatingPicker] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+
+  const search = async () => {
+    const radius = searchDistance * 1000; // Convert km to meters
+
+    try {
+      const restaurants = await fetchAndPrepareRestaurants(
+        'Burnaby, British Columbia, Canada', // late change the location
+        searchKeyword,
+        radius,
+        searchRating
+      );
+
+      setSearchResults(restaurants);
+      console.log('Search results:', restaurants);
+
+      
+    } catch (error) {
+      console.error('Error fetching or preparing restaurant data:', error);
+    }
+  }
+
 
 
   return (
@@ -79,10 +102,10 @@ const Find = () => {
           </Picker>
         )}
       </View>
-      
+
       <View style={styles.buttonContainer}>
         <PressableButton
-          onPress={() => console.log('Searching...')}
+          onPress={() => search()}
           customStyle={styles.searchButton}
         >
           Search
@@ -136,19 +159,19 @@ const styles = StyleSheet.create({
     // textAlign: 'center',
   },
   pickerStyle: {
-    height: 20, 
+    height: 20,
     width: '60%',
     alignSelf: 'center',
   },
   buttonContainer: {
     justifyContent: 'center',
-    alignItems: 'center', 
+    alignItems: 'center',
     marginTop: 20,
   },
   searchButton: {
     width: '70%',
-    paddingVertical: 10, 
-    paddingHorizontal: 20, 
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     color: 'white',
     fontSize: 20,
     borderRadius: 20,
