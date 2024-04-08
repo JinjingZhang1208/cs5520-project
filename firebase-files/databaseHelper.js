@@ -119,6 +119,9 @@ export const fetchAllRestaurantsFromDB = async () => {
 export async function writeToDB (data, collectionName, id, subCollection) {
     try {
         if (id) {
+            if (collectionName == 'allReviews'){
+                await addDoc(collection(database, collectionName), data);
+            }
             if (subCollection == 'reviews'){
                 await addDoc(collection(database, collectionName, id, subCollection), data);
             }
@@ -132,6 +135,24 @@ export async function writeToDB (data, collectionName, id, subCollection) {
         console.error(err);
     }
 }
+
+// read allReviews from DB by restaurantId
+export async function readAllReviewsFromDB (restaurantId) {
+    try {
+        const querySnapshot = await getDocs(collection(database, 'allReviews'));
+        const reviews = [];
+        querySnapshot.forEach((doc) => {
+            if (doc.data().restaurantId === restaurantId) {
+                reviews.push({ ...doc.data(), id: doc.id });
+            }
+        });
+        return reviews;
+    } catch (error) {
+        console.error("Error fetching reviews from DB:", error);
+        throw new Error('Failed to fetch reviews');
+    }
+}
+
 
 export async function deleteFromDB (collectionName, id, subCollection, subId) {
     try {
