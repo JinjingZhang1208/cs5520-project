@@ -84,7 +84,7 @@ export default function RestaurantDetail({ navigation, route }) {
     //fetch reviews for the restaurant use readAllReviewsFromDB
     useEffect(() => {
         async function fetchReviewsData() {
-            const reviews = await readAllReviewsFromDB(route.params.item.id);
+            const reviews = await readAllReviewsFromDB(route.params.item.bussiness_id);
             setReviews(reviews);
         }
         fetchReviewsData();
