@@ -2,7 +2,7 @@ import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import PressableButton from './PressableButton';
-import { AntDesign } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import { auth, database } from '../firebase-files/firebaseSetup';
 import { deleteFromDB } from '../firebase-files/databaseHelper';
 
@@ -34,15 +34,15 @@ export default function ReviewItem({ review }) {
     <Pressable
       style={({ pressed }) => [styles.textContainer, pressed && styles.pressed]}
       onPress={reviewPressHandler} andriod_ripple={{ color: '#e9e' }}>
+
       <View style={{ flexDirection: 'column' }}>
         <Text style={styles.boldText}>{review.restaurantName}</Text>
-
         <Text style={styles.text}>{review.review}</Text>
       </View>
 
       {userId == review.owner && ( // only show delete button if the review belongs to the current user
         <PressableButton onPress={deleteHandler}>
-          <AntDesign name="delete" size={24} color="black" />
+          <MaterialIcons name="delete" size={24} color="black" />
         </PressableButton>
       )}
     </Pressable>
