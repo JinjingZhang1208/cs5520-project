@@ -22,6 +22,7 @@ import MyReviews from "./screens/MyReviews";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Notification from "./screens/Notification";
 import 'react-native-gesture-handler';
+import Map from "./components/Map";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -117,7 +118,9 @@ export default function App() {
           drawerInactiveTintColor: "gray",
         }} >
         <Drawer.Screen name="Home" component={AppTabsScreen} /> 
+        <Drawer.Screen name="Map" component={Map} />
         <Drawer.Screen name="Notifications" component={Notification} />
+        <Drawer.Screen name="AddReview" component={AddReview} />  
       </Drawer.Navigator>
     );
   };

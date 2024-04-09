@@ -4,11 +4,12 @@ import CommonStyles from '../styles/CommonStyles'
 import PressableButton from '../components/PressableButton'
 import { updateDB, writeToDB } from '../firebase-files/databaseHelper';
 import { auth } from '../firebase-files/firebaseSetup';
+import LocationManager from '../components/LocationManager';
 
 export default function Review({navigation, route}) {
     const [reviewContent, setReviewContent] = useState('');
 
-    const {mode, review} = route.params || {};
+    const {mode, review, item} = route.params || {};
 
     // Set initial values for edit mode
     useEffect(() => {
@@ -22,7 +23,7 @@ export default function Review({navigation, route}) {
         const currentUser = auth.currentUser;
         if (currentUser) {
             const userId = currentUser.uid;
-            let newReview = {review: reviewContent, restaurantId: route.params.item.id, restaurantName: route.params.item.name};
+            let newReview = {review: reviewContent, restaurantId: item.id, restaurantName: item.name};
             writeToDB(newReview, 'users', userId, 'reviews');
             navigation.goBack();
         }
@@ -33,8 +34,8 @@ export default function Review({navigation, route}) {
         const currentUser = auth.currentUser;
         if (currentUser) {
             const userId = currentUser.uid;
-            let updatedReview = {review: reviewContent, restaurantId: route.params.review.restaurantId, restaurantName: route.params.review.restaurantName};
-            updateDB(updatedReview, 'users', userId, 'reviews', route.params.review.id);
+            let updatedReview = {review: reviewContent, restaurantId: review.restaurantId, restaurantName: review.restaurantName};
+            updateDB(updatedReview, 'users', userId, 'reviews', review.id);
             navigation.goBack();
         }
     }
@@ -47,15 +48,15 @@ export default function Review({navigation, route}) {
                     style={CommonStyles.reviewInput}
                     value={reviewContent}
                     onChangeText={setReviewContent}/>
-                {mode == 'edit'? <Text>{route.params.review.restaurantName}</Text> :
-                    <Text>{route.params.item.name}</Text>}
+                {mode == 'edit' && review ? <Text>{review.restaurantName}</Text> :
+                    (item && <Text>{item.name}</Text>)}
+                <LocationManager />
                 <PressableButton 
                     onPress={mode == 'edit'? editHandler:submitHandler}>
                     <Text>Submit</Text>
                 </PressableButton>
             </View>
         </View>
-  )
+    )
 }
 
-const styles = StyleSheet.create({})
