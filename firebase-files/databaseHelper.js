@@ -157,12 +157,8 @@ export async function readAllReviewsFromDB (restaurantId) {
 export async function readUserReviewsFromDB (ownerId) {
     try {
         const querySnapshot = await getDocs(collection(database, 'allReviews'));
-        console.log('querySnapshot:', querySnapshot);
-
         const reviews = [];
         querySnapshot.forEach((doc) => {
-            console.log(doc.data().owner);
-
             if (doc.data().owner === ownerId) {
                 reviews.push({ ...doc.data(), id: doc.id });
             }
