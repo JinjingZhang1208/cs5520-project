@@ -89,8 +89,6 @@ export default function RestaurantDetail({ navigation, route }) {
         fetchReviewsData();
     }, [reviews]);
 
-    console.log('reviews:', reviews);
-
 
     return (
         <View style={[{ marginTop: 10 }, CommonStyles.restaurantContainer]}>

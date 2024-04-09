@@ -29,9 +29,7 @@ export default function ReviewList(allReviews = {}) {
             return () => unsub();
         }
     }, [allReviews, userId]);
-
-    // console.log("allReviews: ", allReviews.allReviews);
-    console.log(useAllReviews);
+    
 
     return (
         <View>
