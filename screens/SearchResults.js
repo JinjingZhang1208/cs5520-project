@@ -24,6 +24,7 @@ const SearchResults = () => {
 
         for (const restaurant of resultRestaurant.data) {
           if (!existingRestaurantNames.has(restaurant.name.toLowerCase())) {
+            console.log('Saving restaurant:', restaurant.name);
             await writeToDB(restaurant, 'restaurants');
           }
           resultRestaurantSavedInDB.push(restaurant);

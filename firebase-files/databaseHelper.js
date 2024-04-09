@@ -126,7 +126,7 @@ export async function writeToDB (data, collectionName, id, subCollection) {
                 await addDoc(collection(database, collectionName, id, subCollection), data);
             }
             if (subCollection == 'wishlists'){
-                await setDoc(doc(database, collectionName, id, subCollection, data.restaurantId), data);
+                await setDoc(doc(database, collectionName, id, subCollection, data.bussiness_id), data);
             }
         } else {
             await addDoc(collection(database, collectionName), data);
@@ -142,7 +142,7 @@ export async function readAllReviewsFromDB (restaurantId) {
         const querySnapshot = await getDocs(collection(database, 'allReviews'));
         const reviews = [];
         querySnapshot.forEach((doc) => {
-            if (doc.data().restaurantId === restaurantId) {
+            if (doc.data().bussiness_id === restaurantId) {
                 reviews.push({ ...doc.data(), id: doc.id });
             }
         });

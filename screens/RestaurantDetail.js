@@ -15,6 +15,7 @@ export default function RestaurantDetail({ navigation, route }) {
     const [bookmark, setBookmark] = useState(false);
     const [reviews, setReviews] = useState([]);
 
+    // console.log('route.params:', route.params);
     restaurantId = route.params.item.bussiness_id;
 
     //check if the restaurant is in the wishlist
@@ -52,7 +53,7 @@ export default function RestaurantDetail({ navigation, route }) {
                     Alert.alert('Removed from Wishlist');
                 } else {
                     let res = {
-                        restaurantId: restaurantId,
+                        bussiness_id: restaurantId,
                         name: route.params.item.name,
                         rating: route.params.item.rating,
                         review_count: route.params.item.review_count,
@@ -88,6 +89,9 @@ export default function RestaurantDetail({ navigation, route }) {
         }
         fetchReviewsData();
     }, [reviews]);
+
+    console.log('restaurantId:', restaurantId);
+    console.log('reviews:', reviews);
 
 
     return (
