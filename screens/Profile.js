@@ -108,7 +108,11 @@ export default function Profile({navigation, route}) {
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Change Avatar</Text>
             <ImageManager receiveImageURI={receiveImageURI} updateAvatar={updateAvatarHandler} />
-            <Button title="Cancel" onPress={() => setImageModalVisible(!imageModalVisible)} />
+            <PressableButton
+              customStyle={{...styles.pressableButtonStyle, backgroundColor: 'gray'}}
+              onPress={() => setImageModalVisible(!imageModalVisible)}>
+              <Text>Cancel</Text>
+            </PressableButton>
           </View>
         </View>
       </Modal>
@@ -129,22 +133,40 @@ export default function Profile({navigation, route}) {
               value={newUsername}
               placeholder="Enter new username"
             />
-            <Button title="Update" onPress={() => {
-              updateUsernameHandler();
-              setNameModalVisible(!nameModalVisible);
-            }} />
-            <Button title="Cancel" onPress={() => setNameModalVisible(!nameModalVisible)} />
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: 200 }}>
+              <PressableButton
+                customStyle={styles.pressableButtonStyle}
+                onPress={() => {
+                  updateUsernameHandler();
+                  setNameModalVisible(!nameModalVisible);
+                }}>
+                <Text>Update</Text>
+              </PressableButton>
+              <PressableButton
+                customStyle={{...styles.pressableButtonStyle, backgroundColor: 'gray'}}
+                onPress={() => setNameModalVisible(!nameModalVisible)}>
+                <Text>Cancel</Text>
+              </PressableButton>
+            </View>
           </View>
         </View>
       </Modal>
 
       {/* Display the avatar image */}
       <Image source={{uri:avatarUri}} style={styles.image} />
-      <Button title="Change Avatar" onPress={() => setImageModalVisible(true)} />
+      <PressableButton
+        customStyle={styles.pressableButtonStyle}
+        onPress={() => setImageModalVisible(true)}>
+        <Text style ={styles.buttonText}>Change Avatar</Text>
+      </PressableButton>
 
       {/* Display the username and other profile info */}
       <Text style={styles.usernameText}>{username}</Text>
-      <Button title="Change Username" onPress={() => setNameModalVisible(true)} />
+      <PressableButton
+        customStyle={styles.pressableButtonStyle}
+        onPress={() => setNameModalVisible(true)}>
+        <Text style ={styles.buttonText}>Change Username</Text>
+      </PressableButton>
 
       <PressableButton
         onPress={() => {navigation.navigate('MyReviews')}}>
@@ -197,19 +219,22 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginBottom: 20,
   },
   usernameText: {
     fontSize: 20,
     color: '#333',
     fontWeight: 'bold',
-    marginTop: 10,
+    marginTop: 30,
   },
-  emailText: {
+  buttonText: {
     fontSize: 16,
-    color: '#555',
-    marginTop: 5,
   },
+  pressableButtonStyle: {
+    backgroundColor: 'tomato', 
+    padding: 7, 
+    borderRadius: 10, 
+    alignSelf: 'center'
+},
   buttonStyle: {
     marginTop: 20,
     padding: 10,
@@ -225,7 +250,8 @@ const styles = StyleSheet.create({
     width: 200,
   },
   modalText: {
-    marginBottom: 15,
+    marginBottom: 10,
+    fontWeight: 'bold',
     textAlign: "center"
   },
   goToReviews: {

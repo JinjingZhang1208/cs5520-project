@@ -4,12 +4,19 @@ import CommonStyles from '../styles/CommonStyles'
 import PressableButton from '../components/PressableButton'
 import { MaterialIcons } from '@expo/vector-icons';
 import { auth, database } from '../firebase-files/firebaseSetup';
-import { writeToDB, deleteFromDB } from '../firebase-files/databaseHelper';
+import { writeToDB, deleteFromDB, readAllReviewsFromDB } from '../firebase-files/databaseHelper';
 import { doc, getDoc } from "firebase/firestore";
 import Card from '../components/Card';
+import { fetchReviews } from '../services/YelpService';
+import ReviewList from '../components/ReviewList';
+
 
 export default function RestaurantDetail({ navigation, route }) {
     const [bookmark, setBookmark] = useState(false);
+    const [reviews, setReviews] = useState([]);
+
+    // console.log('route.params:', route.params);
+    restaurantId = route.params.item.bussiness_id;
 
     //check if the restaurant is in the wishlist
     useEffect(() => {
@@ -20,7 +27,6 @@ export default function RestaurantDetail({ navigation, route }) {
         const currentUser = auth.currentUser;
         if (currentUser) {
             const userId = currentUser.uid;
-            const restaurantId = route.params.item.id;
             const docRef = doc(database, 'users', userId, 'wishlists', restaurantId);
             const docSnap = await getDoc(docRef);
 
@@ -39,7 +45,6 @@ export default function RestaurantDetail({ navigation, route }) {
         const currentUser = auth.currentUser;
         if (currentUser) {
             const userId = currentUser.uid;
-            const restaurantId = route.params.item.id;
 
             try {
                 if (bookmark) {
@@ -48,7 +53,7 @@ export default function RestaurantDetail({ navigation, route }) {
                     Alert.alert('Removed from Wishlist');
                 } else {
                     let res = {
-                        restaurantId: restaurantId,
+                        bussiness_id: restaurantId,
                         name: route.params.item.name,
                         rating: route.params.item.rating,
                         review_count: route.params.item.review_count,
@@ -76,24 +81,52 @@ export default function RestaurantDetail({ navigation, route }) {
         });
     }, [bookmark]);
 
+    //fetch reviews for the restaurant use readAllReviewsFromDB
+    useEffect(() => {
+        async function fetchReviewsData() {
+            const reviews = await readAllReviewsFromDB(route.params.item.bussiness_id);
+            setReviews(reviews);
+        }
+        fetchReviewsData();
+    }, [reviews]);
+
+    console.log('restaurantId:', restaurantId);
+    console.log('reviews:', reviews);
+
+
     return (
         <View style={[{ marginTop: 10 }, CommonStyles.restaurantContainer]}>
             <Card>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                <Image
-                    source={{ uri: route.params.item.image_url }}
-                    style={{ width: 325, height: 150 }} />
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <Image
+                        source={{ uri: route.params.item.image_url }}
+                        style={{ width: 325, height: 150 }} />
                 </View>
                 <View style={[CommonStyles.directionRow, { justifyContent: 'center' }]}>
                     <Text>Ratings: {route.params.item.rating}   </Text>
                     <Text>Reviews: {route.params.item.review_count}</Text>
                 </View>
-                <PressableButton onPress={() => {navigation.navigate('Add My Review', {item: route.params.item})}}>
-                <Text>Add my Review</Text>
+                <PressableButton
+                    customStyle={styles.pressableButtonStyle}
+                    onPress={() => { navigation.navigate('Add My Review', { item: route.params.item }) }}>
+                    <Text>Add my Review</Text>
                 </PressableButton>
             </Card>
+
+            <ReviewList allReviews={reviews} />
+
         </View>
     )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    pressableButtonStyle: {
+        backgroundColor: 'tomato',
+        padding: 7,
+        borderRadius: 10,
+        marginTop: 5,
+        width: 200,
+        alignSelf: 'center'
+
+    }
+})

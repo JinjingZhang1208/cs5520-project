@@ -29,13 +29,15 @@ export default function PressableButton({
 
 const styles = StyleSheet.create({
   defaultStyle: {
-    borderRadius: 10,
+    borderRadius: 5,
     justifyContent: "center", 
     alignItems: "center", 
+    padding: 2,
   },
   buttonText: {
-    color: "black",
+    color: "white",
     fontSize: 16,
+    fontWeight: "bold",
   },
   pressed: {
     opacity: 0.5,

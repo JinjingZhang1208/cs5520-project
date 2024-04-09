@@ -119,11 +119,14 @@ export const fetchAllRestaurantsFromDB = async () => {
 export async function writeToDB (data, collectionName, id, subCollection) {
     try {
         if (id) {
+            if (collectionName == 'allReviews'){
+                await addDoc(collection(database, collectionName), data);
+            }
             if (subCollection == 'reviews'){
                 await addDoc(collection(database, collectionName, id, subCollection), data);
             }
             if (subCollection == 'wishlists'){
-                await setDoc(doc(database, collectionName, id, subCollection, data.restaurantId), data);
+                await setDoc(doc(database, collectionName, id, subCollection, data.bussiness_id), data);
             }
         } else {
             await addDoc(collection(database, collectionName), data);
@@ -132,6 +135,41 @@ export async function writeToDB (data, collectionName, id, subCollection) {
         console.error(err);
     }
 }
+
+// read allReviews from DB by restaurantId
+export async function readAllReviewsFromDB (restaurantId) {
+    try {
+        const querySnapshot = await getDocs(collection(database, 'allReviews'));
+        const reviews = [];
+        querySnapshot.forEach((doc) => {
+            if (doc.data().bussiness_id === restaurantId) {
+                reviews.push({ ...doc.data(), id: doc.id });
+            }
+        });
+        return reviews;
+    } catch (error) {
+        console.error("Error fetching reviews from DB:", error);
+        throw new Error('Failed to fetch reviews');
+    }
+}
+
+// read reviews from allReviews by owner ID
+export async function readUserReviewsFromDB (ownerId) {
+    try {
+        const querySnapshot = await getDocs(collection(database, 'allReviews'));
+        const reviews = [];
+        querySnapshot.forEach((doc) => {
+            if (doc.data().owner === ownerId) {
+                reviews.push({ ...doc.data(), id: doc.id });
+            }
+        });
+        return reviews;
+    } catch (error) {
+        console.error("Error fetching user reviews from DB:", error);
+        throw new Error('Failed to fetch user reviews');
+    }
+}
+
 
 export async function deleteFromDB (collectionName, id, subCollection, subId) {
     try {
