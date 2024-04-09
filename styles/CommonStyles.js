@@ -3,11 +3,10 @@ import { StyleSheet } from 'react-native'
 const CommonStyles = StyleSheet.create({
     card: {
         backgroundColor:'white',
-        padding:10,
+        padding:15,
         width:'100%',
         justifyContent: 'center',
-        marginTop: '2%',
-        borderRadius: 12,
+        borderRadius: 15,
     },
 
     directionRow: {
