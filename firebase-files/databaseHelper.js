@@ -153,6 +153,27 @@ export async function readAllReviewsFromDB (restaurantId) {
     }
 }
 
+// read reviews from allReviews by owner ID
+export async function readUserReviewsFromDB (ownerId) {
+    try {
+        const querySnapshot = await getDocs(collection(database, 'allReviews'));
+        console.log('querySnapshot:', querySnapshot);
+
+        const reviews = [];
+        querySnapshot.forEach((doc) => {
+            console.log(doc.data().owner);
+
+            if (doc.data().owner === ownerId) {
+                reviews.push({ ...doc.data(), id: doc.id });
+            }
+        });
+        return reviews;
+    } catch (error) {
+        console.error("Error fetching user reviews from DB:", error);
+        throw new Error('Failed to fetch user reviews');
+    }
+}
+
 
 export async function deleteFromDB (collectionName, id, subCollection, subId) {
     try {
