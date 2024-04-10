@@ -10,8 +10,8 @@ export default function Review({navigation, route}) {
     const [reviewContent, setReviewContent] = useState('');
     const {mode, review} = route.params || {};
     const [location, setLocation] = useState({latitude: 37, longitude: -122}); // later fetch from user's location
-    const [locationName, setLocationName] = useState('here');
-
+    const [locationName, setLocationName] = useState(null);
+        
     const updateLocationName = async () => {
         if (route.params.selectedLocation) {
             setLocation(route.params.selectedLocation);
@@ -46,9 +46,10 @@ export default function Review({navigation, route}) {
             const userId = currentUser.uid;
             let newReview = {
                 review: reviewContent, 
-                bussiness_id: route.params.item.bussiness_id,
-                restaurantName: route.params.item.name, 
-                owner: userId};
+                bussiness_id: route.params.review.bussiness_id,
+                restaurantName: route.params.review.name, 
+                owner: userId
+            };
             // writeToDB(newReview, 'users', userId, 'reviews'); // write to user's reviews
             writeToDB(newReview, 'allReviews'); // write to all reviews
             navigation.goBack();
@@ -84,7 +85,7 @@ export default function Review({navigation, route}) {
                     onChangeText={setReviewContent}/>
                 {mode == 'edit'? <Text>{route.params.review.restaurantName}</Text> :
                     <Text>{route.params.review.restaurantName}</Text>}
-                <Text>📍{locationName}</Text>
+                {locationName && <Text>📍{locationName}</Text>}
 
                 <PressableButton  
                     customStyle={styles.locationButtonStyle}
