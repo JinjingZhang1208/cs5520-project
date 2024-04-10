@@ -3,13 +3,14 @@ import { StyleSheet, View, Button } from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation } from "@react-navigation/native";
 
-export default function Map({ route }) {
-    const navigation = useNavigation(); // Correct way to use useNavigation hook
+export default function Map({ navigation, route }) {
     const [selectedLocation, setSelectedLocation] = useState(null);
+
+    console.log("Route in Map:", route);
 
     function confirmHandler() {
         //navigate to AddReview and pass selectedlocation as parameter
-        navigation.navigate('AddReview', { selectedLocation }); // Use navigation from useNavigation hook
+        navigation.navigate('AddReview', { selectedLocation, review: route.params.review});
     }
 
     return (

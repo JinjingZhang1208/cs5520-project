@@ -4,21 +4,38 @@ import CommonStyles from '../styles/CommonStyles'
 import PressableButton from '../components/PressableButton'
 import { updateDB, writeToDB } from '../firebase-files/databaseHelper';
 import { auth } from '../firebase-files/firebaseSetup';
-import LocationManager from '../components/LocationManager';
+import * as Location from 'expo-location';
 
 export default function Review({navigation, route}) {
     const [reviewContent, setReviewContent] = useState('');
     const {mode, review} = route.params || {};
     const [location, setLocation] = useState(null);
+    const [locationName, setLocationName] = useState('here');
 
-    console.log('route.params here:', route.params.item);
+    const updateLocationName = async () => {
+        if (route.params.selectedLocation) {
+            setLocation(route.params.selectedLocation);
+            const lat = route.params.selectedLocation.latitude;
+            const long = route.params.selectedLocation.longitude;
+            const location = await getLocationName(lat, long);
+            setLocationName(location);
+        }
+    }
 
+    async function getLocationName(lat, long) {
+        const location = await Location.reverseGeocodeAsync({ latitude: lat, longitude: long });
+        return location[0].name;
+      }
+    
 
     // Set initial values for edit mode
     useEffect(() => {
+        console.log('route.params in add review:', route.params);
         if (mode === 'edit') {
             setReviewContent(review.review);
         }
+        // set location name
+        updateLocationName();
     }, [mode, review]);
 
     async function submitHandler() {
@@ -65,14 +82,20 @@ export default function Review({navigation, route}) {
                     value={reviewContent}
                     onChangeText={setReviewContent}/>
                 {mode == 'edit'? <Text>{route.params.review.restaurantName}</Text> :
-                    <Text>{route.params.item.name}</Text>}
+                    <Text>{route.params.review.restaurantName}</Text>}
+                <Text>📍{locationName}</Text>
 
-                {/* <LocationManager /> */}
+                <PressableButton  
+                    customStyle={styles.locationButtonStyle}
+                    onPress={() => navigation.navigate('LocationManager', { review: review })}>
+                    {console.log('Navigating to LocationManager with review:', review)}  
+                    <Text>Choose Location</Text>
+                </PressableButton>
 
                 <PressableButton 
                     customStyle={styles.pressableButtonStyle}
                     onPress={mode == 'edit'? editHandler:submitHandler}>
-                    <Text>Submit</Text>
+                    <Text>{mode == 'edit'? 'Update':'Submit'}</Text>
                 </PressableButton>
             </View>
         </View>
@@ -82,6 +105,14 @@ export default function Review({navigation, route}) {
 const styles = StyleSheet.create({
     pressableButtonStyle: {
         backgroundColor: 'tomato',
+        padding: 7,
+        borderRadius: 10,
+        marginTop: 5,
+        width: 200,
+        alignSelf: 'center'
+    },
+    locationButtonStyle: {
+        backgroundColor: 'lightblue',
         padding: 7,
         borderRadius: 10,
         marginTop: 5,
