@@ -11,6 +11,7 @@ export default function LocationManager({navigation, route}) {
   useEffect(() => {
     if (route.params) {
       console.log("Review received in LocationManager:", route.params.review);
+      console.log("Location received in LocationManager:", route.params.selectedLocation);
       setLocation(route.params.selectedLocation);
     }
   }, [route.params]);

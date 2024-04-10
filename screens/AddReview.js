@@ -9,7 +9,7 @@ import * as Location from 'expo-location';
 export default function Review({navigation, route}) {
     const [reviewContent, setReviewContent] = useState('');
     const {mode, review} = route.params || {};
-    const [location, setLocation] = useState(null);
+    const [location, setLocation] = useState({latitude: 37, longitude: -122}); // later fetch from user's location
     const [locationName, setLocationName] = useState('here');
 
     const updateLocationName = async () => {
@@ -17,8 +17,9 @@ export default function Review({navigation, route}) {
             setLocation(route.params.selectedLocation);
             const lat = route.params.selectedLocation.latitude;
             const long = route.params.selectedLocation.longitude;
-            const location = await getLocationName(lat, long);
-            setLocationName(location);
+            const name = await getLocationName(lat, long);
+            setLocation(route.params.selectedLocation);
+            setLocationName(name);
         }
     }
 
@@ -87,8 +88,9 @@ export default function Review({navigation, route}) {
 
                 <PressableButton  
                     customStyle={styles.locationButtonStyle}
-                    onPress={() => navigation.navigate('LocationManager', { review: review })}>
+                    onPress={() => navigation.navigate('LocationManager', { selectedLocation: location, review: review })}>
                     {console.log('Navigating to LocationManager with review:', review)}  
+                    {console.log('Navigating to LocationManager with location:', location)}
                     <Text>Choose Location</Text>
                 </PressableButton>
 
