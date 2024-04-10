@@ -4,13 +4,15 @@ import CommonStyles from '../styles/CommonStyles'
 import PressableButton from '../components/PressableButton'
 import { updateDB, writeToDB } from '../firebase-files/databaseHelper';
 import { auth } from '../firebase-files/firebaseSetup';
+import { MaterialIcons } from '@expo/vector-icons';
+import ImageInput from '../components/ImageInput';
 
 export default function Review({navigation, route}) {
     const [reviewContent, setReviewContent] = useState('');
+    const [imageModalVisible, setImageModalVisible] = useState(false);
     const {mode, review} = route.params || {};
 
     //console.log('route.params here:', route.params.item);
-
 
     // Set initial values for edit mode
     useEffect(() => {
@@ -54,8 +56,26 @@ export default function Review({navigation, route}) {
         }
     }
 
+    function openImageModal() {
+        setImageModalVisible(true);
+    }
+
+    function dismissModal() {
+        setImageModalVisible(false);
+    }
+
     return (
         <View style={CommonStyles.container}>
+            <View style={{alignSelf:'flex-start'}}>
+                <PressableButton
+                    onPress={openImageModal}>
+                    <MaterialIcons name="add-a-photo" size={40} color="black" />
+                </PressableButton>
+            </View>
+            <ImageInput
+                imageModalVisible={imageModalVisible}
+                dismissModal={dismissModal}
+            />
             <View style={{marginTop:10}}>   
                 <TextInput 
                     placeholder='Enter your review'
