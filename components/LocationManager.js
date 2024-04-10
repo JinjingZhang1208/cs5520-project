@@ -2,9 +2,9 @@ import { View, Button, Image, StyleSheet, Dimensions } from "react-native";
 import React, { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import { mapsApiKey } from "@env";
-import { useNavigation, useRoute,} from "@react-navigation/native";
+import { useNavigation, useRoute, } from "@react-navigation/native";
 
-export default function LocationManager({navigation, route}) {
+export default function LocationManager({ navigation, route }) {
   const [status, requestPermission] = Location.useForegroundPermissions();
   const [location, setLocation] = useState(null);
 
@@ -29,23 +29,6 @@ export default function LocationManager({navigation, route}) {
   }
 
 
-  // async function locateUserHandler() {
-  //   try {
-  //     const havePermission = await verifyPermission();
-  //     if (!havePermission) {
-  //       Alert.alert("You need to give permission");
-  //       return;
-  //     }
-  //     const receivedLocation = await Location.getCurrentPositionAsync();
-  //     setLocation({
-  //       latitude: receivedLocation.coords.latitude,
-  //       longitude: receivedLocation.coords.longitude,
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
-
   async function locateUserHandler() {
     // if user has not given permission, ask for it
     const havePermission = await verifyPermission();
@@ -55,33 +38,40 @@ export default function LocationManager({navigation, route}) {
 
     // get the location 
     const location = await Location.getCurrentPositionAsync();
-    setLocation({
-      latitude: location.coords.latitude,
+    console.log("User current location fetched:", location);
+    const newCoords = {latitude: location.coords.latitude,
       longitude: location.coords.longitude,
-    });
-    console.log("User current location in LocationManager:", location);
-    navigation.navigate("AddReview", { selectedLocation: location, review: route.params.review });
+    };
+    setLocation({ newCoords});
+    console.log("User current location in LocationManager:", newCoords);
+    navigation.navigate("AddReview", { selectedLocation: newCoords, review: route.params.review });
   }
 
 
-  function chooseLocationHandler() {
+  async function chooseLocationHandler() {
+    // if user has not given permission, ask for it
+    const havePermission = await verifyPermission();
+    if (!havePermission) {
+      return;
+    }
     if (location) {
-      navigation.navigate("Map", { initLoc: location, review: route.params.review});
-      console.log("Pass from LocationManager to Map:", location, route.params.review );
+      navigation.navigate("Map", { initLoc: location, review: route.params.review });
+      console.log("Pass from LocationManager to Map:", location, route.params.review);
     } else {
       navigation.navigate("Map", { review: route.params.review });
-      console.log("Pass from LocationManager to Map:", route.params.review );
+      console.log("Pass from LocationManager to Map:", route.params.review);
     }
   }
-    function saveLocationHandler() {
-      //call setDocToDB
-      setDocToDB({ location: location }, "users");
-      navigation.navigate("Home");
-    }
+  // function saveLocationHandler() {
+  //   //call setDocToDB
+  //   setDocToDB({ location: location }, "users");
+  //   navigation.navigate("Home");
+  // }
+
   return (
     <View style={styles.container}>
-      <Button title="Use my current location" onPress={locateUserHandler} />
-      <Button title="Choose another location" onPress={chooseLocationHandler} />
+
+
       {location && (
         <Image
           style={styles.image}
@@ -90,14 +80,25 @@ export default function LocationManager({navigation, route}) {
           }}
         />
       )}
-      <Button title="Save Location" onPress={saveLocationHandler} />
+
+      <Button title="Choose another location" onPress={chooseLocationHandler} />
+      <Button title="Use current location" onPress={locateUserHandler} />
+
+      {/* <Button title="Save Location" onPress={saveLocationHandler} /> */}
     </View>
   );
 }
 
 
 const styles = StyleSheet.create({
-  image: { width: Dimensions.get("screen").width, height: 400 },
+  image: {
+    width: Dimensions.get("screen").width * 0.9,
+    height: Dimensions.get("screen").height * 0.8,
+    // marginLeft: 50,
+    // marginRight: 50,
+    marginTop: 50,
+    borderRadius: 10,
+  },
   container: {
     flex: 1,
     justifyContent: "center",
