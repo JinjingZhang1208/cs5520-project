@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Image, Pressable, StyleSheet, Text, TextInput, View, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CommonStyles from '../styles/CommonStyles'
 import PressableButton from '../components/PressableButton'
@@ -23,6 +23,12 @@ export default function Review({navigation, route}) {
     const receiveImageURI = (uri) => {
         setUploadedPhotos([...uploadedPhotos, uri]);
         setImageModalVisible(false);
+    };
+
+    const deletePhoto = (index) => {
+        const updatedPhotos = [...uploadedPhotos];
+        updatedPhotos.splice(index, 1);
+        setUploadedPhotos(updatedPhotos);
     };
 
     async function submitHandler() {
@@ -60,19 +66,27 @@ export default function Review({navigation, route}) {
 
     return (
         <View style={CommonStyles.container}>
-            {/* Add a button to open the image modal */}
-            <View style={{alignSelf:'flex-start', marginLeft: 60}}>
-                <PressableButton
-                    onPress={() => setImageModalVisible(true)}>
-                    <MaterialIcons name="add-a-photo" size={40} color="black" />
-                </PressableButton>
-            </View>
+            <View style={{marginTop:10, flexDirection: 'row'}}>
+                {/* Add a button to open the image modal */}
+                <View style={{alignSelf:'flex-start'}}>
+                    <PressableButton
+                        onPress={() => setImageModalVisible(true)}>
+                        <MaterialIcons name="add-a-photo" size={40} color="black" />
+                    </PressableButton>
+                </View>
 
-            {/* Render the uploaded photos */}
-            <View style={CommonStyles.uploadedPhotosContainer}>
-                {uploadedPhotos.map((uri, index) => (
-                    <Image key={index} source={{ uri: uri }} style={CommonStyles.uploadedPhoto} />
-                ))}
+                {/* Render the uploaded photos */}
+                <FlatList
+                    data={uploadedPhotos}
+                    renderItem={({ item, index }) => (
+                        <View style={CommonStyles.uploadedPhotosContainer}>
+                            <Image source={{ uri: item }} style={CommonStyles.uploadedPhoto} />
+                            <Pressable onPress={() => deletePhoto(index)}>
+                                <MaterialIcons name="delete" size={24} color="red" />
+                            </Pressable>
+                        </View>
+                    )}
+                    horizontal={true}/>
             </View>
             
             {/* Add the ImageInput modal */}
@@ -96,7 +110,7 @@ export default function Review({navigation, route}) {
 
                 {/* Add a button to submit the review */}
                 <PressableButton 
-                    customStyle={styles.pressableButtonStyle}
+                    customStyle={CommonStyles.pressableButtonStyle}
                     onPress={mode == 'edit'? editHandler:submitHandler}>
                     <Text>Submit</Text>
                 </PressableButton>
@@ -106,12 +120,4 @@ export default function Review({navigation, route}) {
 }
 
 const styles = StyleSheet.create({
-    pressableButtonStyle: {
-        backgroundColor: 'tomato',
-        padding: 7,
-        borderRadius: 10,
-        marginTop: 5,
-        width: 200,
-        alignSelf: 'center'
-    }
 })
