@@ -6,6 +6,7 @@ import { signOut } from "firebase/auth";
 import { Ionicons } from "@expo/vector-icons";
 import { fetchUserData, uploadImageAsync, saveImageURLToFirestore, updateUsername, setEmail } from "../firebase-files/databaseHelper";
 import ImageManager from "../components/ImageManager";
+import ImageInput from "../components/ImageInput";
 
 
 export default function Profile({navigation, route}) {
@@ -97,7 +98,7 @@ export default function Profile({navigation, route}) {
 
       <StatusBar translucent={true} backgroundColor="transparent" />
 
-      <Modal
+      {/* <Modal
         animationType="slide"
         transparent={true}
         visible={imageModalVisible}
@@ -115,7 +116,13 @@ export default function Profile({navigation, route}) {
             </PressableButton>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
+      <ImageInput
+        imageModalVisible={imageModalVisible}
+        dismissModal={() => setImageModalVisible(false)}
+        receiveImageURI={receiveImageURI}
+        updateAvatar={updateAvatarHandler}
+      />
 
       <Modal
         animationType="slide"
@@ -234,7 +241,7 @@ const styles = StyleSheet.create({
     padding: 7, 
     borderRadius: 10, 
     alignSelf: 'center'
-},
+  },
   buttonStyle: {
     marginTop: 20,
     padding: 10,
