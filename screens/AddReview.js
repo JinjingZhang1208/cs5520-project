@@ -9,7 +9,7 @@ export default function Review({navigation, route}) {
     const [reviewContent, setReviewContent] = useState('');
     const {mode, review} = route.params || {};
 
-    console.log('route.params here:', route.params.item);
+    //console.log('route.params here:', route.params.item);
 
 
     // Set initial values for edit mode

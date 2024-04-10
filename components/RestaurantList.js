@@ -50,7 +50,7 @@ export default function RestaurantList({ fetchedRestaurants = [], collectionName
         } else {
             return (
                 <View style={CommonStyles.centeredContainer}>
-                    <Text style={CommonStyles.centeredText}>No restaurants in your wishlist.</Text>
+                    <Text style={CommonStyles.centeredText}>Add restaurants to your wishlist!</Text>
                 </View>
             )
         }

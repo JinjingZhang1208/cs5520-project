@@ -70,7 +70,6 @@ const ImageManager = ({ receiveImageURI, updateAvatar }) => {
         quality: 1,
       });
 
-      console.log(result.assets[0].uri);
       receiveImageURI(result.assets[0].uri);
       setImage(result.assets[0].uri);
 

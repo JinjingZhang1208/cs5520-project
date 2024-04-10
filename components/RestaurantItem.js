@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 export default function RestaurantItem({item}) {
 
   const navigation = useNavigation();
-  console.log('item:', item.image_url);
+  //console.log('item:', item.image_url);
 
   return (
     <PressableButton onPress={() => {navigation.navigate('Restaurant', {item: item})}}>
