@@ -28,22 +28,41 @@ export default function LocationManager({navigation, route}) {
     }
   }
 
+
+  // async function locateUserHandler() {
+  //   try {
+  //     const havePermission = await verifyPermission();
+  //     if (!havePermission) {
+  //       Alert.alert("You need to give permission");
+  //       return;
+  //     }
+  //     const receivedLocation = await Location.getCurrentPositionAsync();
+  //     setLocation({
+  //       latitude: receivedLocation.coords.latitude,
+  //       longitude: receivedLocation.coords.longitude,
+  //     });
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
+
   async function locateUserHandler() {
-    try {
-      const havePermission = await verifyPermission();
-      if (!havePermission) {
-        Alert.alert("You need to give permission");
-        return;
-      }
-      const receivedLocation = await Location.getCurrentPositionAsync();
-      setLocation({
-        latitude: receivedLocation.coords.latitude,
-        longitude: receivedLocation.coords.longitude,
-      });
-    } catch (err) {
-      console.log(err);
+    // if user has not given permission, ask for it
+    const havePermission = await verifyPermission();
+    if (!havePermission) {
+      return;
     }
+
+    // get the location 
+    const location = await Location.getCurrentPositionAsync();
+    setLocation({
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    });
+    console.log("User current location in LocationManager:", location);
+    navigation.navigate("AddReview", { selectedLocation: location, review: route.params.review });
   }
+
 
   function chooseLocationHandler() {
     if (location) {
@@ -78,7 +97,7 @@ export default function LocationManager({navigation, route}) {
 
 
 const styles = StyleSheet.create({
-  image: { width: Dimensions.get("screen").width, height: 200 },
+  image: { width: Dimensions.get("screen").width, height: 400 },
   container: {
     flex: 1,
     justifyContent: "center",

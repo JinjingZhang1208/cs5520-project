@@ -6,11 +6,12 @@ import { useNavigation } from "@react-navigation/native";
 export default function Map({ navigation, route }) {
     const [selectedLocation, setSelectedLocation] = useState(null);
 
-    console.log("Route in Map:", route);
+    // console.log("Route in Map:", route);
 
     function confirmHandler() {
         //navigate to AddReview and pass selectedlocation as parameter
         navigation.navigate('AddReview', { selectedLocation, review: route.params.review});
+        console.log("Location passed from Map to AddReview:", selectedLocation);
     }
 
     return (
@@ -26,6 +27,7 @@ export default function Map({ navigation, route }) {
                 onPress={(e) => {
                     const { latitude, longitude } = e.nativeEvent.coordinate;
                     setSelectedLocation({ latitude, longitude });
+                    {console.log("Selected Location:", selectedLocation);}
                 }}
             >
                 {selectedLocation && (

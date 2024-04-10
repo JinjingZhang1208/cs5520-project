@@ -9,7 +9,7 @@ import * as Location from 'expo-location';
 export default function Review({navigation, route}) {
     const [reviewContent, setReviewContent] = useState('');
     const {mode, review} = route.params || {};
-    const [location, setLocation] = useState({latitude: 37, longitude: -122}); // later fetch from user's location
+    const [location, setLocation] = useState({latitude: 37, longitude: -122}); // default location, later will be substituted with user's location
     const [locationName, setLocationName] = useState(null);
         
     const updateLocationName = async () => {
@@ -37,7 +37,7 @@ export default function Review({navigation, route}) {
         }
         // set location name
         updateLocationName();
-    }, [mode, review]);
+    }, [mode, review, route.params.selectedLocation]);
 
     async function submitHandler() {
         // code to submit review
