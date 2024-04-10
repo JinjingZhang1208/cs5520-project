@@ -25,7 +25,8 @@ export default function Review({navigation, route}) {
 
     async function getLocationName(lat, long) {
         const location = await Location.reverseGeocodeAsync({ latitude: lat, longitude: long });
-        return location[0].name;
+        return `${location[0].name}, ${location[0].street}, ${location[0].city}`;
+
       }
     
 
