@@ -39,10 +39,11 @@ export default function LocationManager({ navigation, route }) {
     // get the location 
     const location = await Location.getCurrentPositionAsync();
     console.log("User current location fetched:", location);
-    const newCoords = {latitude: location.coords.latitude,
+    const newCoords = {
+      latitude: location.coords.latitude,
       longitude: location.coords.longitude,
     };
-    setLocation({ newCoords});
+    setLocation({ newCoords });
     console.log("User current location in LocationManager:", newCoords);
     navigation.navigate("AddReview", { selectedLocation: newCoords, review: route.params.review });
   }
@@ -76,9 +77,10 @@ export default function LocationManager({ navigation, route }) {
         <Image
           style={styles.image}
           source={{
-            uri: `https://maps.googleapis.com/maps/api/staticmap?center=${location.latitude},${location.longitude}&zoom=14&size=400x200&maptype=roadmap&markers=color:red%7Clabel:L%7C${location.latitude},${location.longitude}&key=${mapsApiKey}`,
+            uri: `https://maps.googleapis.com/maps/api/staticmap?center=${location.latitude},${location.longitude}&zoom=14&size=2400x1200&maptype=roadmap&markers=color:red%7Clabel:L%7C${location.latitude},${location.longitude}&key=${mapsApiKey}&scale=2`, // Increased size, added scale
           }}
         />
+
       )}
 
       <Button title="Choose another location" onPress={chooseLocationHandler} />
