@@ -45,7 +45,7 @@ export default function LocationManager({ navigation, route }) {
     };
     setLocation({ newCoords });
     console.log("User current location in LocationManager:", newCoords);
-    navigation.navigate("AddReview", { selectedLocation: newCoords, review: route.params.review });
+    navigation.navigate("AddReview", { mode: route.params.mode, selectedLocation: newCoords, review: route.params.review });
   }
 
 
@@ -56,10 +56,10 @@ export default function LocationManager({ navigation, route }) {
       return;
     }
     if (location) {
-      navigation.navigate("Map", { initLoc: location, review: route.params.review });
+      navigation.navigate("Map", { initLoc: location, review: route.params.review, mode: route.params.mode });
       console.log("Pass from LocationManager to Map:", location, route.params.review);
     } else {
-      navigation.navigate("Map", { review: route.params.review });
+      navigation.navigate("Map", { review: route.params.review, mode: route.params.mode});
       console.log("Pass from LocationManager to Map:", route.params.review);
     }
   }
@@ -80,7 +80,6 @@ export default function LocationManager({ navigation, route }) {
             uri: `https://maps.googleapis.com/maps/api/staticmap?center=${location.latitude},${location.longitude}&zoom=14&size=2400x1200&maptype=roadmap&markers=color:red%7Clabel:L%7C${location.latitude},${location.longitude}&key=${mapsApiKey}&scale=2`, // Increased size, added scale
           }}
         />
-
       )}
 
       <Button title="Choose another location" onPress={chooseLocationHandler} />

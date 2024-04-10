@@ -10,7 +10,7 @@ export default function Map({ navigation, route }) {
 
     function confirmHandler() {
         //navigate to AddReview and pass selectedlocation as parameter
-        navigation.navigate('AddReview', { selectedLocation, review: route.params.review});
+        navigation.navigate('AddReview', { mode: route.params.mode, selectedLocation, review: route.params.review});
         console.log("Location passed from Map to AddReview:", selectedLocation);
     }
 

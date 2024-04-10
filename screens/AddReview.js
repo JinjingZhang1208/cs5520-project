@@ -90,7 +90,7 @@ export default function Review({navigation, route}) {
 
                 <PressableButton  
                     customStyle={styles.locationButtonStyle}
-                    onPress={() => navigation.navigate('LocationManager', { selectedLocation: location, review: review })}>
+                    onPress={() => navigation.navigate('LocationManager', { mode: mode ,selectedLocation: location, review: review })}>
                     {console.log('Navigating to LocationManager with review:', review)}  
                     {console.log('Navigating to LocationManager with location:', location)}
                     <Text>Choose Location</Text>
