@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CommonStyles from '../styles/CommonStyles'
 import PressableButton from '../components/PressableButton'
@@ -10,9 +10,8 @@ import ImageInput from '../components/ImageInput';
 export default function Review({navigation, route}) {
     const [reviewContent, setReviewContent] = useState('');
     const [imageModalVisible, setImageModalVisible] = useState(false);
+    const [uploadedPhotos, setUploadedPhotos] = useState([]);
     const {mode, review} = route.params || {};
-
-    //console.log('route.params here:', route.params.item);
 
     // Set initial values for edit mode
     useEffect(() => {
@@ -20,6 +19,11 @@ export default function Review({navigation, route}) {
             setReviewContent(review.review);
         }
     }, [mode, review]);
+
+    const receiveImageURI = (uri) => {
+        setUploadedPhotos([...uploadedPhotos, uri]);
+        setImageModalVisible(false);
+    };
 
     async function submitHandler() {
         // code to submit review
@@ -63,11 +67,19 @@ export default function Review({navigation, route}) {
                     <MaterialIcons name="add-a-photo" size={40} color="black" />
                 </PressableButton>
             </View>
+
+            {/* Render the uploaded photos */}
+            <View style={CommonStyles.uploadedPhotosContainer}>
+                {uploadedPhotos.map((uri, index) => (
+                    <Image key={index} source={{ uri: uri }} style={CommonStyles.uploadedPhoto} />
+                ))}
+            </View>
             
             {/* Add the ImageInput modal */}
             <ImageInput
                 imageModalVisible={imageModalVisible}
                 dismissModal={() => setImageModalVisible(false)}
+                receiveImageURI={receiveImageURI}
             />
 
             <View style={{marginTop:10}}> 

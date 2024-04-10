@@ -86,6 +86,20 @@ const CommonStyles = StyleSheet.create({
         borderRadius: 10, 
         alignSelf: 'center'
     },
+
+    uploadedPhotosContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginTop: 20,
+    },
+
+    uploadedPhoto: {
+        width: 100,
+        height: 100,
+        marginRight: 10,
+        marginBottom: 10,
+        borderRadius: 5,
+    },
 })
 
 export default CommonStyles;
