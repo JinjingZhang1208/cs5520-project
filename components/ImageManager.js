@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import * as ImagePicker from 'expo-image-picker';
 import PressableButton from './PressableButton';
 
-const ImageManager = ({ receiveImageURI, updateAvatar }) => {
+const ImageManager = ({ receiveImageURI, updateURI }) => {
   const [status, requestPermission] = ImagePicker.useCameraPermissions();
   const [imageURI, setImage] = useState("");
 
@@ -47,7 +47,7 @@ const ImageManager = ({ receiveImageURI, updateAvatar }) => {
 
       if (!result.canceled) {
         setImage(result.uri);
-        updateAvatar(result.assets[0].uri);
+        updateURI(result.assets[0].uri);
       }
     } catch (e) {
       console.log(e);
@@ -70,13 +70,12 @@ const ImageManager = ({ receiveImageURI, updateAvatar }) => {
         quality: 1,
       });
 
-      console.log(result.assets[0].uri);
       receiveImageURI(result.assets[0].uri);
       setImage(result.assets[0].uri);
 
       if (!result.canceled) {
         setImage(result.uri);
-        updateAvatar(result.assets[0].uri);
+        updateURI(result.assets[0].uri);
       }
     } catch (e) {
       console.log(e);
