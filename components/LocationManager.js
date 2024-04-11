@@ -45,7 +45,7 @@ export default function LocationManager({ navigation, route }) {
     };
     setLocation({ newCoords });
     console.log("User current location in LocationManager:", newCoords);
-    navigation.navigate("Add Review", { 
+    navigation.navigate("Add My Review", { 
       mode: route.params.mode, 
       selectedLocation: newCoords, 
       review: route.params.review,
@@ -108,7 +108,7 @@ export default function LocationManager({ navigation, route }) {
 const styles = StyleSheet.create({
   image: {
     width: Dimensions.get("screen").width * 0.9,
-    height: Dimensions.get("screen").height * 0.8,
+    height: Dimensions.get("screen").height * 0.7,
     // marginLeft: 50,
     // marginRight: 50,
     marginTop: 50,
