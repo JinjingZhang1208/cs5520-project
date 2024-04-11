@@ -56,7 +56,8 @@ export default function RestaurantDetail({ navigation, route }) {
                         name: route.params.item.name,
                         rating: route.params.item.rating,
                         review_count: route.params.item.review_count,
-                        image_url: route.params.item.image_url
+                        image_url: route.params.item.image_url,
+                        owner: userId,
                     };
                     await writeToDB(res, 'users', userId, 'wishlists');
                     setBookmark(true);
