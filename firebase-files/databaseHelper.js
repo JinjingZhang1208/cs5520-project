@@ -28,7 +28,7 @@ const compressImage = async (uri) => {
         const manipResult = await manipulateAsync(
             uri,
             [{ resize: { width: 800, height: 800 } }], // Resize the image to a maximum width or height of 800 pixels
-            { compress: 0.3, format: 'jpeg' } // Adjust the compression quality (0 to 1) and format to JPEG
+            { compress: 0.2, format: 'jpeg' } // Adjust the compression quality (0 to 1) and format to JPEG
         );
         return manipResult.uri; // Return the URI of the compressed image
     } catch (error) {
