@@ -45,7 +45,12 @@ export default function LocationManager({ navigation, route }) {
     };
     setLocation({ newCoords });
     console.log("User current location in LocationManager:", newCoords);
-    navigation.navigate("AddReview", { mode: route.params.mode, selectedLocation: newCoords, review: route.params.review });
+    navigation.navigate("AddReview", { 
+      mode: route.params.mode, 
+      selectedLocation: newCoords, 
+      review: route.params.review,
+      restaurantInfo: route.params.restaurantInfo
+     });
   }
 
 
@@ -56,10 +61,19 @@ export default function LocationManager({ navigation, route }) {
       return;
     }
     if (location) {
-      navigation.navigate("Map", { initLoc: location, review: route.params.review, mode: route.params.mode });
+      navigation.navigate("Map", { 
+        initLoc: location, 
+        review: route.params.review, 
+        mode: route.params.mode,
+        restaurantInfo: route.params.restaurantInfo
+      });
       console.log("Pass from LocationManager to Map:", location, route.params.review);
     } else {
-      navigation.navigate("Map", { review: route.params.review, mode: route.params.mode});
+      navigation.navigate("Map", { 
+        review: route.params.review, 
+        mode: route.params.mode,
+        restaurantInfo: route.params.restaurantInfo
+      });
       console.log("Pass from LocationManager to Map:", route.params.review);
     }
   }
