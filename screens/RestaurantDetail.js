@@ -56,7 +56,8 @@ export default function RestaurantDetail({ navigation, route }) {
                         name: route.params.item.name,
                         rating: route.params.item.rating,
                         review_count: route.params.item.review_count,
-                        image_url: route.params.item.image_url
+                        image_url: route.params.item.image_url,
+                        owner: userId,
                     };
                     await writeToDB(res, 'users', userId, 'wishlists');
                     setBookmark(true);
@@ -83,10 +84,10 @@ export default function RestaurantDetail({ navigation, route }) {
     //fetch reviews for the restaurant use readAllReviewsFromDB
     useEffect(() => {
         async function fetchReviewsData() {
-            console.log('Reviews params:', route.params);
+            //console.log('Reviews params:', route.params);
             const reviews = await readAllReviewsFromDB(route.params.item.bussiness_id);
             setReviews(reviews);
-            console.log('reviews:', reviews);
+            //console.log('reviews:', reviews);
         }
         fetchReviewsData();
     }, [reviews]);

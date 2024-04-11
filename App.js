@@ -151,9 +151,8 @@ export default function App() {
             <Stack.Screen name="Search Results" component={SearchResults} />
             <Stack.Screen name="Add My Review" component={AddReview} />
             <Stack.Screen name="Edit My Review" component={EditReview} />
-            <Stack.Screen name="MyReviews" component={MyReviews} />
-            <Stack.Screen name="Map" component={Map} />
-            <Stack.Screen name="LocationManager" component={LocationManager} />
+            <Stack.Screen name="My Reviews" component={MyReviews} />
+
           </Stack.Navigator>
         ) : (
           AuthStack()

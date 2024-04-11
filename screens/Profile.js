@@ -39,8 +39,7 @@ export default function Profile({navigation, route}) {
       const userId = auth.currentUser.uid;
       const userEmail = auth.currentUser.email;
 
-      const userData = await fetchUserData(userId); // Await the async call
-
+      const userData = await fetchUserData(userId); // Await the async call to fetch user data
       const fetchedName = userData ? userData.username : null;
       const fetchedAvatarUri = userData ? userData.avatarUrl : null;
 
