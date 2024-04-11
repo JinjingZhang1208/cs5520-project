@@ -9,7 +9,10 @@ import * as Location from 'expo-location';
 export default function Review({navigation, route}) {
     const [reviewContent, setReviewContent] = useState('');
     const {mode, review} = route.params || {};
-    const [location, setLocation] = useState({latitude: 37, longitude: -122}); // default location, later will be substituted with user's location
+    const [location, setLocation] = useState({
+        latitude: route.params.review?.latitude? route.params.review.latitude: 37.78825,
+        longitude: route.params.review?.longitude? route.params.review.longitude: -122.4324
+    });
     const [locationName, setLocationName] = useState(null);
         
     const updateLocationName = async () => {
@@ -50,6 +53,9 @@ export default function Review({navigation, route}) {
                 review: reviewContent, 
                 bussiness_id: route.params.item.bussiness_id,
                 restaurantName: route.params.item.name,
+                locationName: locationName,
+                latitude: location.latitude, // for map initial location
+                longitude: location.longitude, // for map initial location
                 owner: userId
             };
             // writeToDB(newReview, 'users', userId, 'reviews'); // write to user's reviews
@@ -67,6 +73,9 @@ export default function Review({navigation, route}) {
                 review: reviewContent, 
                 bussiness_id: route.params.review.bussiness_id, 
                 restaurantName: route.params.review.restaurantName,
+                locationName: route.params.review.locationName? route.params.review.locationName: locationName,
+                latitude: route.params.review.latitude? route.params.review.latitude: location.latitude, // for map initial location
+                longitude: route.params.review.longitude? route.params.review.longitude: location.longitude, // for map initial location
                 owner: userId
             };
 
@@ -85,8 +94,8 @@ export default function Review({navigation, route}) {
                     style={CommonStyles.reviewInput}
                     value={reviewContent}
                     onChangeText={setReviewContent}/>
-                {mode == 'edit'? <Text>{route.params.review.restaurantName}</Text> :
-                    <Text>{route.params.item.name}</Text>}
+                {/* {mode == 'edit'? <Text>{route.params.review.restaurantName}</Text> :
+                    <Text>{route.params.item.name}</Text>} */}
                 {locationName && <Text>📍{locationName}</Text>}
 
                 <PressableButton  

@@ -38,6 +38,7 @@ export default function ReviewItem({ review }) {
       <View style={{ flexDirection: 'column' }}>
         <Text style={styles.boldText}>{review.restaurantName}</Text>
         <Text style={styles.text}>{review.review}</Text>
+        <Text style={styles.text}>📍{review.locationName}</Text>
       </View>
 
       {userId == review.owner && ( // only show delete button if the review belongs to the current user
