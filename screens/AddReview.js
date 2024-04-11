@@ -14,7 +14,7 @@ export default function Review({navigation, route}) {
         longitude: route.params.review?.longitude? route.params.review.longitude: -122.4324
     });
     const [locationName, setLocationName] = useState(null);
-        
+    
     const updateLocationName = async () => {
         if (route.params.selectedLocation) {
             setLocation(route.params.selectedLocation);
@@ -51,8 +51,8 @@ export default function Review({navigation, route}) {
             const userId = currentUser.uid;
             let newReview = {
                 review: reviewContent, 
-                bussiness_id: route.params.item.bussiness_id,
-                restaurantName: route.params.item.name,
+                bussiness_id: route.params.item?.bussiness_id? route.params.item.bussiness_id: route.params.restaurantInfo.restaurantId, // either from RestaurantDetail or naviagte back from Map
+                restaurantName: route.params.item?.name? route.params.item.name: route.params.restaurantInfo.restaurantName, // either from RestaurantDetail or naviagte back from Map
                 locationName: locationName,
                 latitude: location.latitude, // for map initial location
                 longitude: location.longitude, // for map initial location
@@ -94,13 +94,20 @@ export default function Review({navigation, route}) {
                     style={CommonStyles.reviewInput}
                     value={reviewContent}
                     onChangeText={setReviewContent}/>
-                {/* {mode == 'edit'? <Text>{route.params.review.restaurantName}</Text> :
-                    <Text>{route.params.item.name}</Text>} */}
+                <Text>🍽️{route.params.item?.name? route.params.item.name: route.params.restaurantInfo.restaurantName}</Text>
                 {locationName && <Text>📍{locationName}</Text>}
 
                 <PressableButton  
                     customStyle={styles.locationButtonStyle}
-                    onPress={() => navigation.navigate('LocationManager', { mode: mode ,selectedLocation: location, review: review })}>
+                    onPress={() => navigation.navigate('LocationManager', { 
+                        mode: mode ,
+                        selectedLocation: location, 
+                        review: review, 
+                        restaurantInfo: {
+                            restaurantName: route.params.item.name? route.params.item.name: route.params.review.restaurantName,
+                            restaurantId: route.params.item.id? route.params.item.id: route.params.review.bussiness_id
+                            } })
+                            }>
                     {console.log('Navigating to LocationManager with review:', review)}  
                     {console.log('Navigating to LocationManager with location:', location)}
                     <Text>Choose Location</Text>
