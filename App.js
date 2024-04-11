@@ -100,7 +100,6 @@ export default function App() {
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="person" size={size} color={color} />
             ),
-
           }}
         />
       </Tab.Navigator>
@@ -120,10 +119,7 @@ export default function App() {
           drawerInactiveTintColor: "gray",
         }} >
         <Drawer.Screen name="Home" component={AppTabsScreen} /> 
-        <Drawer.Screen name="Map" component={Map} />
-        <Drawer.Screen name="AddReview" component={AddReview} />
         <Drawer.Screen name="Notifications" component={Notification} />
-        <Drawer.Screen name="LocationManager" component={LocationManager} />
       </Drawer.Navigator>
     );
   };

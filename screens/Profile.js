@@ -156,7 +156,7 @@ export default function Profile({navigation, route}) {
       </PressableButton>
 
       <PressableButton
-        onPress={() => {navigation.navigate('MyReviews')}}>
+        onPress={() => {navigation.navigate('My Reviews')}}>
         <Text style={styles.goToReviews}>Go to My Reviews 👉</Text>
       </PressableButton>
 
