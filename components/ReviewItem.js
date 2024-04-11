@@ -13,7 +13,9 @@ export default function ReviewItem({ review }) {
   const userId = currentUser.uid;
 
   const reviewPressHandler = () => {
-    navigation.navigate('Edit My Review', { review: review });
+    if (review.owner == userId) {
+      navigation.navigate('Edit My Review', { review: review });
+    } 
   }
 
   const deleteHandler = () => {
@@ -33,12 +35,11 @@ export default function ReviewItem({ review }) {
   return (
     <Pressable
       style={({ pressed }) => [styles.textContainer, pressed && styles.pressed]}
-      onPress={reviewPressHandler} andriod_ripple={{ color: '#e9e' }}>
+      onPress={reviewPressHandler} andriod_ripple={{ color: '#e9e' }}> 
 
       <View style={{ flexDirection: 'column' }}>
         <Text style={styles.boldText}>{review.restaurantName}</Text>
         <Text style={styles.text}>{review.review}</Text>
-        <Text style={styles.text}>📍{review.locationName}</Text>
       </View>
 
       {userId == review.owner && ( // only show delete button if the review belongs to the current user
@@ -54,6 +55,7 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.5,
   },
+
   textContainer: {
     borderRadius: 10,
     backgroundColor: "#FFF",
@@ -73,6 +75,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 1,
   },
+
   text: {
     color: "#333",
     fontSize: 16,
@@ -84,7 +87,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#000",
   },
+
   deleteButton: {
     padding: 8,
   },
+
 });
