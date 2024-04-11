@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react'
 import CommonStyles from '../styles/CommonStyles'
 import PressableButton from '../components/PressableButton'
 import { updateDB, writeToDB } from '../firebase-files/databaseHelper';
-import { auth } from '../firebase-files/firebaseSetup';
+import { uploadImageAsync, saveImageURLToFirestore } from '../firebase-files/databaseHelper';
+import { auth, storage} from '../firebase-files/firebaseSetup';
 import * as Location from 'expo-location';
 import { MaterialIcons } from '@expo/vector-icons';
 import ImageInput from '../components/ImageInput';
@@ -12,10 +13,47 @@ export default function Review({navigation, route}) {
     const [reviewContent, setReviewContent] = useState('');
     const [imageModalVisible, setImageModalVisible] = useState(false);
     const [uploadedPhotos, setUploadedPhotos] = useState([]);
-    const {mode, review} = route.params || {};
+    const [imageURLs, setImageURLs] = useState([]);
     const [location, setLocation] = useState({latitude: 37, longitude: -122}); // default location, later will be substituted with user's location
     const [locationName, setLocationName] = useState(null);
-        
+
+    const {mode, review} = route.params || {};
+
+    // Set initial values for edit mode
+    useEffect(() => {
+        console.log('route.params in add review:', route.params);
+        if (mode === 'edit') {
+            setReviewContent(review.review);
+            setUploadedPhotos(review.imageURLs);
+            setImageURLs(review.imageURLs);
+        }
+    }, [mode, review]);
+
+    function receiveImageURI(imageUri) {
+        setUploadedPhotos([...uploadedPhotos, imageUri]); // Set local state
+        setImageModalVisible(false);
+    };
+
+    const updateReviewImageUrl = async(imageUri) => {
+        try {
+            const userId = auth.currentUser.uid;
+            const imageUrl = await uploadImageAsync(imageUri); // Upload image and get URL
+            setImageURLs([...imageURLs, imageUrl]); // Set local state
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const deletePhoto = (index) => {
+        const updatedPhotos = [...uploadedPhotos];
+        updatedPhotos.splice(index, 1);
+        setUploadedPhotos(updatedPhotos);
+
+        const updatedImageURLs = [...imageURLs];
+        updatedImageURLs.splice(index, 1);
+        setImageURLs(updatedImageURLs);
+    };
+
     const updateLocationName = async () => {
         if (route.params.selectedLocation) {
             setLocation(route.params.selectedLocation);
@@ -31,16 +69,7 @@ export default function Review({navigation, route}) {
         const location = await Location.reverseGeocodeAsync({ latitude: lat, longitude: long });
         return `${location[0].name}, ${location[0].street}, ${location[0].city}`;
 
-      }
-    
-
-    // Set initial values for edit mode
-    useEffect(() => {
-        console.log('route.params in add review:', route.params);
-        if (mode === 'edit') {
-            setReviewContent(review.review);
-        }
-    }, [mode, review]);
+    }
 
     async function submitHandler() {
         // code to submit review
@@ -52,7 +81,8 @@ export default function Review({navigation, route}) {
                 review: reviewContent, 
                 bussiness_id: route.params.item.bussiness_id,
                 restaurantName: route.params.item.name,
-                owner: userId
+                owner: userId,
+                imageURLs: imageURLs,
             };
 
             writeToDB(newReview, 'allReviews'); // write to all reviews
@@ -69,7 +99,8 @@ export default function Review({navigation, route}) {
                 review: reviewContent, 
                 bussiness_id: route.params.review.bussiness_id, 
                 restaurantName: route.params.review.restaurantName,
-                owner: userId
+                owner: userId,
+                imageURLs: imageURLs,
             };
 
             updateDB(updatedReview, 'allReviews', route.params.review.id); // update all reviews
@@ -107,6 +138,7 @@ export default function Review({navigation, route}) {
                 imageModalVisible={imageModalVisible}
                 dismissModal={() => setImageModalVisible(false)}
                 receiveImageURI={receiveImageURI}
+                updateURI={updateReviewImageUrl}
             />
 
             <View style={{marginTop:10}}> 
@@ -129,7 +161,6 @@ export default function Review({navigation, route}) {
                     {console.log('Navigating to LocationManager with location:', location)}
                     <Text>Choose Location</Text>
                 </PressableButton>
-
 
                 {/* Add a button to submit the review */}
                 <PressableButton 

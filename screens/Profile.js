@@ -98,30 +98,11 @@ export default function Profile({navigation, route}) {
 
       <StatusBar translucent={true} backgroundColor="transparent" />
 
-      {/* <Modal
-        animationType="slide"
-        transparent={true}
-        visible={imageModalVisible}
-        onRequestClose={() => {
-          setImageModalVisible(!imageModalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Change Avatar</Text>
-            <ImageManager receiveImageURI={receiveImageURI} updateAvatar={updateAvatarHandler} />
-            <PressableButton
-              customStyle={{...styles.pressableButtonStyle, backgroundColor: 'gray'}}
-              onPress={() => setImageModalVisible(!imageModalVisible)}>
-              <Text>Cancel</Text>
-            </PressableButton>
-          </View>
-        </View>
-      </Modal> */}
       <ImageInput
         imageModalVisible={imageModalVisible}
         dismissModal={() => setImageModalVisible(false)}
         receiveImageURI={receiveImageURI}
-        updateAvatar={updateAvatarHandler}
+        updateURI={updateAvatarHandler}
       />
 
       <Modal
