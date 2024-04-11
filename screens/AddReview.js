@@ -43,12 +43,13 @@ export default function Review({navigation, route}) {
     async function submitHandler() {
         // code to submit review
         const currentUser = auth.currentUser;
+        console.log('!!!!:', route.params);
         if (currentUser) {
             const userId = currentUser.uid;
             let newReview = {
                 review: reviewContent, 
-                bussiness_id: route.params.review.bussiness_id,
-                restaurantName: route.params.review.name, 
+                bussiness_id: route.params.item.bussiness_id,
+                restaurantName: route.params.item.name,
                 owner: userId
             };
             // writeToDB(newReview, 'users', userId, 'reviews'); // write to user's reviews
@@ -85,7 +86,7 @@ export default function Review({navigation, route}) {
                     value={reviewContent}
                     onChangeText={setReviewContent}/>
                 {mode == 'edit'? <Text>{route.params.review.restaurantName}</Text> :
-                    <Text>{route.params.review.restaurantName}</Text>}
+                    <Text>{route.params.item.name}</Text>}
                 {locationName && <Text>📍{locationName}</Text>}
 
                 <PressableButton  
