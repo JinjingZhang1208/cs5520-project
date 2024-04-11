@@ -45,7 +45,7 @@ export default function LocationManager({ navigation, route }) {
     };
     setLocation({ newCoords });
     console.log("User current location in LocationManager:", newCoords);
-    navigation.navigate("AddReview", { 
+    navigation.navigate("Add Review", { 
       mode: route.params.mode, 
       selectedLocation: newCoords, 
       review: route.params.review,
