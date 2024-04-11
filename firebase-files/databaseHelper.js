@@ -2,7 +2,7 @@ import { getFirestore, collection, addDoc, deleteDoc, doc, getDoc, getDocs, setD
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { database } from "./firebaseSetup";
 import { auth } from "./firebaseSetup";
-
+import { manipulateAsync } from 'expo-image-manipulator';
 
 // function to fetch user data
 export const fetchUserData = async (userId) => {
@@ -22,31 +22,46 @@ export const fetchUserData = async (userId) => {
     }
 };
 
+// Function to resize and compress the image
+const compressImage = async (uri) => {
+    try {
+        const manipResult = await manipulateAsync(
+            uri,
+            [{ resize: { width: 800, height: 800 } }], // Resize the image to a maximum width or height of 800 pixels
+            { compress: 0.5, format: 'jpeg' } // Adjust the compression quality (0 to 1) and format to JPEG
+        );
+        return manipResult.uri; // Return the URI of the compressed image
+    } catch (error) {
+        console.error("Error compressing image: ", error);
+        return uri; // Return the original URI if compression fails
+    }
+};
 
 // Function to convert local file URI to a Blob
 const uriToBlob = async (uri) => {
     const response = await fetch(uri);
     const blob = await response.blob();
+    console.log('Converted to Blob:', blob)
     return blob;
 };
-
 
 // Function to upload a Blob to Firebase Storage
 const uploadImage = async (blob) => {
     const storage = getStorage();
     const storageRef = ref(storage, `images/${Date.now()}.jpeg`); // Creates a unique name for each image
-
-    return uploadBytes(storageRef, blob).then((snapshot) => {
-        console.log('Uploaded blob!');
-        return snapshot.ref; // You might want to return the reference for further use, e.g., getting the download URL
-    });
+    
+    console.log('Uploading blob:', blob);
+    const uploadResult = await uploadBytes(storageRef, blob);
+    console.log('Uploaded blob!');
+    return uploadResult.ref;
 };
 
 
 // Combined function to upload an image from a local URI
 export const uploadImageAsync = async (imageUri) => {
     try {
-        const blob = await uriToBlob(imageUri);
+        const compressedUri = await compressImage(imageUri);
+        const blob = await uriToBlob(compressedUri);
         const snapshotRef = await uploadImage(blob);
         blob.close(); // Free up memory after blob is uploaded
 
