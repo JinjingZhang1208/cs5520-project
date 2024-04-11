@@ -5,6 +5,7 @@ import PressableButton from './PressableButton';
 import { MaterialIcons } from '@expo/vector-icons';
 import { auth, database } from '../firebase-files/firebaseSetup';
 import { deleteFromDB } from '../firebase-files/databaseHelper';
+import Card from './Card';
 
 export default function ReviewItem({ review }) {
 
@@ -33,21 +34,30 @@ export default function ReviewItem({ review }) {
   }
 
   return (
-    <Pressable
-      style={({ pressed }) => [styles.textContainer, pressed && styles.pressed]}
-      onPress={reviewPressHandler} andriod_ripple={{ color: '#e9e' }}> 
+      // if the review belongs to the user, wrap it in pressable to navigate to edit screen,
+      // otherwise, just show the review
+      <>
+        { review.owner == userId && (
+          <Pressable
+            style={({ pressed }) => [styles.textContainer, pressed && styles.pressed]}
+            onPress={reviewPressHandler} andriod_ripple={{ color: '#e9e' }}> 
 
-      <View style={{ flexDirection: 'column' }}>
-        <Text style={styles.boldText}>{review.restaurantName}</Text>
-        <Text style={styles.text}>{review.review}</Text>
-      </View>
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.boldText}>{review.restaurantName}</Text>
+              <Text style={styles.text}>{review.review}</Text>
+            </View>
 
-      {userId == review.owner && ( // only show delete button if the review belongs to the current user
-        <PressableButton onPress={deleteHandler}>
-          <MaterialIcons name="delete" size={24} color="black" />
-        </PressableButton>
-      )}
-    </Pressable>
+            <PressableButton onPress={deleteHandler}>
+              <MaterialIcons name="delete" size={24} color="black" />
+            </PressableButton>
+          </Pressable>
+        )}
+
+        { review.owner != userId && <Card style={styles.textContainer}>
+          <Text style={styles.boldText}>{review.restaurantName}</Text>
+          <Text style={styles.text}>{review.review}</Text>
+        </Card>}
+      </>
   )
 }
 
