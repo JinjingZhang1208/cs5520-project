@@ -94,7 +94,14 @@ export default function Review({navigation, route}) {
                     style={CommonStyles.reviewInput}
                     value={reviewContent}
                     onChangeText={setReviewContent}/>
-                <Text>🍽️{route.params.item?.name? route.params.item.name: route.params.restaurantInfo.restaurantName}</Text>
+                    {console.log('bug here:', route.params)}
+
+                    <Text>🍽️{ 
+                        route.params.item?.name || 
+                        route.params.review?.restaurantName || 
+                        route.params.restaurantInfo?.restaurantName 
+                    }</Text>
+
                 {locationName && <Text>📍{locationName}</Text>}
 
                 <PressableButton  
@@ -104,8 +111,8 @@ export default function Review({navigation, route}) {
                         selectedLocation: location, 
                         review: review, 
                         restaurantInfo: {
-                            restaurantName: route.params.item.name? route.params.item.name: route.params.review.restaurantName,
-                            restaurantId: route.params.item.id? route.params.item.id: route.params.review.bussiness_id
+                            restaurantName: route.params.item?.name? route.params.item.name: route.params.review.restaurantName,
+                            restaurantId: route.params.item?.bussiness_id? route.params.item.bussiness_id: route.params.review.bussiness_id
                             } })
                             }>
                     {console.log('Navigating to LocationManager with review:', review)}  

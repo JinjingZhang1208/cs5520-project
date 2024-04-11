@@ -15,8 +15,7 @@ export default function RestaurantDetail({ navigation, route }) {
     const [bookmark, setBookmark] = useState(false);
     const [reviews, setReviews] = useState([]);
 
-    // console.log('route.params:', route.params);
-    restaurantId = route.params.item.bussiness_id;
+    const restaurantId = route.params.item.bussiness_id;
 
     //check if the restaurant is in the wishlist
     useEffect(() => {
@@ -84,14 +83,13 @@ export default function RestaurantDetail({ navigation, route }) {
     //fetch reviews for the restaurant use readAllReviewsFromDB
     useEffect(() => {
         async function fetchReviewsData() {
+            console.log('Reviews params:', route.params);
             const reviews = await readAllReviewsFromDB(route.params.item.bussiness_id);
             setReviews(reviews);
+            console.log('reviews:', reviews);
         }
         fetchReviewsData();
     }, [reviews]);
-
-    console.log('restaurantId:', restaurantId);
-    console.log('reviews:', reviews);
 
 
     return (
