@@ -29,8 +29,9 @@ export default function Review({navigation, route}) {
             setReviewContent(review.review);
             setUploadedPhotos(review.imageURLs);
             setImageURLs(review.imageURLs);
+            updateLocationName();
         }
-    }, [mode, review]);
+    }, [mode, review, route.params.selectedLocation]);
 
     function receiveImageURI(imageUri) {
         setUploadedPhotos([...uploadedPhotos, imageUri]); // Set local state
@@ -58,6 +59,7 @@ export default function Review({navigation, route}) {
     };
 
     const updateLocationName = async () => {
+        console.log('in updateLocationName:', route.params, review);
         if (route.params.selectedLocation) {
             setLocation(route.params.selectedLocation);
             const lat = route.params.selectedLocation.latitude;
@@ -77,8 +79,8 @@ export default function Review({navigation, route}) {
     async function submitHandler() {
         // code to submit review
         const currentUser = auth.currentUser;
-        console.log('!!!!:', route.params);
         if (currentUser) {
+            await updateLocationName();
             const userId = currentUser.uid;
             let newReview = {
                 review: reviewContent, 
@@ -100,12 +102,14 @@ export default function Review({navigation, route}) {
         // code to edit review
         const currentUser = auth.currentUser;
         if (currentUser) {
+            await updateLocationName();
             const userId = currentUser.uid;
+            console.log('in edit:', route.params);
             let updatedReview = {
                 review: reviewContent, 
                 bussiness_id: route.params.review.bussiness_id, 
                 restaurantName: route.params.review.restaurantName,
-                locationName: route.params.review.locationName? route.params.review.locationName: locationName,
+                locationName: locationName? locationName : route.params.review.locationName,
                 latitude: route.params.review.latitude? route.params.review.latitude: location.latitude, // for map initial location
                 longitude: route.params.review.longitude? route.params.review.longitude: location.longitude, // for map initial location
                 owner: userId,
@@ -167,6 +171,7 @@ export default function Review({navigation, route}) {
                         route.params.restaurantInfo?.restaurantName 
                     }</Text>
 
+                {console.log('name bug:', locationName, route.params, review)}
                 {locationName && <Text>📍{locationName}</Text>}
 
                 <PressableButton  
@@ -176,16 +181,16 @@ export default function Review({navigation, route}) {
                         selectedLocation: location, 
                         review: review, 
                         restaurantInfo: {
-                            restaurantName: route.params.item?.name? route.params.item.name: route.params.review.restaurantName,
-                            restaurantId: route.params.item?.bussiness_id? route.params.item.bussiness_id: route.params.review.bussiness_id
+                            restaurantName:route.params.item?.name || route.params.review?.restaurantName || route.params.restaurantInfo?.restaurantName,
+                            restaurantId: route.params.item?.bussiness_id || route.params.review?.bussiness_id || route.params.restaurantInfo.restaurantId
                             } })
                             }>
-                    {console.log('Navigating to LocationManager with review:', review)}  
-                    {console.log('Navigating to LocationManager with location:', location)}
+                    {/* {console.log('Navigating to LocationManager with review:', review)}  
+                    {console.log('Navigating to LocationManager with location:', location)} */}
                     <Text>Choose Location</Text>
                 </PressableButton>
 
-                {/* Add a button to submit the review */}
+                {/* Add a button to submit/update the review */}
                 <PressableButton 
                     customStyle={CommonStyles.pressableButtonStyle}
                     onPress={mode == 'edit'? editHandler:submitHandler}>
