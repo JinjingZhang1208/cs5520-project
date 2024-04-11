@@ -39,15 +39,17 @@ const CommonStyles = StyleSheet.create({
     },
 
     reviewInput: {
-        width: 300,
-        height: 100,
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 5,
-        marginTop: 10,
+        marginTop: 50,
+        // marginLeft: 30,
+        // marginRight: 30,
         marginBottom: 10,
-        paddingHorizontal: 10,
-        textAlign: 'left',
+        fontSize: 18,
+        // fontWeight: 'bold',
+        height: 120,
+        padding: 15,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: 'tomato',
       },
 
     restauntName: {

@@ -23,6 +23,8 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import Notification from "./screens/Notification";
 import 'react-native-gesture-handler';
 import SearchResults from "./screens/SearchResults";
+import Map from "./components/Map";
+import LocationManager from "./components/LocationManager";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -118,7 +120,10 @@ export default function App() {
           drawerInactiveTintColor: "gray",
         }} >
         <Drawer.Screen name="Home" component={AppTabsScreen} /> 
+        <Drawer.Screen name="Map" component={Map} />
+        <Drawer.Screen name="AddReview" component={AddReview} />
         <Drawer.Screen name="Notifications" component={Notification} />
+        <Drawer.Screen name="LocationManager" component={LocationManager} />
       </Drawer.Navigator>
     );
   };

@@ -4,6 +4,7 @@ import AddReview from './AddReview'
 import CommonStyles from '../styles/CommonStyles'
 
 export default function EditReview({navigation, route}) {
+  console.log('route.params in edit review:', route.params);
   return (
       <AddReview 
         navigation={navigation} 
