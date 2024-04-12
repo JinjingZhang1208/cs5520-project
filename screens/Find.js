@@ -1,9 +1,10 @@
-import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
-import React, { useState } from 'react';
+import { StyleSheet, Text, TextInput, View, Button, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import PressableButton from '../components/PressableButton';
 import { Picker } from '@react-native-picker/picker';
 import { fetchAndPrepareRestaurants } from '../services/YelpService';
 import { useNavigation } from '@react-navigation/native';
+import * as Location from 'expo-location';
 
 const Find = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -12,8 +13,50 @@ const Find = () => {
   const [showDistancePicker, setShowDistancePicker] = useState(false);
   const [showRatingPicker, setShowRatingPicker] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
-
+  const [userLocation, setUserLocation] = useState(null);
+  const [userCurrLocName, setUserCurrLocName] = useState('');
   const navigation = useNavigation();
+
+
+  // User location state
+  useEffect(() => {
+    (async () => {
+      const coords = await fetchUserLocation();
+      if (!coords) {
+        // if location is null (permission denied or error)
+        return;
+      }
+      setUserLocation({ latitude: coords.latitude, longitude: coords.longitude });
+
+      const locName = await getLocationNameFromCoords(coords.latitude, coords.longitude);
+      setUserCurrLocName(locName);
+    })();
+  }, []);
+
+
+
+  // Fetch user current location
+  async function fetchUserLocation() {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.error('Permission to access location was denied');
+      return null;
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    return location.coords;
+  }
+
+  // Function to convert coordinates to a readable location name
+  async function getLocationNameFromCoords(latitude, longitude) {
+    const locationDetails = await Location.reverseGeocodeAsync({ latitude, longitude });
+    if (locationDetails && locationDetails.length > 0) {
+      console.log('User curr loc:', locationDetails[0].name, userLocation);
+      return `${locationDetails[0].name}, ${locationDetails[0].street}, ${locationDetails[0].city}`;
+    }
+    Alert.alert('Location name not found');
+    return 'Location name not found';
+  }
 
   const search = async () => {
     const radius = searchDistance * 1000; // Convert km to meters
@@ -28,7 +71,7 @@ const Find = () => {
 
       console.log('Search results:', restaurants);
       setSearchResults(restaurants);
-  
+
       navigation.navigate('Search Results', { results: restaurants }); // Navigate and pass results
 
     } catch (error) {
