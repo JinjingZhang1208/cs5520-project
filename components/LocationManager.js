@@ -9,12 +9,10 @@ export default function LocationManager({ navigation, route }) {
   const [location, setLocation] = useState(null);
 
   useEffect(() => {
-    if (route.params) {
-      console.log("Review received in LocationManager:", route.params.review);
-      console.log("Location received in LocationManager:", route.params.selectedLocation);
-      setLocation(route.params.selectedLocation);
+    if (route.params?.location) {
+      setLocation(route.params.location);
     }
-  }, [route.params]);
+  }, [route.params?.location])
 
   async function verifyPermission() {
     if (status.granted) {
@@ -44,7 +42,7 @@ export default function LocationManager({ navigation, route }) {
       longitude: location.coords.longitude,
     };
     setLocation({ newCoords });
-    console.log("User current location in LocationManager:", newCoords);
+    // console.log("User current location in LocationManager:", newCoords);
     navigation.navigate("Add My Review", { 
       mode: route.params.mode, 
       selectedLocation: newCoords, 

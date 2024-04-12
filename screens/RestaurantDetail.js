@@ -15,6 +15,7 @@ export default function RestaurantDetail({ navigation, route }) {
     const [bookmark, setBookmark] = useState(false);
     const [reviews, setReviews] = useState([]);
 
+    //get restaurant details from the route params
     const restaurantId = route.params.item.bussiness_id;
     const name = route.params.item.name;
     const rating = route.params.item.rating;
@@ -111,7 +112,7 @@ export default function RestaurantDetail({ navigation, route }) {
                 </View>
                 <PressableButton
                     customStyle={styles.pressableButtonStyle}
-                    onPress={() => { navigation.navigate('Add My Review') }}>
+                    onPress={() => { navigation.navigate('Add My Review', {item: route.params.item})}}>
                     <Text>Add my Review</Text>
                 </PressableButton>
             </Card>

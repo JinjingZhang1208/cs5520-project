@@ -8,27 +8,30 @@ import { auth, storage} from '../firebase-files/firebaseSetup';
 import * as Location from 'expo-location';
 import { MaterialIcons } from '@expo/vector-icons';
 import ImageInput from '../components/ImageInput';
+import { useRoute } from '@react-navigation/native';
 
 export default function Review({navigation, route}) {
+
     const [reviewContent, setReviewContent] = useState('');
-    const [imageModalVisible, setImageModalVisible] = useState(false);
     const [uploadedPhotos, setUploadedPhotos] = useState([]);
     const [imageURLs, setImageURLs] = useState([]);
+    const [imageModalVisible, setImageModalVisible] = useState(false);
     const [location, setLocation] = useState({
-        latitude: route.params.review?.latitude? route.params.review.latitude: 37.78825,
-        longitude: route.params.review?.longitude? route.params.review.longitude: -122.4324
+        latitude: route.params.review?.latitude? route.params.review.latitude: 42.339904,
+        longitude: route.params.review?.longitude? route.params.review.longitude: 71.0924641,17
     });
     const [locationName, setLocationName] = useState(null);
 
     const {mode, review} = route.params || {};
+    const business_id = route.params.item?.bussiness_id || route.params.review?.bussiness_id;
+    const restauntName = route.params.item?.name || route.params.review?.restaurantName;
 
     // Set initial values for edit mode
     useEffect(() => {
-        console.log('route.params in add review:', route.params);
         if (mode === 'edit') {
             setReviewContent(review.review);
-            setUploadedPhotos(review.imageURLs);
             setImageURLs(review.imageURLs);
+            setUploadedPhotos(review.imageURLs); // Set local state of image urls to display
         }
     }, [mode, review]);
 
@@ -77,13 +80,12 @@ export default function Review({navigation, route}) {
     async function submitHandler() {
         // code to submit review
         const currentUser = auth.currentUser;
-        console.log('!!!!:', route.params);
         if (currentUser) {
             const userId = currentUser.uid;
             let newReview = {
                 review: reviewContent, 
-                bussiness_id: route.params.item?.bussiness_id? route.params.item.bussiness_id: route.params.restaurantInfo.restaurantId, // either from RestaurantDetail or naviagte back from Map
-                restaurantName: route.params.item?.name? route.params.item.name: route.params.restaurantInfo.restaurantName, // either from RestaurantDetail or naviagte back from Map
+                bussiness_id: business_id,
+                restaurantName: restauntName,
                 locationName: locationName,
                 latitude: location.latitude, // for map initial location
                 longitude: location.longitude, // for map initial location
@@ -103,8 +105,8 @@ export default function Review({navigation, route}) {
             const userId = currentUser.uid;
             let updatedReview = {
                 review: reviewContent, 
-                bussiness_id: route.params.review.bussiness_id, 
-                restaurantName: route.params.review.restaurantName,
+                bussiness_id: business_id, 
+                restaurantName: restauntName,
                 locationName: route.params.review.locationName? route.params.review.locationName: locationName,
                 latitude: route.params.review.latitude? route.params.review.latitude: location.latitude, // for map initial location
                 longitude: route.params.review.longitude? route.params.review.longitude: location.longitude, // for map initial location
@@ -158,12 +160,10 @@ export default function Review({navigation, route}) {
                     value={reviewContent}
                     onChangeText={setReviewContent}/>
 
-                {/* If in edit mode, display the restaurant name */}
-                    {console.log('bug here:', route.params)}
+                {/* Display the restaurant name */}
 
                     <Text>🍽️{ 
-                        route.params.item?.name || 
-                        route.params.review?.restaurantName || 
+                        restauntName || 
                         route.params.restaurantInfo?.restaurantName 
                     }</Text>
 
@@ -172,16 +172,16 @@ export default function Review({navigation, route}) {
                 <PressableButton  
                     customStyle={styles.locationButtonStyle}
                     onPress={() => navigation.navigate('LocationManager', { 
-                        mode: mode ,
-                        selectedLocation: location, 
-                        review: review, 
-                        restaurantInfo: {
-                            restaurantName: route.params.item?.name? route.params.item.name: route.params.review.restaurantName,
-                            restaurantId: route.params.item?.bussiness_id? route.params.item.bussiness_id: route.params.review.bussiness_id
-                            } })
-                            }>
-                    {console.log('Navigating to LocationManager with review:', review)}  
-                    {console.log('Navigating to LocationManager with location:', location)}
+                        // mode: mode ,
+                        location: location, 
+                        // review: review, 
+                        // restaurantInfo: {
+                        //     restaurantName: route.params.item?.name? route.params.item.name: route.params.review.restaurantName,
+                        //     restaurantId: route.params.item?.bussiness_id? route.params.item.bussiness_id: route.params.review.bussiness_id
+                        //     } 
+                        })}>
+                    {/* {console.log('Navigating to LocationManager with review:', review)}  
+                    {console.log('Navigating to LocationManager with location:', location)} */}
                     <Text>Choose Location</Text>
                 </PressableButton>
 
