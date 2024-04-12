@@ -16,6 +16,10 @@ export default function RestaurantDetail({ navigation, route }) {
     const [reviews, setReviews] = useState([]);
 
     const restaurantId = route.params.item.bussiness_id;
+    const name = route.params.item.name;
+    const rating = route.params.item.rating;
+    const review_count = route.params.item.review_count;
+    const image_url = route.params.item.image_url;
 
     //check if the restaurant is in the wishlist
     useEffect(() => {
@@ -53,10 +57,10 @@ export default function RestaurantDetail({ navigation, route }) {
                 } else {
                     let res = {
                         bussiness_id: restaurantId,
-                        name: route.params.item.name,
-                        rating: route.params.item.rating,
-                        review_count: route.params.item.review_count,
-                        image_url: route.params.item.image_url,
+                        name: name,
+                        rating: rating,
+                        review_count: review_count,
+                        image_url: image_url,
                         owner: userId,
                     };
                     await writeToDB(res, 'users', userId, 'wishlists');
@@ -85,7 +89,7 @@ export default function RestaurantDetail({ navigation, route }) {
     useEffect(() => {
         async function fetchReviewsData() {
             //console.log('Reviews params:', route.params);
-            const reviews = await readAllReviewsFromDB(route.params.item.bussiness_id);
+            const reviews = await readAllReviewsFromDB(restaurantId);
             setReviews(reviews);
             //console.log('reviews:', reviews);
         }
@@ -98,16 +102,16 @@ export default function RestaurantDetail({ navigation, route }) {
             <Card>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <Image
-                        source={{ uri: route.params.item.image_url }}
+                        source={{ uri: image_url}}
                         style={{ width: 325, height: 150 }} />
                 </View>
                 <View style={[CommonStyles.directionRow, { justifyContent: 'center' }]}>
-                    <Text>Ratings: {route.params.item.rating}   </Text>
-                    <Text>Reviews: {route.params.item.review_count}</Text>
+                    <Text>Ratings: {rating}   </Text>
+                    <Text>Reviews: {review_count}</Text>
                 </View>
                 <PressableButton
                     customStyle={styles.pressableButtonStyle}
-                    onPress={() => { navigation.navigate('Add My Review', { item: route.params.item }) }}>
+                    onPress={() => { navigation.navigate('Add My Review') }}>
                     <Text>Add my Review</Text>
                 </PressableButton>
             </Card>
