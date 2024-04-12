@@ -7,9 +7,9 @@ import { uploadImageAsync, saveImageURLToFirestore } from '../firebase-files/dat
 import { auth, storage} from '../firebase-files/firebaseSetup';
 import { MaterialIcons } from '@expo/vector-icons';
 import ImageInput from '../components/ImageInput';
+import * as Location from 'expo-location';
 
 export default function Review({navigation, route}) {
-
     const [reviewContent, setReviewContent] = useState('');
     const [uploadedPhotos, setUploadedPhotos] = useState([]);
     const [imageURLs, setImageURLs] = useState([]);

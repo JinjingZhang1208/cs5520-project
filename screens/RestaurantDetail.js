@@ -21,6 +21,8 @@ export default function RestaurantDetail({ navigation, route }) {
     const rating = route.params.item.rating;
     const review_count = route.params.item.review_count;
     const image_url = route.params.item.image_url;
+    const latitude = route.params.item.latitude;
+    const longitude = route.params.item.longitude;
 
     //check if the restaurant is in the wishlist
     useEffect(() => {
@@ -63,6 +65,8 @@ export default function RestaurantDetail({ navigation, route }) {
                         review_count: review_count,
                         image_url: image_url,
                         owner: userId,
+                        latitude: latitude,
+                        longitude: longitude
                     };
                     await writeToDB(res, 'users', userId, 'wishlists');
                     setBookmark(true);
