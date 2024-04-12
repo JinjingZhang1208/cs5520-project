@@ -6,20 +6,19 @@ import { fetchAndPrepareRestaurants } from '../services/YelpService';
 import { useNavigation } from '@react-navigation/native';
 import * as Location from 'expo-location';
 
-const Find = () => {
+const Find = ({route, navigation}) => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchDistance, setSearchDistance] = useState("3");
   const [searchRating, setSearchRating] = useState("4");
   const [showDistancePicker, setShowDistancePicker] = useState(false);
   const [showRatingPicker, setShowRatingPicker] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
+  // const [searchResults, setSearchResults] = useState([]);
 
   const [status, requestPermission] = Location.useForegroundPermissions();
   const [userCurrLoc, setUserCurrLoc] = useState(null);
   const [userCurrLocName, setUserCurrLocName] = useState('');
-
-  const navigation = useNavigation();
-
+  const [location, setLocation] = useState(null);
+  const [locationName, setLocationName] = useState('Loading your current location...');
 
   // User location state
   useEffect(() => {
@@ -31,12 +30,31 @@ const Find = () => {
           return;
         }
         setUserCurrLoc(coords);
+        setLocation(coords);
+        const locName = await getLocationNameFromCoords(coords.latitude, coords.longitude);
+        setUserCurrLocName(locName);
+        setLocationName(locName);
       }
-
-      const locName = await getLocationNameFromCoords(coords.latitude, coords.longitude);
-      setUserCurrLocName(locName);
     })();
   }, []);
+
+    // Update location name when location changes
+    useEffect(() => {
+      async function fetchNewLocationName() {
+          if (route.params?.location) {
+            console.log('route.params.location:', route.params.location);
+            setLocation(route.params.location);
+
+            const lat = route.params.location.latitude;
+            console.log('lat:', lat);
+            const long = route.params.location.longitude;
+            console.log('long:', long);
+            const name = await getLocationNameFromCoords(lat, long);
+            setLocationName(name);
+          }
+      }
+      fetchNewLocationName();
+    }, [route.params?.location])
 
   // Verify location permission
   async function verifyPermission() {
@@ -52,12 +70,10 @@ const Find = () => {
     }
   }
 
-
   // Fetch user current location
   async function fetchUserLocation() {
     try {
       const havePermission = await verifyPermission();
-      console.log('Have permission:', havePermission);
       if (!havePermission) {
         return null;
       }
@@ -74,7 +90,6 @@ const Find = () => {
   // Function to convert coordinates to a readable location name
   async function getLocationNameFromCoords(latitude, longitude) {
     const locationDetails = await Location.reverseGeocodeAsync({ latitude, longitude });
-    console.log('Location details:', locationDetails);
     if (locationDetails && locationDetails.length > 0) {
       return `${locationDetails[0].name}, ${locationDetails[0].street}, ${locationDetails[0].city}`;
     }
@@ -85,22 +100,14 @@ const Find = () => {
     const radius = searchDistance * 1000; // Convert km to meters
 
     try {
-      const coords = await fetchUserLocation();
-      locName = 'Location not found'
-      if (coords) {
-        console.log('User current location:', coords);
-        locName = await getLocationNameFromCoords(coords.latitude, coords.longitude);
-      }
-      console.log("User current location name:", locName)
       const restaurants = await fetchAndPrepareRestaurants(
-        locName, // later change the location
+        locationName, // later change the location
         searchKeyword,
         radius,
         searchRating
       );
 
       console.log('Search results:', restaurants);
-
       navigation.navigate('Search Results', { results: restaurants }); // Navigate and pass results
 
     } catch (error) {
@@ -121,7 +128,13 @@ const Find = () => {
         value={searchKeyword}
       />
 
-      <Text style={styles.location}>📍{userCurrLocName}</Text>
+      <Text style={styles.location}>📍{locationName}</Text>
+
+      <PressableButton  
+        customStyle={styles.locationButtonStyle}
+        onPress={() => navigation.navigate('LocationManager', {location: location})}>
+        <Text>Choose Location</Text>
+      </PressableButton>
 
       {/* Rating Picker */}
       <View style={styles.horizontal}>
@@ -260,7 +273,16 @@ const styles = StyleSheet.create({
     color: 'grey',
     marginLeft: 30,
     marginTop: 1,
-    marginBottom: 10,
   },
 
+  locationButtonStyle: {
+    backgroundColor: 'lightblue',
+    padding: 7,
+    borderRadius: 10,
+    marginTop: 5,
+    marginBottom: 5,
+    marginLeft: 30,
+    width: 200,
+    alignSelf: 'flex-start'
+  }
 })
