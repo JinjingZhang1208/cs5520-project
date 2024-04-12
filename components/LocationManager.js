@@ -25,7 +25,6 @@ export default function LocationManager({ navigation, route }) {
     }
   }
 
-
   async function locateUserHandler() {
     // if user has not given permission, ask for it
     const havePermission = await verifyPermission();
@@ -41,7 +40,7 @@ export default function LocationManager({ navigation, route }) {
     };
     setLocation({ newCoords });
     console.log("User current location in LocationManager:", newCoords);
-    navigation.navigate("Add My Review", { location: newCoords});
+    navigation.navigate("Find", { location: newCoords});
   }
 
 
@@ -56,9 +55,6 @@ export default function LocationManager({ navigation, route }) {
         location: location 
       });
       console.log("Pass from LocationManager to Map:", location);
-    } else {
-      navigation.navigate("Map");
-      // console.log("Pass from LocationManager to Map:", route.params.review);
     }
   }
 
