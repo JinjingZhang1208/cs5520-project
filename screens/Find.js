@@ -12,6 +12,7 @@ const Find = ({route, navigation}) => {
   const [searchRating, setSearchRating] = useState("4");
   const [showDistancePicker, setShowDistancePicker] = useState(false);
   const [showRatingPicker, setShowRatingPicker] = useState(false);
+  const [minReviewCount, setMinReviewCount] = useState(0);
   // const [searchResults, setSearchResults] = useState([]);
 
   const [status, requestPermission] = Location.useForegroundPermissions();
@@ -101,10 +102,11 @@ const Find = ({route, navigation}) => {
     Alert.alert('Searching for restaurants... This may take a few seconds...');
     try {
       const restaurants = await fetchAndPrepareRestaurants(
-        locationName, // later change the location
+        locationName, // 
         searchKeyword,
         radius,
-        searchRating
+        searchRating,
+        minReviewCount
       );
 
       console.log('Search results:', restaurants);
@@ -192,6 +194,17 @@ const Find = ({route, navigation}) => {
             <Picker.Item label="15 km" value="15" />
           </Picker>
         )}
+      </View>
+
+      <View style={styles.horizontal}>
+        <Text style={styles.text}>Minimum </Text>
+        <TextInput
+          style={styles.textInputforPicker}
+          placeholder='Min Reviews'
+          onChangeText={setMinReviewCount}
+          value={minReviewCount}
+        />
+        <Text style={styles.text}> Reviews </Text>
       </View>
 
       <View style={styles.buttonContainer}>
