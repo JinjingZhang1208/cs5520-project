@@ -13,8 +13,6 @@ export default function Map({ navigation, route }) {
         navigation.navigate('Add My Review', { 
             mode: route.params.mode, 
             selectedLocation, 
-            review: route.params.review,
-            restaurantInfo: route.params.restaurantInfo
         });
         console.log("Location passed from Map to AddReview:", selectedLocation);
     }
