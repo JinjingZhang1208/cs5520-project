@@ -9,6 +9,7 @@ import * as Location from 'expo-location';
 import { MaterialIcons } from '@expo/vector-icons';
 import ImageInput from '../components/ImageInput';
 import { useRoute } from '@react-navigation/native';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 export default function Review({navigation, route}) {
 
@@ -17,14 +18,46 @@ export default function Review({navigation, route}) {
     const [imageURLs, setImageURLs] = useState([]);
     const [imageModalVisible, setImageModalVisible] = useState(false);
     const [location, setLocation] = useState({
-        latitude: route.params.review?.latitude? route.params.review.latitude: 42.339904,
-        longitude: route.params.review?.longitude? route.params.review.longitude: 71.0924641,17
+        latitude: route.params.item?.latitude || route.params.review?.latitude,
+        longitude: route.params.item?.longitude || route.params.review?.longitude,
     });
-    const [locationName, setLocationName] = useState(null);
+    const [locationName, setLocationName] = useState(route.params.review?.locationName || 'Location Address');
 
     const {mode, review} = route.params || {};
-    const business_id = route.params.item?.bussiness_id || route.params.review?.bussiness_id;
-    const restauntName = route.params.item?.name || route.params.review?.restaurantName;
+    const [business_id, setBusinessID] = useState(route.params.item?.bussiness_id || route.params.review?.bussiness_id);
+    const [restauntName, setRestaurantName] = useState(route.params.item?.name || route.params.review?.restaurantName);
+
+    // Set initial location name
+    useEffect(() => {
+        async function fetchLocationName() {
+            if (route.params.item) {
+                const lat = route.params.item.latitude;
+                const long = route.params.item.longitude;
+                const name = await getLocationName(lat, long);
+                setLocationName(name);
+            }
+        }
+        fetchLocationName();
+    }, []);
+
+    // // Update location name when location changes
+    // useEffect(() => {
+    //     async function fetchNewLocationName() {
+    //         if (route.params?.location) {
+    //             console.log('route.params.location:', route.params.location);
+    //             setLocation(route.params.location);
+
+    //             const lat = route.params.location.latitude;
+    //             console.log('lat:', lat);
+    //             const long = route.params.location.longitude;
+    //             console.log('long:', long);
+    //             const name = await getLocationName(lat, long);
+    //             setLocationName(name);
+    //         }
+    //     }
+    //     fetchNewLocationName();
+    //   }, [route.params?.location])
+
 
     // Set initial values for edit mode
     useEffect(() => {
@@ -60,21 +93,9 @@ export default function Review({navigation, route}) {
         setImageURLs(updatedImageURLs);
     };
 
-    const updateLocationName = async () => {
-        if (route.params.selectedLocation) {
-            setLocation(route.params.selectedLocation);
-            const lat = route.params.selectedLocation.latitude;
-            const long = route.params.selectedLocation.longitude;
-            const name = await getLocationName(lat, long);
-            setLocation(route.params.selectedLocation);
-            setLocationName(name);
-        }
-    }
-
     async function getLocationName(lat, long) {
         const location = await Location.reverseGeocodeAsync({ latitude: lat, longitude: long });
-        return `${location[0].name}, ${location[0].street}, ${location[0].city}`;
-
+        return `${location[0].name}, ${location[0].street}, ${location[0].city}`;;
     }
 
     async function submitHandler() {
@@ -107,9 +128,9 @@ export default function Review({navigation, route}) {
                 review: reviewContent, 
                 bussiness_id: business_id, 
                 restaurantName: restauntName,
-                locationName: route.params.review.locationName? route.params.review.locationName: locationName,
-                latitude: route.params.review.latitude? route.params.review.latitude: location.latitude, // for map initial location
-                longitude: route.params.review.longitude? route.params.review.longitude: location.longitude, // for map initial location
+                locationName: locationName,
+                latitude: location.latitude, 
+                longitude: location.longitude, 
                 owner: userId,
                 imageURLs: imageURLs,
             };
@@ -142,15 +163,15 @@ export default function Review({navigation, route}) {
                         </View>
                     )}
                     horizontal={true}/>
-            </View>
             
-            {/* Add the ImageInput modal */}
-            <ImageInput
-                imageModalVisible={imageModalVisible}
-                dismissModal={() => setImageModalVisible(false)}
-                receiveImageURI={receiveImageURI}
-                updateURI={updateReviewImageUrl}
-            />
+                {/* Add the ImageInput modal */}
+                <ImageInput
+                    imageModalVisible={imageModalVisible}
+                    dismissModal={() => setImageModalVisible(false)}
+                    receiveImageURI={receiveImageURI}
+                    updateURI={updateReviewImageUrl}
+                />
+            </View>
 
             <View style={{marginTop:10}}> 
                 {/* Add a text input for the review content */}
@@ -161,13 +182,10 @@ export default function Review({navigation, route}) {
                     onChangeText={setReviewContent}/>
 
                 {/* Display the restaurant name */}
-
-                    <Text>🍽️{ 
-                        restauntName || 
-                        route.params.restaurantInfo?.restaurantName 
-                    }</Text>
-
-                {locationName && <Text>📍{locationName}</Text>}
+                <Text>🍽️{restauntName}</Text>
+                        
+                {/* Display the location name */}
+                <Text>📍{locationName}</Text>
 
                 <PressableButton  
                     customStyle={styles.locationButtonStyle}
@@ -180,8 +198,6 @@ export default function Review({navigation, route}) {
                         //     restaurantId: route.params.item?.bussiness_id? route.params.item.bussiness_id: route.params.review.bussiness_id
                         //     } 
                         })}>
-                    {/* {console.log('Navigating to LocationManager with review:', review)}  
-                    {console.log('Navigating to LocationManager with location:', location)} */}
                     <Text>Choose Location</Text>
                 </PressableButton>
 

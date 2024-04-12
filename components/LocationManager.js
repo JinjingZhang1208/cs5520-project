@@ -36,19 +36,13 @@ export default function LocationManager({ navigation, route }) {
 
     // get the location 
     const location = await Location.getCurrentPositionAsync();
-    console.log("User current location fetched:", location);
     const newCoords = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
     };
     setLocation({ newCoords });
-    // console.log("User current location in LocationManager:", newCoords);
-    navigation.navigate("Add My Review", { 
-      mode: route.params.mode, 
-      selectedLocation: newCoords, 
-      review: route.params.review,
-      restaurantInfo: route.params.restaurantInfo
-     });
+    console.log("User current location in LocationManager:", newCoords);
+    navigation.navigate("Add My Review", { location: newCoords});
   }
 
 
@@ -60,19 +54,19 @@ export default function LocationManager({ navigation, route }) {
     }
     if (location) {
       navigation.navigate("Map", { 
-        initLoc: location, 
-        review: route.params.review, 
-        mode: route.params.mode,
-        restaurantInfo: route.params.restaurantInfo
+        location: location 
+        // review: route.params.review, 
+        // mode: route.params.mode,
+        // restaurantInfo: route.params.restaurantInfo
       });
-      console.log("Pass from LocationManager to Map:", location, route.params.review);
+      console.log("Pass from LocationManager to Map:", location);
     } else {
-      navigation.navigate("Map", { 
-        review: route.params.review, 
-        mode: route.params.mode,
-        restaurantInfo: route.params.restaurantInfo
-      });
-      console.log("Pass from LocationManager to Map:", route.params.review);
+      navigation.navigate("Map" 
+        // review: route.params.review, 
+        // mode: route.params.mode,
+        // restaurantInfo: route.params.restaurantInfo
+      );
+      // console.log("Pass from LocationManager to Map:", route.params.review);
     }
   }
   // function saveLocationHandler() {

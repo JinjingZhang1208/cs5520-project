@@ -11,10 +11,7 @@ export default function Map({ navigation, route }) {
     function confirmHandler() {
         //navigate to AddReview and pass selectedlocation as parameter
         navigation.navigate('Add My Review', { 
-            mode: route.params.mode, 
-            selectedLocation, 
-            review: route.params.review,
-            restaurantInfo: route.params.restaurantInfo
+            location:selectedLocation,
         });
         console.log("Location passed from Map to AddReview:", selectedLocation);
     }
@@ -24,8 +21,8 @@ export default function Map({ navigation, route }) {
             <MapView
                 style={styles.map}
                 initialRegion={{
-                    latitude: route.params ? route.params.initLoc.latitude : 37.78825,
-                    longitude: route.params ? route.params.initLoc.longitude : -122.4324,
+                    latitude: route.params ? route.params.location.latitude : 37.78825,
+                    longitude: route.params ? route.params.location.longitude : -122.4324,
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                 }}
