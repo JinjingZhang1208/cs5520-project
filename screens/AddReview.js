@@ -7,21 +7,44 @@ import { uploadImageAsync, saveImageURLToFirestore } from '../firebase-files/dat
 import { auth, storage} from '../firebase-files/firebaseSetup';
 import { MaterialIcons } from '@expo/vector-icons';
 import ImageInput from '../components/ImageInput';
+import * as Location from 'expo-location';
 
 export default function Review({navigation, route}) {
     const [reviewContent, setReviewContent] = useState('');
-    const [imageModalVisible, setImageModalVisible] = useState(false);
     const [uploadedPhotos, setUploadedPhotos] = useState([]);
     const [imageURLs, setImageURLs] = useState([]);
+    const [imageModalVisible, setImageModalVisible] = useState(false);
+
     const {mode, review} = route.params || {};
+    const business_id = route.params.item?.bussiness_id || route.params.review?.bussiness_id;
+    const restauntName = route.params.item?.name || route.params.review?.restaurantName;
+    const location = route.params.item? {latitude: route.params.item.latitude, longitude: route.params.item.longitude}: route.params.review? {latitude: route.params.review.latitude, longitude: route.params.review.longitude}: {latitude: 37.78825, longitude: -122.4324};
+    const [locationName, setLocationName] = useState(route.params.review?.locationName || 'Location Address');
+
+    // Set initial location name
+    useEffect(() => {
+        async function fetchLocationName() {
+            if (route.params.item) {
+                const lat = route.params.item.latitude;
+                const long = route.params.item.longitude;
+                const name = await getLocationName(lat, long);
+                setLocationName(name);
+            }
+        }
+        fetchLocationName();
+    }, []);
+
+    async function getLocationName(lat, long) {
+        const location = await Location.reverseGeocodeAsync({ latitude: lat, longitude: long });
+        return `${location[0].name}, ${location[0].street}, ${location[0].city}`;;
+    }
 
     // Set initial values for edit mode
     useEffect(() => {
-        console.log('route.params in add review:', route.params);
         if (mode === 'edit') {
             setReviewContent(review.review);
-            setUploadedPhotos(review.imageURLs);
             setImageURLs(review.imageURLs);
+            setUploadedPhotos(review.imageURLs); // Set local state of image urls to display
         }
     }, [mode, review]);
 
@@ -57,8 +80,11 @@ export default function Review({navigation, route}) {
             const userId = currentUser.uid;
             let newReview = {
                 review: reviewContent, 
-                bussiness_id: route.params.item?.bussiness_id? route.params.item.bussiness_id: route.params.restaurantInfo.restaurantId, // either from RestaurantDetail or naviagte back from Map
-                restaurantName: route.params.item?.name? route.params.item.name: route.params.restaurantInfo.restaurantName, // either from RestaurantDetail or naviagte back from Map
+                bussiness_id: business_id,
+                restaurantName: restauntName,
+                locationName: locationName,
+                latitude: location.latitude, 
+                longitude: location.longitude,
                 owner: userId,
                 imageURLs: imageURLs,
             };
@@ -76,8 +102,11 @@ export default function Review({navigation, route}) {
             console.log('in edit:', route.params);
             let updatedReview = {
                 review: reviewContent, 
-                bussiness_id: route.params.review.bussiness_id, 
-                restaurantName: route.params.review.restaurantName,
+                bussiness_id: business_id, 
+                restaurantName: restauntName,
+                locationName: locationName,
+                latitude: location.latitude, 
+                longitude: location.longitude, 
                 owner: userId,
                 imageURLs: imageURLs,
             };
@@ -110,15 +139,15 @@ export default function Review({navigation, route}) {
                         </View>
                     )}
                     horizontal={true}/>
-            </View>
             
-            {/* Add the ImageInput modal */}
-            <ImageInput
-                imageModalVisible={imageModalVisible}
-                dismissModal={() => setImageModalVisible(false)}
-                receiveImageURI={receiveImageURI}
-                updateURI={updateReviewImageUrl}
-            />
+                {/* Add the ImageInput modal */}
+                <ImageInput
+                    imageModalVisible={imageModalVisible}
+                    dismissModal={() => setImageModalVisible(false)}
+                    receiveImageURI={receiveImageURI}
+                    updateURI={updateReviewImageUrl}
+                />
+            </View>
 
             <View style={{marginTop:10}}> 
                 {/* Add a text input for the review content */}
@@ -128,16 +157,13 @@ export default function Review({navigation, route}) {
                     value={reviewContent}
                     onChangeText={setReviewContent}/>
 
-                {/* If in edit mode, display the restaurant name */}
-                    {console.log('bug here:', route.params)}
+                {/* Display the restaurant name */}
+                <Text>🍽️{restauntName}</Text>
+                        
+                {/* Display the location name */}
+                <Text>📍{locationName}</Text>
 
-                    <Text>📍{ 
-                        route.params.item?.name || 
-                        route.params.review?.restaurantName || 
-                        route.params.restaurantInfo?.restaurantName 
-                    }</Text>
-
-                {/* Add a button to submit/update the review */}
+                {/* Add a button to submit the review */}
                 <PressableButton 
                     customStyle={CommonStyles.pressableButtonStyle}
                     onPress={mode == 'edit'? editHandler:submitHandler}>

@@ -20,8 +20,8 @@ export default function RestaurantItem({item}) {
           source={{uri: item.image_url}}
           style={{width: 325, height: 150, borderRadius: 5}} />
         <View style={[CommonStyles.directionRow, {justifyContent:'start'}]}>
-          {/* <Text>Ratings: {item.rating}   </Text>
-          <Text>Reviews: {item.review_count}</Text> */}
+          <Text>Ratings: {item.rating}   </Text>
+          <Text>Reviews: {item.review_count}</Text>
         </View>
       </Card>
     </PressableButton>

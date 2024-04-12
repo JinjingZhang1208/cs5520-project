@@ -2,19 +2,16 @@ import { View, Button, Image, StyleSheet, Dimensions } from "react-native";
 import React, { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import { mapsApiKey } from "@env";
-import { useNavigation, useRoute, } from "@react-navigation/native";
 
 export default function LocationManager({ navigation, route }) {
   const [status, requestPermission] = Location.useForegroundPermissions();
   const [location, setLocation] = useState(null);
 
   useEffect(() => {
-    if (route.params) {
-      console.log("Params received in LocationManager:", route.params);
-      console.log("Location received in LocationManager:", route.params.selectedLocation);
-      setLocation(route.params.selectedLocation);
+    if (route.params?.location) {
+      setLocation(route.params.location);
     }
-  }, [route.params]);
+  }, [route.params?.location])
 
   async function verifyPermission() {
     if (status.granted) {
@@ -38,17 +35,13 @@ export default function LocationManager({ navigation, route }) {
 
     // get the location 
     const location = await Location.getCurrentPositionAsync();
-    console.log("User current location fetched:", location);
     const newCoords = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
     };
     setLocation({ newCoords });
     console.log("User current location in LocationManager:", newCoords);
-    navigation.navigate("Add My Review", { 
-      mode: route.params.mode, 
-      selectedLocation: newCoords, 
-     });
+    navigation.navigate("Add My Review", { location: newCoords});
   }
 
 
@@ -60,15 +53,12 @@ export default function LocationManager({ navigation, route }) {
     }
     if (location) {
       navigation.navigate("Map", { 
-        initLoc: location, 
-        mode: route.params.mode,
+        location: location 
       });
-      console.log("Pass from LocationManager to Map:", location, route.params.review);
+      console.log("Pass from LocationManager to Map:", location);
     } else {
-      navigation.navigate("Map", { 
-        mode: route.params.mode,
-      });
-      console.log("Pass from LocationManager to Map:", route.params.review);
+      navigation.navigate("Map");
+      // console.log("Pass from LocationManager to Map:", route.params.review);
     }
   }
 
@@ -95,7 +85,9 @@ export default function LocationManager({ navigation, route }) {
 const styles = StyleSheet.create({
   image: {
     width: Dimensions.get("screen").width * 0.9,
-    height: Dimensions.get("screen").height * 0.6,
+    height: Dimensions.get("screen").height * 0.7,
+    // marginLeft: 50,
+    // marginRight: 50,
     marginTop: 50,
     borderRadius: 10,
   },
