@@ -1,15 +1,13 @@
-import { View, Text, StyleSheet, Image, Modal, TextInput, Button, StatusBar } from "react-native";
 import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, Image, Modal, TextInput, Pressable, StatusBar } from "react-native";
 import { auth } from "../firebase-files/firebaseSetup";
-import PressableButton from "../components/PressableButton";
 import { signOut } from "firebase/auth";
 import { Ionicons } from "@expo/vector-icons";
 import { fetchUserData, uploadImageAsync, saveImageURLToFirestore, updateUsername, setEmail } from "../firebase-files/databaseHelper";
-import ImageManager from "../components/ImageManager";
+import PressableButton from "../components/PressableButton";
 import ImageInput from "../components/ImageInput";
 
-
-export default function Profile({navigation, route}) {
+export default function Profile({ navigation, route }) {
   const defaultAvatar = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png";
 
   const [avatarUri, setAvatarUri] = useState(defaultAvatar);
@@ -19,9 +17,8 @@ export default function Profile({navigation, route}) {
   const [nameModalVisible, setNameModalVisible] = useState(false);
 
   const receiveImageURI = (imageURI) => {
-    console.log("we are receiving", imageURI);
     setAvatarUri(imageURI);
-    setImageModalVisible(false); // Close the image modal after selecting an image
+    setImageModalVisible(false);
   };
 
   const generateRandomUsername = () => {
@@ -33,68 +30,57 @@ export default function Profile({navigation, route}) {
     return `${adjective}${noun}${number}`;
   };
 
-  // Fetch user data from Firestore and set the local state
   useEffect(() => {
     const fetchAndSetUserData = async () => {
       const userId = auth.currentUser.uid;
       const userEmail = auth.currentUser.email;
 
-      const userData = await fetchUserData(userId); // Await the async call to fetch user data
+      const userData = await fetchUserData(userId);
       const fetchedName = userData ? userData.username : null;
       const fetchedAvatarUri = userData ? userData.avatarUrl : null;
 
-      // Update username
       if (!fetchedName) {
         const newGeneratedUsername = generateRandomUsername();
-        setUsername(newGeneratedUsername); // Set the new username in the local state
+        setUsername(newGeneratedUsername);
         await updateUsername(userId, newGeneratedUsername);
       } else {
         setUsername(fetchedName);
       }
 
-      // Set the avatar URI 
       setAvatarUri(fetchedAvatarUri ? fetchedAvatarUri : defaultAvatar);
 
-      // Set the email
       await setEmail(userId, userEmail);
     };
 
     fetchAndSetUserData();
   }, []);
 
-
-  // a function to handle updating the avatar
   const updateAvatarHandler = async (imageURI) => {
     try {
       const userId = auth.currentUser.uid;
-      const imageUrl = await uploadImageAsync(imageURI); // Upload image and get URL
-      await saveImageURLToFirestore(userId, imageUrl); // Save image URL to Firestore
-      setAvatarUri(imageUrl); // Update local state
+      const imageUrl = await uploadImageAsync(imageURI);
+      await saveImageURLToFirestore(userId, imageUrl);
+      setAvatarUri(imageUrl);
       console.log("Avatar updated successfully.");
     } catch (error) {
       console.error("Error updating avatar:", error);
     }
   };
 
-
-
-  // a function to handle updating the username
   const updateUsernameHandler = async () => {
     const userId = auth.currentUser.uid;
     try {
-      await updateUsername(userId, newUsername.trim()); // Update username in Firestore
-      setUsername(newUsername.trim()); // Update local state
-      setNewUsername(''); // Reset the newUsername field
+      await updateUsername(userId, newUsername.trim());
+      setUsername(newUsername.trim());
+      setNewUsername('');
       console.log("Username updated successfully.");
     } catch (error) {
       console.error("Error updating username:", error);
     }
   };
 
-
   return (
     <View style={styles.container}>
-
       <StatusBar translucent={true} backgroundColor="transparent" />
 
       <ImageInput
@@ -108,9 +94,7 @@ export default function Profile({navigation, route}) {
         animationType="slide"
         transparent={true}
         visible={nameModalVisible}
-        onRequestClose={() => {
-          setNameModalVisible(!nameModalVisible);
-        }}>
+        onRequestClose={() => setNameModalVisible(!nameModalVisible)}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Change Username</Text>
@@ -120,7 +104,7 @@ export default function Profile({navigation, route}) {
               value={newUsername}
               placeholder="Enter new username"
             />
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: 200 }}>
+            <View style={styles.modalButtonsContainer}>
               <PressableButton
                 customStyle={styles.pressableButtonStyle}
                 onPress={() => {
@@ -130,7 +114,7 @@ export default function Profile({navigation, route}) {
                 <Text>Update</Text>
               </PressableButton>
               <PressableButton
-                customStyle={{...styles.pressableButtonStyle, backgroundColor: 'gray'}}
+                customStyle={{ ...styles.pressableButtonStyle, backgroundColor: 'gray' }}
                 onPress={() => setNameModalVisible(!nameModalVisible)}>
                 <Text>Cancel</Text>
               </PressableButton>
@@ -139,24 +123,22 @@ export default function Profile({navigation, route}) {
         </View>
       </Modal>
 
-      {/* Display the avatar image */}
-      <Image source={{uri:avatarUri}} style={styles.image} />
+      <Image source={{ uri: avatarUri }} style={styles.image} />
       <PressableButton
         customStyle={styles.pressableButtonStyle}
         onPress={() => setImageModalVisible(true)}>
-        <Text style ={styles.buttonText}>Change Avatar</Text>
+        <Text style={styles.buttonText}>Change Avatar</Text>
       </PressableButton>
 
-      {/* Display the username and other profile info */}
       <Text style={styles.usernameText}>{username}</Text>
       <PressableButton
         customStyle={styles.pressableButtonStyle}
         onPress={() => setNameModalVisible(true)}>
-        <Text style ={styles.buttonText}>Change Username</Text>
+        <Text style={styles.buttonText}>Change Username</Text>
       </PressableButton>
 
       <PressableButton
-        onPress={() => {navigation.navigate('MyReviews')}}>
+        onPress={() => { navigation.navigate('MyReviews') }}>
         <Text style={styles.goToReviews}>Go to My Reviews 👉</Text>
       </PressableButton>
 
@@ -165,8 +147,7 @@ export default function Profile({navigation, route}) {
           signOut(auth)
             .catch((error) => console.error("Error signing out:", error));
         }}
-        customStyle={styles.buttonStyle}
-      >
+        customStyle={styles.buttonStyle}>
         <Ionicons name="log-out-outline" size={24} color="white" />
       </PressableButton>
     </View>
@@ -217,9 +198,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   pressableButtonStyle: {
-    backgroundColor: 'tomato', 
-    padding: 7, 
-    borderRadius: 10, 
+    backgroundColor: 'tomato',
+    padding: 7,
+    borderRadius: 10,
     alignSelf: 'center'
   },
   buttonStyle: {
@@ -239,12 +220,18 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 10,
     fontWeight: 'bold',
-    textAlign: "center"
+    textAlign: "center",
+    fontSize: 18,
   },
   goToReviews: {
     fontSize: 20,
-    color: 'tomato',
+    color: "#0077CC",
     fontWeight: 'bold',
     marginTop: 10,
+  },
+  modalButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: 200
   }
 });

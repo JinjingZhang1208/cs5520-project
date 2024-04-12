@@ -25,6 +25,7 @@ import 'react-native-gesture-handler';
 import SearchResults from "./screens/SearchResults";
 import Map from "./components/Map";
 import LocationManager from "./components/LocationManager";
+import { SafeAreaView } from "react-native";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -50,7 +51,7 @@ export default function App() {
   }, []);
 
   const AuthStack = () => (
-    <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: "#C08B5C" }, headerTintColor: "white" }}>
+    <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: "tomato" }, headerTintColor: "white" }}>
       <Stack.Screen name="Start" component={Start} options={{ headerShown: false }} />
       <Stack.Screen name="Signup" component={Signup} options={{ title: "Sign Up" }} />
       <Stack.Screen name="Login" component={Login} options={{ title: "Login" }} />
@@ -60,15 +61,16 @@ export default function App() {
 
   const AppTabsScreen = () => {
     return (
-      <Tab.Navigator 
+      <Tab.Navigator
         screenOptions={{
           headerStyle: { backgroundColor: "tomato" },
           headerTintColor: "white",
-          tabBarActiveTintColor: "tomato", 
-          tabBarInactiveTintColor: "gray" }}>
-        <Tab.Screen 
-          name="Discover" 
-          component={Discover} 
+          tabBarActiveTintColor: "tomato",
+          tabBarInactiveTintColor: "gray"
+        }}>
+        <Tab.Screen
+          name="Discover"
+          component={Discover}
           options={{
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="home" size={size} color={color} />
@@ -93,7 +95,7 @@ export default function App() {
             ),
           }}
         />
-        <Tab.Screen 
+        <Tab.Screen
           name="Profile"
           component={Profile}
           options={{
@@ -110,8 +112,9 @@ export default function App() {
   // Function to return the App Tabs Screen with Drawer Navigation
   const DrawerWithTabs = () => {
     return (
-      <Drawer.Navigator initialRouteName="Home" 
-        screenOptions={{ headerShown: false,
+      <Drawer.Navigator initialRouteName="Home"
+        screenOptions={{
+          headerShown: false,
           drawerStyle: {
             backgroundColor: "white",
             width: 240,
@@ -125,7 +128,7 @@ export default function App() {
     );
   };
 
-  
+
 
   if (loading) {
     return (
@@ -136,16 +139,17 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
+    <SafeAreaView style={{ flex: 1 }}>
+      <NavigationContainer>
         {userLoggedIn ? (
           <Stack.Navigator>
             {/* <Stack.Screen name="Home" component={AppTabsScreen} options={{ headerShown: false }} /> */}
-            <Stack.Screen 
-              name="DrawerHome" 
-              component={DrawerWithTabs} 
+            <Stack.Screen
+              name="DrawerHome"
+              component={DrawerWithTabs}
               options={{ headerShown: false, title: "Back" }} />
-            <Stack.Screen 
-              name="Restaurant" 
+            <Stack.Screen
+              name="Restaurant"
               component={RestaurantDetail}
               options={({ route }) => ({ title: route.params.item.name })} />
             <Stack.Screen name="Search Results" component={SearchResults} />
@@ -157,7 +161,8 @@ export default function App() {
         ) : (
           AuthStack()
         )}
-    </NavigationContainer>
+      </NavigationContainer>
+    </SafeAreaView>
   );
 }
 

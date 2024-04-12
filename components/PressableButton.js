@@ -1,6 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import Colors from "../Colors";
 
 export default function PressableButton({
   customStyle,
@@ -9,20 +8,20 @@ export default function PressableButton({
   children,
 }) {
   return (
-    <View style={{marginTop: '5%'}}>
-    <Pressable
-      onPress={onPress}
-      disabled={disabled}
-      style={({ pressed }) => [
-        styles.defaultStyle,
-        customStyle,
-        disabled ? styles.disabled : null,
-        pressed && !disabled ? styles.pressed : null,
-      ]}
-      android_ripple={{ color: 'rgba(255, 255, 255, 0.3)' }}
-    >
-      <Text style={styles.buttonText}>{children}</Text>
-    </Pressable>
+    <View style={{ marginTop: '5%' }}>
+      <Pressable
+        onPress={onPress}
+        disabled={disabled}
+        style={({ pressed }) => [
+          styles.defaultStyle,
+          customStyle,
+          disabled ? styles.disabled : null,
+          pressed && !disabled ? styles.pressed : null,
+        ]}
+        android_ripple={{ color: 'rgba(255, 255, 255, 0.3)' }}
+      >
+        <Text style={styles.buttonText}>{children}</Text>
+      </Pressable>
     </View>
   );
 }
@@ -30,8 +29,8 @@ export default function PressableButton({
 const styles = StyleSheet.create({
   defaultStyle: {
     borderRadius: 5,
-    justifyContent: "center", 
-    alignItems: "center", 
+    justifyContent: "center",
+    alignItems: "center",
     padding: 2,
   },
   buttonText: {
@@ -43,6 +42,6 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   disabled: {
-    backgroundColor: Colors.inactiveBottomBarTab,
+    backgroundColor: "#E8DFE8",
   },
 });

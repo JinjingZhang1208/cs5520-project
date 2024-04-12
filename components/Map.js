@@ -2,6 +2,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { StyleSheet, View, Button } from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Map({ navigation, route }) {
     const [selectedLocation, setSelectedLocation] = useState(null);
@@ -18,6 +19,7 @@ export default function Map({ navigation, route }) {
     }
 
     return (
+        <SafeAreaView>
         <View style={styles.container}>
             <MapView
                 style={styles.map}
@@ -43,6 +45,7 @@ export default function Map({ navigation, route }) {
             </MapView>
             <Button disabled={!selectedLocation} title='Confirm Selected Location' onPress={confirmHandler} />
         </View>
+        </SafeAreaView>
     );
 }
 
