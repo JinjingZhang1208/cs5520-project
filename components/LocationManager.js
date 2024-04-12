@@ -2,7 +2,6 @@ import { View, Button, Image, StyleSheet, Dimensions } from "react-native";
 import React, { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import { mapsApiKey } from "@env";
-import { useNavigation, useRoute, } from "@react-navigation/native";
 
 export default function LocationManager({ navigation, route }) {
   const [status, requestPermission] = Location.useForegroundPermissions();
@@ -55,25 +54,13 @@ export default function LocationManager({ navigation, route }) {
     if (location) {
       navigation.navigate("Map", { 
         location: location 
-        // review: route.params.review, 
-        // mode: route.params.mode,
-        // restaurantInfo: route.params.restaurantInfo
       });
       console.log("Pass from LocationManager to Map:", location);
     } else {
-      navigation.navigate("Map" 
-        // review: route.params.review, 
-        // mode: route.params.mode,
-        // restaurantInfo: route.params.restaurantInfo
-      );
+      navigation.navigate("Map");
       // console.log("Pass from LocationManager to Map:", route.params.review);
     }
   }
-  // function saveLocationHandler() {
-  //   //call setDocToDB
-  //   setDocToDB({ location: location }, "users");
-  //   navigation.navigate("Home");
-  // }
 
   return (
     <View style={styles.container}>
