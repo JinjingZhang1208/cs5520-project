@@ -15,6 +15,7 @@ const Find = () => {
   const [searchResults, setSearchResults] = useState([]);
 
   const [status, requestPermission] = Location.useForegroundPermissions();
+  const [userCurrLoc, setUserCurrLoc] = useState(null);
   const [userCurrLocName, setUserCurrLocName] = useState('');
 
   const navigation = useNavigation();
@@ -23,10 +24,13 @@ const Find = () => {
   // User location state
   useEffect(() => {
     (async () => {
-      const coords = await fetchUserLocation();
-      if (!coords) {
-        // if location is null (permission denied or error)
-        return;
+      if (!userCurrLoc) {
+        coords = await fetchUserLocation();
+        if (!coords) {
+          // if location is null (permission denied or error)
+          return;
+        }
+        setUserCurrLoc(coords);
       }
 
       const locName = await getLocationNameFromCoords(coords.latitude, coords.longitude);
@@ -34,10 +38,10 @@ const Find = () => {
     })();
   }, []);
 
-
   // Verify location permission
   async function verifyPermission() {
-    if (status.granted) {
+    console.log('Status:', status)
+    if (status && status.granted) {
       return true;
     }
     try {
@@ -70,8 +74,8 @@ const Find = () => {
   // Function to convert coordinates to a readable location name
   async function getLocationNameFromCoords(latitude, longitude) {
     const locationDetails = await Location.reverseGeocodeAsync({ latitude, longitude });
+    console.log('Location details:', locationDetails);
     if (locationDetails && locationDetails.length > 0) {
-      console.log('User curr Loc Name:', userCurrLocName);
       return `${locationDetails[0].name}, ${locationDetails[0].street}, ${locationDetails[0].city}`;
     }
     return 'Location name not found';
@@ -81,8 +85,15 @@ const Find = () => {
     const radius = searchDistance * 1000; // Convert km to meters
 
     try {
+      const coords = await fetchUserLocation();
+      locName = 'Location not found'
+      if (coords) {
+        console.log('User current location:', coords);
+        locName = await getLocationNameFromCoords(coords.latitude, coords.longitude);
+      }
+      console.log("User current location name:", locName)
       const restaurants = await fetchAndPrepareRestaurants(
-        userCurrLocName, // later change the location
+        locName, // later change the location
         searchKeyword,
         radius,
         searchRating
@@ -109,6 +120,8 @@ const Find = () => {
         onChangeText={setSearchKeyword}
         value={searchKeyword}
       />
+
+      <Text style={styles.location}>📍{userCurrLocName}</Text>
 
       {/* Rating Picker */}
       <View style={styles.horizontal}>
@@ -241,6 +254,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     borderRadius: 20,
+  },
+  location: {
+    fontSize: 12,
+    color: 'grey',
+    marginLeft: 30,
+    marginTop: 1,
+    marginBottom: 10,
   },
 
 })
