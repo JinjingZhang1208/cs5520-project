@@ -51,10 +51,10 @@ export default function LocationManager({ navigation, route }) {
       return;
     }
     if (location) {
-      navigation.navigate("Map", { 
-        location: location 
-      });
+      navigation.navigate("Map", {location: location});
       console.log("Pass from LocationManager to Map:", location);
+    } else {
+      navigation.navigate("Map");
     }
   }
 

@@ -19,8 +19,8 @@ export default function Map({ navigation, route }) {
             <MapView
                 style={styles.map}
                 initialRegion={{
-                    latitude: route.params ? route.params.location.latitude : 37.78825,
-                    longitude: route.params ? route.params.location.longitude : -122.4324,
+                    latitude: route.params ? route.params.location.latitude : 49.2802354,
+                    longitude: route.params ? route.params.location.longitude : -123.1383791,
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                 }}

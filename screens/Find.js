@@ -20,23 +20,24 @@ const Find = ({route, navigation}) => {
   const [location, setLocation] = useState(null);
   const [locationName, setLocationName] = useState('Loading your current location...');
 
-  // User location state
-  useEffect(() => {
-    (async () => {
-      if (!userCurrLoc) {
-        coords = await fetchUserLocation();
-        if (!coords) {
-          // if location is null (permission denied or error)
-          return;
+    // User location state
+    useEffect(() => {
+      (async () => {
+        if (!userCurrLoc) {
+          coords = await fetchUserLocation();
+          if (!coords) {
+            // if location is null (permission denied or error)
+            return;
+          }
+          setUserCurrLoc(coords);
+          setLocation(coords);
+
+          const locName = await getLocationNameFromCoords(coords.latitude, coords.longitude);
+          setUserCurrLocName(locName);
+          setLocationName(locName);
         }
-        setUserCurrLoc(coords);
-        setLocation(coords);
-        const locName = await getLocationNameFromCoords(coords.latitude, coords.longitude);
-        setUserCurrLocName(locName);
-        setLocationName(locName);
-      }
-    })();
-  }, []);
+      })();
+    }, []);
 
     // Update location name when location changes
     useEffect(() => {
@@ -46,9 +47,7 @@ const Find = ({route, navigation}) => {
             setLocation(route.params.location);
 
             const lat = route.params.location.latitude;
-            console.log('lat:', lat);
             const long = route.params.location.longitude;
-            console.log('long:', long);
             const name = await getLocationNameFromCoords(lat, long);
             setLocationName(name);
           }
