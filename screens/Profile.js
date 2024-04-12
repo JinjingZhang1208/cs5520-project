@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
   },
   goToReviews: {
     fontSize: 20,
-    color: 'tomato',
+    color: '#0077CC',
     fontWeight: 'bold',
     marginTop: 10,
   }

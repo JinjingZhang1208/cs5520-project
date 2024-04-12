@@ -65,7 +65,6 @@ export default function LocationManager({ navigation, route }) {
   return (
     <View style={styles.container}>
 
-
       {location && (
         <Image
           style={styles.image}
@@ -78,7 +77,6 @@ export default function LocationManager({ navigation, route }) {
       <Button title="Choose another location" onPress={chooseLocationHandler} />
       <Button title="Use current location" onPress={locateUserHandler} />
 
-      {/* <Button title="Save Location" onPress={saveLocationHandler} /> */}
     </View>
   );
 }

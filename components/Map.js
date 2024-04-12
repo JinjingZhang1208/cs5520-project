@@ -6,8 +6,6 @@ import { useNavigation } from "@react-navigation/native";
 export default function Map({ navigation, route }) {
     const [selectedLocation, setSelectedLocation] = useState(null);
 
-    // console.log("Route in Map:", route);
-
     function confirmHandler() {
         //navigate to AddReview and pass selectedlocation as parameter
         navigation.navigate('Add My Review', { 

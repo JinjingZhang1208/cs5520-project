@@ -5,7 +5,6 @@ import PressableButton from '../components/PressableButton'
 import { updateDB, writeToDB } from '../firebase-files/databaseHelper';
 import { uploadImageAsync, saveImageURLToFirestore } from '../firebase-files/databaseHelper';
 import { auth, storage} from '../firebase-files/firebaseSetup';
-import * as Location from 'expo-location';
 import { MaterialIcons } from '@expo/vector-icons';
 import ImageInput from '../components/ImageInput';
 
@@ -100,6 +99,7 @@ export default function Review({navigation, route}) {
         const currentUser = auth.currentUser;
         if (currentUser) {
             const userId = currentUser.uid;
+            console.log('in edit:', route.params);
             let updatedReview = {
                 review: reviewContent, 
                 bussiness_id: business_id, 
@@ -183,12 +183,4 @@ const styles = StyleSheet.create({
         width: 200,
         alignSelf: 'center'
     },
-    locationButtonStyle: {
-        backgroundColor: 'lightblue',
-        padding: 7,
-        borderRadius: 10,
-        marginTop: 5,
-        width: 200,
-        alignSelf: 'center'
-    }
 })
