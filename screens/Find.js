@@ -99,6 +99,7 @@ const Find = ({route, navigation}) => {
   const search = async () => {
     const radius = searchDistance * 1000; // Convert km to meters
 
+    Alert.alert('Searching for restaurants... This may take a few seconds...');
     try {
       const restaurants = await fetchAndPrepareRestaurants(
         locationName, // later change the location

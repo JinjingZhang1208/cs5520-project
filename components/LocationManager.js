@@ -1,4 +1,4 @@
-import { View, Button, Image, StyleSheet, Dimensions } from "react-native";
+import { View, Button, Image, StyleSheet, Dimensions, Alert } from "react-native";
 import React, { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import { mapsApiKey } from "@env";
@@ -31,7 +31,7 @@ export default function LocationManager({ navigation, route }) {
     if (!havePermission) {
       return;
     }
-
+    Alert.alert("Locating you... This may take a few seconds.");
     // get the location 
     const location = await Location.getCurrentPositionAsync();
     const newCoords = {
