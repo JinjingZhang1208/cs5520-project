@@ -77,19 +77,21 @@ This collection stores information about restaurants that users can interact wit
 </div>
 
 ## Discover
-- Users can find our recommended restaurants here.
+- Users can find our recommended restaurants and tap in to view restaurants details & reviews.
 <div style="display:flex; flex-direction:row;">
   <img src="images/discover_home.png" width="300">
+  <img src="images/restaurant_detail.png" width="300">
 </div>
 
 ## Find
-- Users can find restaurants based on their preference.
+- Users can find restaurants based on their preference and distance.
 <div style="display:flex; flex-direction:row;">
-  <img src="images/find.png" width="300">
+  <img src="images/search.png" width="300">
+  <img src="search_results.png" width="300">
 </div>
 
 ## WishList
-- Users can find the restaurants they bookmarked.
+- Users can find the restaurants they bookmarked. Also, the can bookmark and unbookmark a restaurant.
 <div style="display:flex; flex-direction:row;">
   <img src="images/wishlists.png" width="300">
   <img src="images/view_wishlists.png" width="300">
@@ -103,11 +105,13 @@ This collection stores information about restaurants that users can interact wit
   <img src="images/profile.png" width="300">
   <img src="images/change_avatar.png" width="300">
   <img src="images/change_name.png" width="300">
+  <img src="images/profile_myReviews.png" width="300">
 </div>
 
 ## Review
+- Users can write reviews with photos!
 <div style="display:flex; flex-direction:row;">
-<img src="images/write_review.png" width="300">
+  <img src="images/add_photos_to_review.png" width="300">
 </div>
 
 ## Drawer and Notification
