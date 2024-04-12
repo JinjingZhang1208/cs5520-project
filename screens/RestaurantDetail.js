@@ -151,6 +151,7 @@ export default function RestaurantDetail({ navigation, route }) {
                     </PressableButton>
                 </View>
             </Card>
+            <Card>
                 <View>
                     <View style={{ marginBotton: 5}}>
                         <Text style={{ fontSize: 15, fontWeight: 'bold'}}>My Reviews</Text>
@@ -161,7 +162,7 @@ export default function RestaurantDetail({ navigation, route }) {
                         <ReviewList allReviews={otherReviews} />
                     </View>
                 </View>
-
+            </Card>
         </View>
     )
 }
