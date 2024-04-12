@@ -3,6 +3,23 @@
 - Jinjing Zhang
 - Yue Zhang
 
+# Iteration 2 Updates
+- Authentication
+  - Updated Firebase rule and added related authentication in code to only allow for editing and deleting reviews when the review belongs to the user;
+  - Updated Firebase rule and added related authentication in code to only allow for editing the user’s profile picture
+- Camera use
+  - Added function to allow the user to take pictures or upload from camera roll for their reviews
+- Location use
+  - Get user’s location for search restaurants according to user’s distance preference
+  - Display restaurant location addresses when the user adds/edits the review
+- Notification
+  - Not implemented yet.
+- External API use
+  - Use Yelp API to fetch restaurants based on query parameters
+  - Make location parameter automatically get user current location, which incorporate the use of Location package and verifying user permission to use location
+  - Add a new function to fetch yelp’s reviews which is not actually being called in our app. The reason to give up using it is that the review search is for commercial use and is not free.
+
+
 # Data Models and 4 Collections
 
 ## Collection 1: Users Collection
@@ -13,28 +30,30 @@ This collection stores information about users who interact with the app.
 - User ID (unique identifier)
 - Username
 - Email
+- Avatar image Url 
 
 **CRUD Operations:**
 - Create: Allows the creation of a new user account.
-- Read: Enables fetching user information based on user ID or other identifiers.
+- Read: Enables fetching user information and wishlist based on user ID or other identifiers.
 - Update: Allows updating user information, such as username, email, or profile details.
-- Delete: Permits the removal of a user account from the system.
 
-## Collection 2: Reviews Collection (Subcollection of Users)
 
-This collection stores user reviews for various restaurants.
+## Collection 2: All Reviews
+
+This collection stores all user reviews for various restaurants.
 
 **Fields:**
-- Review ID (unique identifier)
-- Restaurant ID (reference to the restaurant being reviewed)
-- Restaurant Name
-- Review content
+- bussiness_id (reference to the restaurant being reviewed)
+- imageURLs (reference to the restaurant photo)
+- owner(user’s id)
+- Restaurant ID - Restaurant Name
+- review - Review content
 
 **CRUD Operations:**
-- Create: Allows users to add a new review for a restaurant.
+- Create: Allows users to add a new review along with review photos for a restaurant.
 - Read: Enables fetching reviews based on user ID.
-- Update: Allows users to update their existing reviews.
-- Delete: Permits users to remove their own reviews.
+- Update: Allows users to update their existing reviews along with review photos  .
+- Delete: Permits users to remove their own reviews along with review photos .
 
 ## Collection 3: Wishlists Collection (Subcollection of Users)
 
@@ -59,7 +78,7 @@ This collection stores information about restaurants that users can interact wit
 - Name
 - Average rating
 - Number of Comments
-- Picture
+- Picture (img_url)
 
 **CRUD Operations:**
 - Create: Allows adding a new restaurant to the list.
@@ -123,42 +142,82 @@ This collection stores information about restaurants that users can interact wit
 # Group Member Contribution
 
 **Yang He**
-- Discover Page:
-  - Implemented restaurant list page
-- Individual Restaurant Page:
-  - Implemented individual restaurant page
-  - Implemented add review function
-  - Implemented add to or remove from wishlist function
-- Wishlist Page:
-  - Implemented view of my wishlist page
-- Profile Page:
-  - Allow users to view my reviews from profile page
-- My Review Page:
-  - Implemented view of my review page
-  - Allow users to update and delete my review function
+- Iteration 1
+  - Discover Page:
+    - Implemented restaurant list page
+  - Individual Restaurant Page:
+    - Implemented individual restaurant page
+    - Implemented add review function
+    - Implemented add to or remove from wishlist function
+  - Wishlist Page:
+    - Implemented view of my wishlist page
+  - Profile Page:
+    - Allow users to view my reviews from profile page
+  - My Review Page:
+    - Implemented view of my review page
+    - Allow users to update and delete my review function
+- Iteration 2
+  - Review Page:
+    - Allow users to add and delete photos when they add new reviews
+    - Allow users to add new and delete old photos when they edit reviews
+  - Map:
+    - Debug the map function for the location to be displayed on the review page correctly
+    - Updated Yelp service to save longitude and latitude information for map use
+  - Review Item:
+    - Updated review item to only show use’s own reviews in pressable area and others’ reviews in card
+  - Style:
+    - Refactor the image modal code to be re-useable
+    - Clean up review list code
+
 
 **Jinjing Zhang**
-- Navigation:
-  - Implemented the drawer navigation
-  - Implemented the stack navigation
-- Login/Register:
-  - Implemented the login and register screen using Firebase authentication with email and password
-  - Added the forget password function in the login screen
+- Iteration 1
+  - Navigation:
+    - Implemented the drawer navigation
+    - Implemented the stack navigation
+  - Login/Register:
+    - Implemented the login and register screen using Firebase authentication with email and password
+    - Added the forget password function in the login screen
+
+- Iteration 2
+  - Map:
+  - Implement the interactive map and static map
+  - Style:
+  - Fix the unmatched style problem
 
 **Yue Zhang**
-- Navigator:
-  - Implemented Bottom Navigator
-  - Fixed error for Drawer Navigator
-- Database and Storage:
-  - Fetch and update user data, for Profile screen
-  - Save image to Storage
-- API:
-  - Use Yelp API to fetch restaurant results based on my search preference
-  - Save searched result restaurants to database
-  - Fetch restaurant data (name, rating, review_count, image_url)
-- Discover:
-  - Provide data source from Yelp API, including restaurant name, rating, review count, and image cover
-- Profile Page:
-  - Allow user to set and update avatar
-  - Allow user to change user name
-  - Allow user to quit the app
+- Iteration 1
+  - Navigator:
+    - Implemented Bottom Navigator
+    - Fixed error for Drawer Navigator
+  - Database and Storage:
+    - Fetch and update user data, for Profile screen
+    - Save image to Storage
+  - API:
+    - Use Yelp API to fetch restaurant results based on my search preference
+    - Save searched result restaurants to database
+    - Fetch restaurant data (name, rating, review_count, image_url)
+  - Discover:
+    - Provide data source from Yelp API, including restaurant name, rating, review count, and image cover
+  - Profile Page:
+    - Allow user to set and update avatar
+    - Allow user to change user name
+    - Allow user to quit the app
+- Iteration 2
+  - Restaurant Review related:
+    - Debug for LocationManager and Map, make it fits our app.
+    - Make user location automatically updates. Work on pass params in a navigation circle (AddReview -> LocationManager -> AddReview): edit mode, review details, user selected location.
+    - Then remove locations related calls after we decided to remove this functionality.
+  - Find(Search restaurants) related:
+    - Allow users to search according to their location and preferred distance. Fetch the user's current location, along with permission requests.
+  - Yelp API related:
+    - Update parameter for specify chinese restaurants.
+    - Allow user search based on their locations.
+
+  - Reviews related:
+    - Make detail page updates when review changes.
+    - Make delete button only renders for users who have permission to delete.
+  - Profile:
+    - Fetch and show user’s reviews based on user ownership.
+
+
