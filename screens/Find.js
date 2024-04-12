@@ -13,8 +13,10 @@ const Find = () => {
   const [showDistancePicker, setShowDistancePicker] = useState(false);
   const [showRatingPicker, setShowRatingPicker] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
-  const [userLocation, setUserLocation] = useState(null);
+
+  const [status, requestPermission] = Location.useForegroundPermissions();
   const [userCurrLocName, setUserCurrLocName] = useState('');
+
   const navigation = useNavigation();
 
 
@@ -26,7 +28,6 @@ const Find = () => {
         // if location is null (permission denied or error)
         return;
       }
-      setUserLocation({ latitude: coords.latitude, longitude: coords.longitude });
 
       const locName = await getLocationNameFromCoords(coords.latitude, coords.longitude);
       setUserCurrLocName(locName);
@@ -34,27 +35,45 @@ const Find = () => {
   }, []);
 
 
+  // Verify location permission
+  async function verifyPermission() {
+    if (status.granted) {
+      return true;
+    }
+    try {
+      const permissionResponse = await requestPermission();
+      return permissionResponse.granted;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
 
   // Fetch user current location
   async function fetchUserLocation() {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      console.error('Permission to access location was denied');
+    try {
+      const havePermission = await verifyPermission();
+      console.log('Have permission:', havePermission);
+      if (!havePermission) {
+        return null;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      return location.coords;
+    } catch (error) {
+      Alert.alert('Cannot found your current location');
+      console.error('Error fetching user location:', error);
       return null;
     }
-
-    let location = await Location.getCurrentPositionAsync({});
-    return location.coords;
   }
 
   // Function to convert coordinates to a readable location name
   async function getLocationNameFromCoords(latitude, longitude) {
     const locationDetails = await Location.reverseGeocodeAsync({ latitude, longitude });
     if (locationDetails && locationDetails.length > 0) {
-      console.log('User curr loc:', locationDetails[0].name, userLocation);
+      console.log('User curr Loc Name:', userCurrLocName);
       return `${locationDetails[0].name}, ${locationDetails[0].street}, ${locationDetails[0].city}`;
     }
-    Alert.alert('Location name not found');
     return 'Location name not found';
   }
 
@@ -63,14 +82,13 @@ const Find = () => {
 
     try {
       const restaurants = await fetchAndPrepareRestaurants(
-        'Burnaby, British Columbia, Canada', // later change the location
+        userCurrLocName, // later change the location
         searchKeyword,
         radius,
         searchRating
       );
 
       console.log('Search results:', restaurants);
-      setSearchResults(restaurants);
 
       navigation.navigate('Search Results', { results: restaurants }); // Navigate and pass results
 

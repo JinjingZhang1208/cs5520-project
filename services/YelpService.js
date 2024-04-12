@@ -6,7 +6,7 @@ export const fetchAndPrepareRestaurants = async (location = 'Vancouver', term = 
     const apiKey = YELP_API_KEY;
     const yelpUrl = 'https://api.yelp.com/v3/businesses/search';
     const parameters = new URLSearchParams({
-      term: 'chinese' + term,
+      term: term,
       location: location,
       radius: radius, // by default, radius is 5000 meters(5km)
       limit: 20, // Limit the number of results to 20
