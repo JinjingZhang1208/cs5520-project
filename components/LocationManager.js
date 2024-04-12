@@ -10,7 +10,7 @@ export default function LocationManager({ navigation, route }) {
 
   useEffect(() => {
     if (route.params) {
-      console.log("Review received in LocationManager:", route.params.review);
+      console.log("Params received in LocationManager:", route.params);
       console.log("Location received in LocationManager:", route.params.selectedLocation);
       setLocation(route.params.selectedLocation);
     }
@@ -48,8 +48,6 @@ export default function LocationManager({ navigation, route }) {
     navigation.navigate("Add My Review", { 
       mode: route.params.mode, 
       selectedLocation: newCoords, 
-      review: route.params.review,
-      restaurantInfo: route.params.restaurantInfo
      });
   }
 
@@ -63,29 +61,19 @@ export default function LocationManager({ navigation, route }) {
     if (location) {
       navigation.navigate("Map", { 
         initLoc: location, 
-        review: route.params.review, 
         mode: route.params.mode,
-        restaurantInfo: route.params.restaurantInfo
       });
       console.log("Pass from LocationManager to Map:", location, route.params.review);
     } else {
       navigation.navigate("Map", { 
-        review: route.params.review, 
         mode: route.params.mode,
-        restaurantInfo: route.params.restaurantInfo
       });
       console.log("Pass from LocationManager to Map:", route.params.review);
     }
   }
-  // function saveLocationHandler() {
-  //   //call setDocToDB
-  //   setDocToDB({ location: location }, "users");
-  //   navigation.navigate("Home");
-  // }
 
   return (
     <View style={styles.container}>
-
 
       {location && (
         <Image
@@ -99,7 +87,6 @@ export default function LocationManager({ navigation, route }) {
       <Button title="Choose another location" onPress={chooseLocationHandler} />
       <Button title="Use current location" onPress={locateUserHandler} />
 
-      {/* <Button title="Save Location" onPress={saveLocationHandler} /> */}
     </View>
   );
 }
@@ -109,8 +96,6 @@ const styles = StyleSheet.create({
   image: {
     width: Dimensions.get("screen").width * 0.9,
     height: Dimensions.get("screen").height * 0.6,
-    // marginLeft: 50,
-    // marginRight: 50,
     marginTop: 50,
     borderRadius: 10,
   },
