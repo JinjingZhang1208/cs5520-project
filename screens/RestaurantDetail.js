@@ -102,8 +102,8 @@ export default function RestaurantDetail({ navigation, route }) {
                         style={{ width: 325, height: 150 }} />
                 </View>
                 <View style={[CommonStyles.directionRow, { justifyContent: 'center' }]}>
-                    <Text>Ratings: {route.params.item.rating}   </Text>
-                    <Text>Reviews: {route.params.item.review_count}</Text>
+                    {/* <Text>Ratings: {route.params.item.rating}   </Text>
+                    <Text>Reviews: {route.params.item.review_count}</Text> */}
                 </View>
                 <PressableButton
                     customStyle={styles.pressableButtonStyle}

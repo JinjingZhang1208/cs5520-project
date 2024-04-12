@@ -1,9 +1,10 @@
-import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
-import React, { useState } from 'react';
+import { StyleSheet, Text, TextInput, View, Button, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import PressableButton from '../components/PressableButton';
 import { Picker } from '@react-native-picker/picker';
 import { fetchAndPrepareRestaurants } from '../services/YelpService';
 import { useNavigation } from '@react-navigation/native';
+import * as Location from 'expo-location';
 
 const Find = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -13,22 +14,93 @@ const Find = () => {
   const [showRatingPicker, setShowRatingPicker] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
 
+  const [status, requestPermission] = Location.useForegroundPermissions();
+  const [userCurrLoc, setUserCurrLoc] = useState(null);
+  const [userCurrLocName, setUserCurrLocName] = useState('');
+
   const navigation = useNavigation();
+
+
+  // User location state
+  useEffect(() => {
+    (async () => {
+      if (!userCurrLoc) {
+        coords = await fetchUserLocation();
+        if (!coords) {
+          // if location is null (permission denied or error)
+          return;
+        }
+        setUserCurrLoc(coords);
+      }
+
+      const locName = await getLocationNameFromCoords(coords.latitude, coords.longitude);
+      setUserCurrLocName(locName);
+    })();
+  }, []);
+
+  // Verify location permission
+  async function verifyPermission() {
+    console.log('Status:', status)
+    if (status && status.granted) {
+      return true;
+    }
+    try {
+      const permissionResponse = await requestPermission();
+      return permissionResponse.granted;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+
+  // Fetch user current location
+  async function fetchUserLocation() {
+    try {
+      const havePermission = await verifyPermission();
+      console.log('Have permission:', havePermission);
+      if (!havePermission) {
+        return null;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      return location.coords;
+    } catch (error) {
+      Alert.alert('Cannot found your current location');
+      console.error('Error fetching user location:', error);
+      return null;
+    }
+  }
+
+  // Function to convert coordinates to a readable location name
+  async function getLocationNameFromCoords(latitude, longitude) {
+    const locationDetails = await Location.reverseGeocodeAsync({ latitude, longitude });
+    console.log('Location details:', locationDetails);
+    if (locationDetails && locationDetails.length > 0) {
+      return `${locationDetails[0].name}, ${locationDetails[0].street}, ${locationDetails[0].city}`;
+    }
+    return 'Location name not found';
+  }
 
   const search = async () => {
     const radius = searchDistance * 1000; // Convert km to meters
 
     try {
+      const coords = await fetchUserLocation();
+      locName = 'Location not found'
+      if (coords) {
+        console.log('User current location:', coords);
+        locName = await getLocationNameFromCoords(coords.latitude, coords.longitude);
+      }
+      console.log("User current location name:", locName)
       const restaurants = await fetchAndPrepareRestaurants(
-        'Burnaby, British Columbia, Canada', // later change the location
+        locName, // later change the location
         searchKeyword,
         radius,
         searchRating
       );
 
       console.log('Search results:', restaurants);
-      setSearchResults(restaurants);
-  
+
       navigation.navigate('Search Results', { results: restaurants }); // Navigate and pass results
 
     } catch (error) {
@@ -48,6 +120,8 @@ const Find = () => {
         onChangeText={setSearchKeyword}
         value={searchKeyword}
       />
+
+      <Text style={styles.location}>📍{userCurrLocName}</Text>
 
       {/* Rating Picker */}
       <View style={styles.horizontal}>
@@ -180,6 +254,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     borderRadius: 20,
+  },
+  location: {
+    fontSize: 12,
+    color: 'grey',
+    marginLeft: 30,
+    marginTop: 1,
+    marginBottom: 10,
   },
 
 })
