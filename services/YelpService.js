@@ -1,7 +1,7 @@
 import { YELP_API_KEY } from '@env';
 
 // New function to fetch restaurant data and prepare it
-export const fetchAndPrepareRestaurants = async (location = 'Vancouver', term = 'chinese restaurant', radius = 5000, minRating = 0) => {
+export const fetchAndPrepareRestaurants = async (location = 'Vancouver', term = 'chinese restaurant', radius = 5000, minRating = 0, minReviewCount = 0) => {
   try {
     const apiKey = YELP_API_KEY;
     const yelpUrl = 'https://api.yelp.com/v3/businesses/search';
@@ -20,15 +20,19 @@ export const fetchAndPrepareRestaurants = async (location = 'Vancouver', term = 
     const data = await response.json();
 
     // Extract and prepare data, with filtering by rating
-    const preparedData = data.businesses.map(({ id, name, rating, review_count, image_url, coordinates }) => ({
+    const preparedData = data.businesses.map(({ id, name, rating, review_count, image_url, coordinates, location, display_phone, price, attributes}) => ({
       bussiness_id: id,
       name,
       rating,
       review_count,
       image_url,
       latitude: coordinates.latitude,
-      longitude: coordinates.longitude
-    })).filter(restaurant => restaurant.rating >= minRating);
+      longitude: coordinates.longitude,
+      address: location.display_address.join(', '),
+      phone: display_phone,
+      price: price || 'N/A',
+      menu: attributes.menu_url
+    })).filter(restaurant => restaurant.rating >= minRating && restaurant.review_count >= minReviewCount);
 
     // After fetching, sort the data by rating
     const sortedByRating = preparedData.sort((a, b) => b.rating - a.rating);

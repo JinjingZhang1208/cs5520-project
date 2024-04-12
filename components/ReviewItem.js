@@ -70,7 +70,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#FFF",
     width: "80%",
-    marginTop: 15,
     marginBottom: 5,
     padding: 10,
     flexDirection: "row",
@@ -88,13 +87,13 @@ const styles = StyleSheet.create({
 
   text: {
     color: "#333",
-    fontSize: 16,
+    fontSize: 12,
     marginRight: 10,
   },
 
   boldText: {
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 15,
     color: "#000",
   },
 

@@ -12,6 +12,7 @@ const Find = ({route, navigation}) => {
   const [searchRating, setSearchRating] = useState("4");
   const [showDistancePicker, setShowDistancePicker] = useState(false);
   const [showRatingPicker, setShowRatingPicker] = useState(false);
+  const [minReviewCount, setMinReviewCount] = useState('0');
   // const [searchResults, setSearchResults] = useState([]);
 
   const [status, requestPermission] = Location.useForegroundPermissions();
@@ -20,23 +21,24 @@ const Find = ({route, navigation}) => {
   const [location, setLocation] = useState(null);
   const [locationName, setLocationName] = useState('Loading your current location...');
 
-  // User location state
-  useEffect(() => {
-    (async () => {
-      if (!userCurrLoc) {
-        coords = await fetchUserLocation();
-        if (!coords) {
-          // if location is null (permission denied or error)
-          return;
+    // User location state
+    useEffect(() => {
+      (async () => {
+        if (!userCurrLoc) {
+          coords = await fetchUserLocation();
+          if (!coords) {
+            // if location is null (permission denied or error)
+            return;
+          }
+          setUserCurrLoc(coords);
+          setLocation(coords);
+
+          const locName = await getLocationNameFromCoords(coords.latitude, coords.longitude);
+          setUserCurrLocName(locName);
+          setLocationName(locName);
         }
-        setUserCurrLoc(coords);
-        setLocation(coords);
-        const locName = await getLocationNameFromCoords(coords.latitude, coords.longitude);
-        setUserCurrLocName(locName);
-        setLocationName(locName);
-      }
-    })();
-  }, []);
+      })();
+    }, []);
 
     // Update location name when location changes
     useEffect(() => {
@@ -46,9 +48,7 @@ const Find = ({route, navigation}) => {
             setLocation(route.params.location);
 
             const lat = route.params.location.latitude;
-            console.log('lat:', lat);
             const long = route.params.location.longitude;
-            console.log('long:', long);
             const name = await getLocationNameFromCoords(lat, long);
             setLocationName(name);
           }
@@ -99,12 +99,14 @@ const Find = ({route, navigation}) => {
   const search = async () => {
     const radius = searchDistance * 1000; // Convert km to meters
 
+    Alert.alert('Searching for restaurants... This may take a few seconds...');
     try {
       const restaurants = await fetchAndPrepareRestaurants(
-        locationName, // later change the location
+        locationName, // 
         searchKeyword,
         radius,
-        searchRating
+        searchRating,
+        minReviewCount
       );
 
       console.log('Search results:', restaurants);
@@ -192,6 +194,17 @@ const Find = ({route, navigation}) => {
             <Picker.Item label="15 km" value="15" />
           </Picker>
         )}
+      </View>
+
+      <View style={styles.horizontal}>
+        <Text style={styles.text}>Minimum </Text>
+        <TextInput
+          style={styles.textInputforPicker}
+          placeholder='Min Reviews'
+          onChangeText={setMinReviewCount}
+          value={minReviewCount}
+        />
+        <Text style={styles.text}> Reviews </Text>
       </View>
 
       <View style={styles.buttonContainer}>
