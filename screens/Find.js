@@ -12,7 +12,7 @@ const Find = ({route, navigation}) => {
   const [searchRating, setSearchRating] = useState("4");
   const [showDistancePicker, setShowDistancePicker] = useState(false);
   const [showRatingPicker, setShowRatingPicker] = useState(false);
-  const [minReviewCount, setMinReviewCount] = useState(0);
+  const [minReviewCount, setMinReviewCount] = useState('0');
   // const [searchResults, setSearchResults] = useState([]);
 
   const [status, requestPermission] = Location.useForegroundPermissions();
