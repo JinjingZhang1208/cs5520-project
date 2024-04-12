@@ -151,20 +151,35 @@ export async function writeToDB (data, collectionName, id, subCollection) {
     }
 }
 
-// read allReviews from DB by restaurantId
-export async function readAllReviewsFromDB (restaurantId) {
+// read user's own reviews from DB by restaurantId
+export async function readMyReviewsFromDB (restaurantId) {
     try {
         const querySnapshot = await getDocs(collection(database, 'allReviews'));
         const reviews = [];
         querySnapshot.forEach((doc) => {
-            if (doc.data().bussiness_id === restaurantId) {
+            if (doc.data().bussiness_id === restaurantId && doc.data().owner === auth.currentUser.uid){
                 reviews.push({ ...doc.data(), id: doc.id });
             }
         });
         return reviews;
     } catch (error) {
         console.error("Error fetching reviews from DB:", error);
-        throw new Error('Failed to fetch reviews');
+    }
+}
+
+// read user's own reviews from DB by restaurantId
+export async function readOtherReviewsFromDB (restaurantId) {
+    try {
+        const querySnapshot = await getDocs(collection(database, 'allReviews'));
+        const reviews = [];
+        querySnapshot.forEach((doc) => {
+            if (doc.data().bussiness_id === restaurantId && doc.data().owner !== auth.currentUser.uid){
+                reviews.push({ ...doc.data(), id: doc.id });
+            }
+        });
+        return reviews;
+    } catch (error) {
+        console.error("Error fetching reviews from DB:", error);
     }
 }
 

@@ -20,14 +20,18 @@ export const fetchAndPrepareRestaurants = async (location = 'Vancouver', term = 
     const data = await response.json();
 
     // Extract and prepare data, with filtering by rating
-    const preparedData = data.businesses.map(({ id, name, rating, review_count, image_url, coordinates }) => ({
+    const preparedData = data.businesses.map(({ id, name, rating, review_count, image_url, coordinates, location, display_phone, price, attributes}) => ({
       bussiness_id: id,
       name,
       rating,
       review_count,
       image_url,
       latitude: coordinates.latitude,
-      longitude: coordinates.longitude
+      longitude: coordinates.longitude,
+      address: location.display_address.join(', '),
+      phone: display_phone,
+      price: price || 'N/A',
+      menu: attributes.menu_url
     })).filter(restaurant => restaurant.rating >= minRating);
 
     // After fetching, sort the data by rating
