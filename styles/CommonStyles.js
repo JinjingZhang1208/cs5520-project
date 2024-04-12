@@ -2,29 +2,29 @@ import { StyleSheet } from 'react-native'
 
 const CommonStyles = StyleSheet.create({
     card: {
-        backgroundColor:'white',
-        padding:15,
-        width:'100%',
+        backgroundColor: 'white',
+        padding: 15,
+        width: '100%',
         justifyContent: 'center',
         borderRadius: 15,
     },
 
     directionRow: {
         flexDirection: "row",
-      },
+    },
 
     container: {
         flex: 1,
-        flexDirection:'column',
-        alignItems:'center',
-        justifyContent:'start',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'start',
     },
 
     restaurantContainer: {
         flex: 1,
-        flexDirection:'column',
-        alignItems:'center',
-        justifyContent:'start',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'start',
     },
 
     centeredContainer: {
@@ -50,7 +50,7 @@ const CommonStyles = StyleSheet.create({
         borderRadius: 5,
         borderWidth: 1,
         borderColor: 'tomato',
-      },
+    },
 
     restauntName: {
         fontSize: 15,
@@ -83,9 +83,9 @@ const CommonStyles = StyleSheet.create({
     },
 
     pressableButtonStyle: {
-        backgroundColor: 'tomato', 
-        padding: 7, 
-        borderRadius: 10, 
+        backgroundColor: 'tomato',
+        padding: 7,
+        borderRadius: 10,
         alignSelf: 'center'
     },
 

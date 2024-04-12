@@ -13,7 +13,7 @@ export default function Login({ navigation }) {
   };
 
   const forgetPasswordHandler = () => {
-    navigation.navigate('Forget Password'); 
+    navigation.navigate('Forget Password');
   };
 
   const loginHandler = async () => {
@@ -29,7 +29,7 @@ export default function Login({ navigation }) {
         Alert.alert("Invalid email address or password.");
       }
     }
-  };  
+  };
 
   return (
     <View style={styles.container}>
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 8,
-    backgroundColor: '#453F78',
+    backgroundColor: 'tomato',
     marginLeft: 40,
     marginRight: 35,
     marginTop: 20,

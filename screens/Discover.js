@@ -14,6 +14,8 @@ export default function Discover({ navigation }) {
       try {
         const newYelpData = await fetchAndPrepareRestaurants();
         const existingRestaurants = await fetchAllRestaurantsFromDB();
+        console.log('existingRestaurants', existingRestaurants);
+        console.log('newYelpData', newYelpData);
         const existingRestaurantNames = new Set(existingRestaurants.map(r => r.name.toLowerCase()));
 
         // if the restaurant is not in the database, write it
