@@ -6,8 +6,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { auth, database } from '../firebase-files/firebaseSetup';
 import { deleteFromDB } from '../firebase-files/databaseHelper';
 import { fetchUserData } from '../firebase-files/databaseHelper';
-import Card from './Card';
+import Card from '../components/Card';
 import CommonStyles from '../styles/CommonStyles';
+import { TouchableWithoutFeedback } from 'react-native';
 
 export default function ReviewItem({ review }) {
 
@@ -29,11 +30,6 @@ export default function ReviewItem({ review }) {
 
     fetchNameAndAvatar();
   }, [review.owner]);
-
-  const getOtherUserName = async () => {
-    const userData = await fetchUserData(review.owner);
-    return userData;
-  }
 
 
   const renderImages = (imageURLs) => {
@@ -66,48 +62,64 @@ export default function ReviewItem({ review }) {
     // otherwise, just show the review
     <>
       {review.owner == userId && (
-        <Pressable
-          style={({ pressed }) => [styles.textContainer, pressed && styles.pressed]}
-          onPress={reviewPressHandler} andriod_ripple={{ color: '#e9e' }}>
+        <View style={[{ marginLeft: 10, marginRight: 10, padding: 5 }, styles.contentContainer]}>
+          <View style={[styles.reviewContainer, flexDirection = 'row']}>
+          <Pressable
+            style={({ pressed }) => [pressed && styles.pressed]}
+            onPress={reviewPressHandler} andriod_ripple={{ color: '#e9e' }}>
 
-          <View style={{ flexDirection: 'column' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View>
+                <Text style={styles.boldText}>{review.restaurantName}</Text>
+                {review.imageURLs && review.imageURLs.length > 0 && (
+                  <View style={styles.imagesContainer}>
+                    {renderImages(review.imageURLs)}
+                  </View>
+                )}
+                <Text style={styles.text}>{review.review}</Text>
+              </View>
+
+              <PressableButton onPress={deleteHandler} style={styles.d}>
+                <MaterialIcons name="delete" size={24} color="black" />
+              </PressableButton>
+
+            </View>
+
+          </Pressable>
+          </View>
+        </View>
+      )}
+
+      {/* {console.log('review owner:', review)} */}
+
+      {review.owner != userId && (
+        <View style={{ marginLeft: 10, marginRight: 10, padding: 5 }}>
+          <View style={styles.reviewContainer}>
+
             <Text style={styles.boldText}>{review.restaurantName}</Text>
+
             {review.imageURLs && review.imageURLs.length > 0 && (
               <View style={styles.imagesContainer}>
                 {renderImages(review.imageURLs)}
               </View>
             )}
+
             <Text style={styles.text}>{review.review}</Text>
-          </View>
 
-          <PressableButton onPress={deleteHandler}>
-            <MaterialIcons name="delete" size={24} color="black" />
-          </PressableButton>
-        </Pressable>
+            <View style={[CommonStyles.directionRow]}>
+              <View>
+                <Image
+                  source={{
+                    uri: avatarUrl !== '' ? avatarUrl : "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+                  }}
+                  style={{ width: 15, height: 15, borderRadius: 25 }}
+                />
+              </View>
+              {otherUserName && <Text style={{ color: 'grey', marginLeft: 10, marginBottom: 3 }}>{otherUserName}</Text>}
+            </View>
+          </View>
+        </View>
       )}
-
-      {console.log('review owner:', review)}
-
-      {review.owner != userId && <Card style={styles.textContainer}>
-        <Text style={styles.boldText}>{review.restaurantName}</Text>
-        {review.imageURLs && review.imageURLs.length > 0 && (
-          <View style={styles.imagesContainer}>
-            {renderImages(review.imageURLs)}
-          </View>
-        )}
-        <Text style={styles.text}>{review.review}</Text>
-        <Text style={[CommonStyles.directionRow, { justifyContent: 'center', alignItems: 'center' }]}>
-          <View>
-          <Image
-            source={{
-              uri: avatarUrl !== '' ? avatarUrl : "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
-            }}
-            style={{ width: 15, height: 15, borderRadius: 25 }}
-          />
-          </View>
-          {otherUserName && <Text style={{color: 'grey', marginLeft: 10, marginBottom: 3}}>{otherUserName}</Text>}
-        </Text>
-      </Card>}
     </>
   )
 }
@@ -117,14 +129,15 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
 
-  textContainer: {
+  reviewContainer: {
+    position: 'relative',
     borderRadius: 10,
     backgroundColor: "#FFF",
-    width: "80%",
     marginBottom: 5,
     padding: 10,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: "column",
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
     justifyContent: "space-between",
     shadowColor: "#000",
     shadowOffset: {
@@ -149,7 +162,10 @@ const styles = StyleSheet.create({
   },
 
   deleteButton: {
+    top: 10,
+    right: 10,
     padding: 8,
+    position: 'absolute',
   },
   reviewImage: {
     width: 100,
@@ -162,5 +178,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 10,
   },
+  contentContainer: {
+    flex: 1,
+  }
 
 });

@@ -151,7 +151,7 @@ export default function RestaurantDetail({ navigation, route }) {
 						<Text style={{ marginLeft: 3, fontSize: 15 }}> {review_count}</Text>
 
 						<View style={{ marginLeft: 40 }}>
-							{price != 'N/A' && 
+							{price != 'N/A' &&
 								<FontAwesome name="dollar" size={14} color="goldenrod" />
 							}
 						</View>
@@ -183,13 +183,17 @@ export default function RestaurantDetail({ navigation, route }) {
 				</PressableButton>
 			</Card>
 
+			{/* {console.log('myReviews:', myReviews)}
+			{console.log('otherReviews:', otherReviews)} */}
+
 			<Card>
-				<View style={{ marginBotton: 5 }}>
-					<Text style={{ fontSize: 15, fontWeight: 'bold', color: "salmon" }}>My Reviews</Text>
+				<View>
+					<Text style={{ fontSize: 15, fontWeight: 'bold', color: "salmon", margin: 10 }}>My Reviews</Text>
 					<ReviewList allReviews={myReviews} />
 				</View>
-				<View style={{ marginBotton: 5 }}>
-					{otherReviews != [] && <Text style={{ fontSize: 15, fontWeight: 'bold', color: "salmon" }}>Other Reviews</Text>}
+
+				<View>
+					{otherReviews != [] && <Text style={{ fontSize: 15, fontWeight: 'bold', color: "salmon", margin: 10 }}>Other's Reviews</Text>}
 					<ReviewList allReviews={otherReviews} />
 				</View>
 			</Card>
