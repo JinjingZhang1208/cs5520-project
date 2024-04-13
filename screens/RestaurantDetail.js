@@ -149,6 +149,13 @@ export default function RestaurantDetail({ navigation, route }) {
 							<MaterialCommunityIcons name="comment" size={14} color="lightgrey" />
 						</View>
 						<Text style={{ marginLeft: 3, fontSize: 15 }}> {review_count}</Text>
+
+						<View style={{ marginLeft: 40 }}>
+							{price != 'N/A' && 
+								<FontAwesome name="dollar" size={14} color="goldenrod" />
+							}
+						</View>
+						<Text style={{ marginLeft: 10, fontSize: 15 }}>{price} </Text>
 					</View>
 
 					<View style={CommonStyles.directionRow}>
@@ -160,11 +167,6 @@ export default function RestaurantDetail({ navigation, route }) {
 						<Zocial name="call" size={15} color="skyblue" />
 						<Text style={{ marginLeft: 5, fontSize: 15 }}>{phone} </Text>
 					</View>
-
-					{price != 'N/A' && <View style={CommonStyles.directionRow}>
-						<FontAwesome name="dollar" size={14} color="goldenrod" />
-						<Text style={{ marginLeft: 10, fontSize: 15 }}>{price} </Text>
-					</View>}
 
 					{menu != null && <Pressable onPress={handleMenuPress}>
 						<View style={CommonStyles.directionRow}>
@@ -182,15 +184,13 @@ export default function RestaurantDetail({ navigation, route }) {
 			</Card>
 
 			<Card>
-				<View>
-					<View style={{ marginBotton: 5 }}>
-						<Text style={{ fontSize: 15, fontWeight: 'bold' }}>My Reviews</Text>
-						<ReviewList allReviews={myReviews} />
-					</View>
-					<View style={{ marginBotton: 5 }}>
-						{otherReviews != [] && <Text style={{ fontSize: 15, fontWeight: 'bold' }}>Other Reviews</Text>}
-						<ReviewList allReviews={otherReviews} />
-					</View>
+				<View style={{ marginBotton: 5 }}>
+					<Text style={{ fontSize: 15, fontWeight: 'bold', color: "salmon" }}>My Reviews</Text>
+					<ReviewList allReviews={myReviews} />
+				</View>
+				<View style={{ marginBotton: 5 }}>
+					{otherReviews != [] && <Text style={{ fontSize: 15, fontWeight: 'bold', color: "salmon" }}>Other Reviews</Text>}
+					<ReviewList allReviews={otherReviews} />
 				</View>
 			</Card>
 
