@@ -98,7 +98,12 @@ export default function ReviewItem({ review }) {
         <Text style={styles.text}>{review.review}</Text>
         <Text style={[CommonStyles.directionRow, { justifyContent: 'center', alignItems: 'center' }]}>
           <View>
-
+          <Image
+            source={{
+              uri: avatarUrl !== '' ? avatarUrl : "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+            }}
+            style={{ width: 15, height: 15, borderRadius: 25 }}
+          />
           </View>
           {otherUserName && <Text style={{color: 'grey', marginLeft: 10, marginBottom: 3}}>{otherUserName}</Text>}
         </Text>
