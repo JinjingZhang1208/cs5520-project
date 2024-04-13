@@ -1,22 +1,47 @@
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import { Alert, Pressable, StyleSheet, Text, View, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import PressableButton from './PressableButton';
 import { MaterialIcons } from '@expo/vector-icons';
 import { auth, database } from '../firebase-files/firebaseSetup';
 import { deleteFromDB } from '../firebase-files/databaseHelper';
-import Card from './Card';
+import { fetchUserData } from '../firebase-files/databaseHelper';
+import Card from '../components/Card';
+import CommonStyles from '../styles/CommonStyles';
+import { TouchableWithoutFeedback } from 'react-native';
 
 export default function ReviewItem({ review }) {
 
   const navigation = useNavigation();
   const currentUser = auth.currentUser;
   const userId = currentUser.uid;
+  const [otherUserName, setOtherUserName] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState('');
+
+
+  useEffect(() => {
+    const fetchNameAndAvatar = async () => {
+      const userData = await fetchUserData(review.owner);
+      if (userData) {
+        setOtherUserName(userData.username || '');
+        setAvatarUrl(userData.avatarUrl || '');
+      }
+    };
+
+    fetchNameAndAvatar();
+  }, [review.owner]);
+
+
+  const renderImages = (imageURLs) => {
+    return imageURLs.map((url, index) => (
+      <Image key={index} source={{ uri: url }} style={styles.reviewImage} resizeMode="cover" />
+    ));
+  };
 
   const reviewPressHandler = () => {
     if (review.owner == userId) {
       navigation.navigate('Edit My Review', { review: review });
-    } 
+    }
   }
 
   const deleteHandler = () => {
@@ -26,7 +51,6 @@ export default function ReviewItem({ review }) {
         text: 'Yes', style: 'destructive',
         onPress: () => {
           console.log('Deleting review', review.id);
-          // deleteFromDB('users', userId, 'reviews', review.id); // delete from user's reviews
           deleteFromDB('allReviews', review.id); // delete from all reviews
         }
       }
@@ -34,30 +58,69 @@ export default function ReviewItem({ review }) {
   }
 
   return (
-      // if the review belongs to the user, wrap it in pressable to navigate to edit screen,
-      // otherwise, just show the review
-      <>
-        { review.owner == userId && (
+    // if the review belongs to the user, wrap it in pressable to navigate to edit screen,
+    // otherwise, just show the review
+    <>
+      {review.owner == userId && (
+        <View style={[{ marginLeft: 10, marginRight: 10, padding: 5 }, styles.contentContainer]}>
+          <View style={[styles.reviewContainer, flexDirection = 'row']}>
           <Pressable
-            style={({ pressed }) => [styles.textContainer, pressed && styles.pressed]}
-            onPress={reviewPressHandler} andriod_ripple={{ color: '#e9e' }}> 
+            style={({ pressed }) => [pressed && styles.pressed]}
+            onPress={reviewPressHandler} andriod_ripple={{ color: '#e9e' }}>
 
-            <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.boldText}>{review.restaurantName}</Text>
-              <Text style={styles.text}>{review.review}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View>
+                <Text style={styles.boldText}>{review.restaurantName}</Text>
+                {review.imageURLs && review.imageURLs.length > 0 && (
+                  <View style={styles.imagesContainer}>
+                    {renderImages(review.imageURLs)}
+                  </View>
+                )}
+                <Text style={styles.text}>{review.review}</Text>
+              </View>
+
+              <PressableButton onPress={deleteHandler} style={styles.d}>
+                <MaterialIcons name="delete" size={24} color="black" />
+              </PressableButton>
+
             </View>
 
-            <PressableButton onPress={deleteHandler}>
-              <MaterialIcons name="delete" size={24} color="black" />
-            </PressableButton>
           </Pressable>
-        )}
+          </View>
+        </View>
+      )}
 
-        { review.owner != userId && <Card style={styles.textContainer}>
-          <Text style={styles.boldText}>{review.restaurantName}</Text>
-          <Text style={styles.text}>{review.review}</Text>
-        </Card>}
-      </>
+      {/* {console.log('review owner:', review)} */}
+
+      {review.owner != userId && (
+        <View style={{ marginLeft: 10, marginRight: 10, padding: 5 }}>
+          <View style={styles.reviewContainer}>
+
+            <Text style={styles.boldText}>{review.restaurantName}</Text>
+
+            {review.imageURLs && review.imageURLs.length > 0 && (
+              <View style={styles.imagesContainer}>
+                {renderImages(review.imageURLs)}
+              </View>
+            )}
+
+            <Text style={styles.text}>{review.review}</Text>
+
+            <View style={[CommonStyles.directionRow]}>
+              <View>
+                <Image
+                  source={{
+                    uri: avatarUrl !== '' ? avatarUrl : "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+                  }}
+                  style={{ width: 15, height: 15, borderRadius: 25 }}
+                />
+              </View>
+              {otherUserName && <Text style={{ color: 'grey', marginLeft: 10, marginBottom: 3 }}>{otherUserName}</Text>}
+            </View>
+          </View>
+        </View>
+      )}
+    </>
   )
 }
 
@@ -66,14 +129,15 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
 
-  textContainer: {
+  reviewContainer: {
+    position: 'relative',
     borderRadius: 10,
     backgroundColor: "#FFF",
-    width: "80%",
     marginBottom: 5,
     padding: 10,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: "column",
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
     justifyContent: "space-between",
     shadowColor: "#000",
     shadowOffset: {
@@ -98,7 +162,24 @@ const styles = StyleSheet.create({
   },
 
   deleteButton: {
+    top: 10,
+    right: 10,
     padding: 8,
+    position: 'absolute',
   },
+  reviewImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 5,
+    margin: 5,
+  },
+
+  imagesContainer: {
+    flexDirection: 'row',
+    marginTop: 10,
+  },
+  contentContainer: {
+    flex: 1,
+  }
 
 });
