@@ -156,10 +156,10 @@ export default function RestaurantDetail({ navigation, route }) {
                         <Zocial name="call" size={15} color="skyblue" />
                         <Text style={{ marginLeft: 5, fontSize: 15  }}>{phone} </Text>
                     </View>
-                    <View style={CommonStyles.directionRow}>
+                    { price != 'N/A' && <View style={CommonStyles.directionRow}>
                         <FontAwesome name="dollar" size={14} color="goldenrod" />
                         <Text style={{ marginLeft: 10, fontSize: 15  }}>{price} </Text>
-                    </View>
+                    </View> }
                     { menu != null &&<Pressable onPress={handleMenuPress}>
                         <View style={CommonStyles.directionRow}>
                             <MaterialIcons name="menu-book" size={15} color="grey" />
