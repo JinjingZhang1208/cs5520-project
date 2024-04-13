@@ -1,10 +1,11 @@
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import PressableButton from './PressableButton';
 import { MaterialIcons } from '@expo/vector-icons';
 import { auth, database } from '../firebase-files/firebaseSetup';
 import { deleteFromDB } from '../firebase-files/databaseHelper';
+import { fetchUserData } from '../firebase-files/databaseHelper';
 import Card from './Card';
 
 export default function ReviewItem({ review }) {
@@ -12,6 +13,19 @@ export default function ReviewItem({ review }) {
   const navigation = useNavigation();
   const currentUser = auth.currentUser;
   const userId = currentUser.uid;
+  const [userData, setUserData] = useState({});
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchUserData(userId);
+      setUserData(data);
+    };
+  
+    fetchData();
+  }, []);
+  
+
 
   const reviewPressHandler = () => {
     if (review.owner == userId) {
@@ -56,6 +70,7 @@ export default function ReviewItem({ review }) {
         { review.owner != userId && <Card style={styles.textContainer}>
           <Text style={styles.boldText}>{review.restaurantName}</Text>
           <Text style={styles.text}>{review.review}</Text>
+          <Text style={styles.text}>By: {userData.username}</Text>
         </Card>}
       </>
   )
