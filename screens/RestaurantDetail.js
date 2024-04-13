@@ -160,12 +160,12 @@ export default function RestaurantDetail({ navigation, route }) {
                         <FontAwesome name="dollar" size={14} color="goldenrod" />
                         <Text style={{ marginLeft: 10, fontSize: 15  }}>{price} </Text>
                     </View>
-                    <Pressable onPress={handleMenuPress}>
+                    { menu != null &&<Pressable onPress={handleMenuPress}>
                         <View style={CommonStyles.directionRow}>
                             <MaterialIcons name="menu-book" size={15} color="grey" />
                             <Text style={{ fontSize: 15, color: 'dodgerblue', textDecorationLine: 'underline', marginLeft: 5 }}>{menu}</Text>
                         </View>
-                    </Pressable>
+                    </Pressable> }
                 </View>
                 <PressableButton
                         customStyle={styles.pressableButtonStyle}
