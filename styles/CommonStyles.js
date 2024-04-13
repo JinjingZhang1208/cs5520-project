@@ -10,6 +10,7 @@ const CommonStyles = StyleSheet.create({
     },
 
     directionRow: {
+        marginTop: 8,
         flexDirection: "row",
       },
 

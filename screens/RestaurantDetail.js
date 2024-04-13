@@ -2,13 +2,14 @@ import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CommonStyles from '../styles/CommonStyles'
 import PressableButton from '../components/PressableButton'
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, MaterialCommunityIcons, Zocial, FontAwesome } from '@expo/vector-icons';
 import { auth, database } from '../firebase-files/firebaseSetup';
 import { writeToDB, deleteFromDB, readMyReviewsFromDB, readOtherReviewsFromDB } from '../firebase-files/databaseHelper';
 import { doc, getDoc } from "firebase/firestore";
 import Card from '../components/Card';
 import ReviewList from '../components/ReviewList';
 import * as Linking from "expo-linking";
+import { Rating } from 'react-native-ratings';
 
 
 export default function RestaurantDetail({ navigation, route }) {
@@ -124,45 +125,68 @@ export default function RestaurantDetail({ navigation, route }) {
 
     return (
         <View style={[{ marginTop: 10 }, CommonStyles.restaurantContainer]}>
+
             <Card>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <Image
-                        source={{ uri: image_url}}
-                        style={{ width: 300, height: 100 }} />
+                        source={{ uri: image_url }}
+                        style={{ width: '90%', height: 150, borderRadius: 5 }} />
                 </View>
-                <View style={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
+                <View style={{ width: '90%', justifyContent: 'flex-start', alignItems: 'flex-start', marginTop: 7, marginLeft: 16 }}>
                     <View style={[CommonStyles.directionRow, { justifyContent: 'center' }]}>
-                        <Text>Ratings: {rating}   </Text>
-                        <Text>Reviews: {review_count}</Text>
+                        <Rating
+                            type="star"
+                            ratingCount={5}
+                            imageSize={15}
+                            startingValue={rating}
+                            fractions={1}
+                            readonly={true}
+                        />
+                        <Text style={{ marginLeft: 5, fontSize: 15  }}>{rating}</Text>
+                        <View style={{ marginLeft: 40 }}>
+                            <MaterialCommunityIcons name="comment" size={14} color="grey" />
+                        </View>
+                        <Text style={{ marginLeft: 3, fontSize: 15 }}> {review_count}</Text>
                     </View>
-                    <Text>Address: {address} </Text>
-                    <Text>Phone: {phone} </Text>
-                    <Text>Price: {price} </Text>
+                    <View style={CommonStyles.directionRow}>
+                        <MaterialIcons name="location-on" size={15} color="crimson" />
+                        <Text style={{ marginLeft: 5, fontSize: 15  }}>{address} </Text>
+                    </View>
+                    <View style={CommonStyles.directionRow}>
+                        <Zocial name="call" size={15} color="skyblue" />
+                        <Text style={{ marginLeft: 5, fontSize: 15  }}>{phone} </Text>
+                    </View>
+                    <View style={CommonStyles.directionRow}>
+                        <FontAwesome name="dollar" size={14} color="goldenrod" />
+                        <Text style={{ marginLeft: 10, fontSize: 15  }}>{price} </Text>
+                    </View>
                     <Pressable onPress={handleMenuPress}>
-                        <Text>
-                            <Text style={{ color: 'black' }}>Menu: </Text>
-                            <Text style={{ color: 'blue', textDecorationLine: 'underline' }}>{menu}</Text>
-                        </Text>
+                        <View style={CommonStyles.directionRow}>
+                            <MaterialIcons name="menu-book" size={15} color="grey" />
+                            <Text style={{ fontSize: 15, color: 'dodgerblue', textDecorationLine: 'underline', marginLeft: 5 }}>{menu}</Text>
+                        </View>
                     </Pressable>
-                    <PressableButton
-                        customStyle={styles.pressableButtonStyle}
-                        onPress={() => { navigation.navigate('Add My Review', {item: route.params.item})}}>
-                        <Text>Add my Review</Text>
-                    </PressableButton>
                 </View>
+                <PressableButton
+                        customStyle={styles.pressableButtonStyle}
+                        onPress={() => { navigation.navigate('Add My Review', { item: route.params.item }) }}>
+                        <Text>Write my Review</Text>
+                    </PressableButton>
             </Card>
+
             <Card>
                 <View>
-                    <View style={{ marginBotton: 5}}>
-                        <Text style={{ fontSize: 15, fontWeight: 'bold'}}>My Reviews</Text>
-                        <ReviewList allReviews={myReviews} /> 
+                    <View style={{ marginBotton: 5 }}>
+                        <Text style={{ fontSize: 15, fontWeight: 'bold' }}>My Reviews</Text>
+                        <ReviewList allReviews={myReviews} />
                     </View>
-                    <View style={{ marginBotton: 5}}>
+                    <View style={{ marginBotton: 5 }}>
                         {otherReviews != [] && <Text style={{ fontSize: 15, fontWeight: 'bold' }}>Other Reviews</Text>}
                         <ReviewList allReviews={otherReviews} />
                     </View>
                 </View>
             </Card>
+
         </View>
     )
 }
