@@ -115,7 +115,7 @@ export default function ReviewItem({ review }) {
                   style={{ width: 15, height: 15, borderRadius: 25 }}
                 />
               </View>
-              {otherUserName && <Text style={{ color: 'grey', marginLeft: 10, marginBottom: 3 }}>{otherUserName}</Text>}
+              {otherUserName && <Text style={{ color: 'grey', marginLeft: 5, marginBottom: 3 }}>{otherUserName}</Text>}
             </View>
           </View>
         </View>
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
 
   text: {
     color: "#333",
-    fontSize: 12,
+    fontSize: 15,
     marginRight: 10,
   },
 
