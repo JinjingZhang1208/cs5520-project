@@ -30,8 +30,6 @@ import { Linking } from 'react-native';
 
 Notifications.setNotificationHandler({
   handleNotification: async function (notification) {
-    //marking the function async will make it always return a resolved promise
-    // you could use the info about incoming notification and do different behaviour for different notifications
     return {
       shouldShowAlert: true,
     };
@@ -42,34 +40,20 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
-
 export default function App() {
   useEffect(() => {
-    const sunscription = Notifications.addNotificationReceivedListener(
-      (notification) => {
-        console.log("received listener", notification);
-      }
-    );
-    return () => {
-      sunscription.remove();
-    };
-  }, []);
-
-  useEffect(() => {
-    const sunscription = Notifications.addNotificationResponseReceivedListener(
-      (notificationResponse) => {
-        console.log(
-          "received response listener",
-          notificationResponse.notification.request.content.data.url
-        );
-        Linking.openURL(
-          notificationResponse.notification.request.content.data.url
-        );
-      }
-    );
-    return () => {
-      sunscription.remove();
-    };
+    // Set up push notification to trigger daily at 12:00 PM
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Don't know what to eat?",
+        body: "Let us help you find something delicious!",
+      },
+      trigger: {
+        hour: 12,
+        minute: 0,
+        repeats: true,
+      },
+    });
   }, []);
 
   const [userLoggedIn, setUserLoggedIn] = useState(false);
