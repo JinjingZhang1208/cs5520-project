@@ -25,13 +25,36 @@ import 'react-native-gesture-handler';
 import SearchResults from "./screens/SearchResults";
 import Map from "./components/Map";
 import LocationManager from "./components/LocationManager";
+import * as Notifications from "expo-notifications";
+import { Linking } from 'react-native';
 
+Notifications.setNotificationHandler({
+  handleNotification: async function (notification) {
+    return {
+      shouldShowAlert: true,
+    };
+  },
+});
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
 
 export default function App() {
+  useEffect(() => {
+    // Set up push notification to trigger daily at 12:00 PM
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Don't know what to eat?",
+        body: "Let us help you find something delicious!",
+      },
+      trigger: {
+        hour: 12,
+        minute: 0,
+        repeats: true,
+      },
+    });
+  }, []);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true); // To manage loading state
 

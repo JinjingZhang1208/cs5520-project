@@ -10,6 +10,7 @@ import Card from '../components/Card';
 import ReviewList from '../components/ReviewList';
 import * as Linking from "expo-linking";
 import { Rating } from 'react-native-ratings';
+import NotificationManager from '../components/NotificationManager';
 
 
 export default function RestaurantDetail({ navigation, route }) {
@@ -88,14 +89,18 @@ export default function RestaurantDetail({ navigation, route }) {
 		}
 	}
 
-	//set header right to a button that adds the restaurant to the wishlist
+	
+	//set header right to buttons for both bookmark and notification manager
 	useEffect(() => {
 		navigation.setOptions({
 			headerRight: () => (
-				<PressableButton onPress={wishlistHandler}>
-					{bookmark ? <MaterialIcons name="bookmark-added" size={24} color="black" /> :
-						<MaterialIcons name="bookmark-add" size={24} color="black" />}
-				</PressableButton>
+				<View style={{ flexDirection: 'row', marginRight: 10 }}>
+					<PressableButton onPress={wishlistHandler}>
+						{bookmark ? <MaterialIcons name="bookmark-added" size={24} color="black" /> :
+							<MaterialIcons name="bookmark-add" size={24} color="black" />}
+					</PressableButton>
+					<NotificationManager />
+				</View>
 			)
 		});
 	}, [bookmark]);
