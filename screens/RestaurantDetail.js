@@ -10,7 +10,7 @@ import Card from '../components/Card';
 import ReviewList from '../components/ReviewList';
 import * as Linking from "expo-linking";
 import { Rating } from 'react-native-ratings';
-
+import NotificationManager from '../components/NotificationManager';
 
 export default function RestaurantDetail({ navigation, route }) {
 	const [bookmark, setBookmark] = useState(false);
@@ -71,8 +71,8 @@ export default function RestaurantDetail({ navigation, route }) {
 						review_count: review_count,
 						image_url: image_url,
 						owner: userId,
-						latitude: latitude,
-						longitude: longitude,
+						latitude: latitude || 0,
+						longitude: longitude || 0,
 						address: address,
 						phone: phone,
 						price: price,
@@ -88,14 +88,17 @@ export default function RestaurantDetail({ navigation, route }) {
 		}
 	}
 
-	//set header right to a button that adds the restaurant to the wishlist
+	//set header right to buttons for both bookmark and notification manager
 	useEffect(() => {
 		navigation.setOptions({
 			headerRight: () => (
-				<PressableButton onPress={wishlistHandler}>
-					{bookmark ? <MaterialIcons name="bookmark-added" size={24} color="black" /> :
-						<MaterialIcons name="bookmark-add" size={24} color="black" />}
-				</PressableButton>
+				<View style={{ flexDirection: 'row', marginRight: 10 }}>
+					<PressableButton onPress={wishlistHandler}>
+						{bookmark ? <MaterialIcons name="bookmark-added" size={24} color="black" /> :
+							<MaterialIcons name="bookmark-add" size={24} color="black" />}
+					</PressableButton>
+					<NotificationManager />
+				</View>
 			)
 		});
 	}, [bookmark]);
@@ -125,7 +128,6 @@ export default function RestaurantDetail({ navigation, route }) {
 
 	return (
 		<View style={[{ marginTop: 10 }, CommonStyles.restaurantContainer]}>
-
 			<Card>
 				<View style={{ justifyContent: 'center', alignItems: 'center' }}>
 					<Image

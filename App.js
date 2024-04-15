@@ -25,6 +25,18 @@ import 'react-native-gesture-handler';
 import SearchResults from "./screens/SearchResults";
 import Map from "./components/Map";
 import LocationManager from "./components/LocationManager";
+import * as Notifications from "expo-notifications";
+import { Linking } from 'react-native';
+
+Notifications.setNotificationHandler({
+  handleNotification: async function (notification) {
+    //marking the function async will make it always return a resolved promise
+    // you could use the info about incoming notification and do different behaviour for different notifications
+    return {
+      shouldShowAlert: true,
+    };
+  },
+});
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -32,6 +44,34 @@ const Drawer = createDrawerNavigator();
 
 
 export default function App() {
+  useEffect(() => {
+    const sunscription = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        console.log("received listener", notification);
+      }
+    );
+    return () => {
+      sunscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const sunscription = Notifications.addNotificationResponseReceivedListener(
+      (notificationResponse) => {
+        console.log(
+          "received response listener",
+          notificationResponse.notification.request.content.data.url
+        );
+        Linking.openURL(
+          notificationResponse.notification.request.content.data.url
+        );
+      }
+    );
+    return () => {
+      sunscription.remove();
+    };
+  }, []);
+
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true); // To manage loading state
 
@@ -60,15 +100,16 @@ export default function App() {
 
   const AppTabsScreen = () => {
     return (
-      <Tab.Navigator 
+      <Tab.Navigator
         screenOptions={{
           headerStyle: { backgroundColor: "tomato" },
           headerTintColor: "white",
-          tabBarActiveTintColor: "tomato", 
-          tabBarInactiveTintColor: "gray" }}>
-        <Tab.Screen 
-          name="Discover" 
-          component={Discover} 
+          tabBarActiveTintColor: "tomato",
+          tabBarInactiveTintColor: "gray"
+        }}>
+        <Tab.Screen
+          name="Discover"
+          component={Discover}
           options={{
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="home" size={size} color={color} />
@@ -93,7 +134,7 @@ export default function App() {
             ),
           }}
         />
-        <Tab.Screen 
+        <Tab.Screen
           name="Profile"
           component={Profile}
           options={{
@@ -109,8 +150,9 @@ export default function App() {
   // Function to return the App Tabs Screen with Drawer Navigation
   const DrawerWithTabs = () => {
     return (
-      <Drawer.Navigator initialRouteName="Home" 
-        screenOptions={{ headerShown: false,
+      <Drawer.Navigator initialRouteName="Home"
+        screenOptions={{
+          headerShown: false,
           drawerStyle: {
             backgroundColor: "white",
             width: 240,
@@ -118,13 +160,13 @@ export default function App() {
           drawerActiveTintColor: "tomato",
           drawerInactiveTintColor: "gray",
         }} >
-        <Drawer.Screen name="Home" component={AppTabsScreen} /> 
+        <Drawer.Screen name="Home" component={AppTabsScreen} />
         <Drawer.Screen name="Notifications" component={Notification} />
       </Drawer.Navigator>
     );
   };
 
-  
+
 
   if (loading) {
     return (
@@ -136,27 +178,27 @@ export default function App() {
 
   return (
     <NavigationContainer>
-        {userLoggedIn ? (
-          <Stack.Navigator>
-            {/* <Stack.Screen name="Home" component={AppTabsScreen} options={{ headerShown: false }} /> */}
-            <Stack.Screen 
-              name="DrawerHome" 
-              component={DrawerWithTabs} 
-              options={{ headerShown: false, title: "Back" }} />
-            <Stack.Screen 
-              name="Restaurant" 
-              component={RestaurantDetail}
-              options={({ route }) => ({ title: route.params.item.name })} />
-            <Stack.Screen name="Search Results" component={SearchResults} />
-            <Stack.Screen name="Add My Review" component={AddReview} />
-            <Stack.Screen name="Edit My Review" component={EditReview} />
-            <Stack.Screen name="My Reviews" component={MyReviews} />
-            <Stack.Screen name="Map" component={Map} />
-            <Stack.Screen name="LocationManager" component={LocationManager} />
-          </Stack.Navigator>
-        ) : (
-          AuthStack()
-        )}
+      {userLoggedIn ? (
+        <Stack.Navigator>
+          {/* <Stack.Screen name="Home" component={AppTabsScreen} options={{ headerShown: false }} /> */}
+          <Stack.Screen
+            name="DrawerHome"
+            component={DrawerWithTabs}
+            options={{ headerShown: false, title: "Back" }} />
+          <Stack.Screen
+            name="Restaurant"
+            component={RestaurantDetail}
+            options={({ route }) => ({ title: route.params.item.name })} />
+          <Stack.Screen name="Search Results" component={SearchResults} />
+          <Stack.Screen name="Add My Review" component={AddReview} />
+          <Stack.Screen name="Edit My Review" component={EditReview} />
+          <Stack.Screen name="My Reviews" component={MyReviews} />
+          <Stack.Screen name="Map" component={Map} />
+          <Stack.Screen name="LocationManager" component={LocationManager} />
+        </Stack.Navigator>
+      ) : (
+        AuthStack()
+      )}
     </NavigationContainer>
   );
 }
