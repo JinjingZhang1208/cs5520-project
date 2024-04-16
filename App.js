@@ -26,7 +26,6 @@ import SearchResults from "./screens/SearchResults";
 import Map from "./components/Map";
 import LocationManager from "./components/LocationManager";
 import * as Notifications from "expo-notifications";
-import { Linking } from 'react-native';
 import { readNotificationDateFromFirebase } from "./firebase-files/databaseHelper";
 
 Notifications.setNotificationHandler({
@@ -66,25 +65,30 @@ export default function App() {
         // Fetch notification date from Firebase only if user is logged in
         if (userLoggedIn) {
           const date = await readNotificationDateFromFirebase(auth.currentUser.uid);
-          setNotificationDate(date);
           console.log("Notification date:", date);
 
-          // Calculate the trigger time one hour before the fetched date
-          const triggerTime = new Date(date);
-          triggerTime.setHours(triggerTime.getHours() - 1);
-
-          // Schedule notification 
-          if (triggerTime > new Date()) {
-            const schedulingOptions = {
-              content: {
-                title: "Time to try this!",
-                body: "Notification Body",
-              },
-              trigger: triggerTime,
-            };
-            await Notifications.scheduleNotificationAsync(schedulingOptions);
-            console.log("Notification scheduled successfully!");
+          if (!date || date.getTime() <= Date.now()) {
+            console.log("Invalid notification date or date is in the past.");
+            return;
           }
+
+          const triggerTime = date.getTime() - Date.now();
+          if (triggerTime <= 0) {
+            console.log("Trigger time is in the past.");
+            return;
+          }
+
+          const schedulingOptions = {
+            content: {
+              title: "Time to try!",
+              body: "Don't forget to try the restaurant!",
+            },
+            trigger: {
+              seconds: Math.floor(triggerTime / 1000), // Convert milliseconds to seconds
+            },
+          };
+
+          await Notifications.scheduleNotificationAsync(schedulingOptions);
         }
       } catch (error) {
         console.error("Error fetching notification date:", error);
@@ -93,7 +97,6 @@ export default function App() {
 
     fetchNotificationDate();
   }, [userLoggedIn]);
-
 
   const AuthStack = () => (
     <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: "#C08B5C" }, headerTintColor: "white" }}>
