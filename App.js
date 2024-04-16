@@ -27,6 +27,7 @@ import Map from "./components/Map";
 import LocationManager from "./components/LocationManager";
 import * as Notifications from "expo-notifications";
 import { Linking } from 'react-native';
+import { readNotificationDateFromFirebase } from "./firebase-files/databaseHelper";
 
 Notifications.setNotificationHandler({
   handleNotification: async function (notification) {
@@ -41,23 +42,24 @@ const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
 export default function App() {
-  useEffect(() => {
-    // Set up push notification to trigger daily at 12:00 PM
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Don't know what to eat?",
-        body: "Let us help you find something delicious!",
-      },
-      trigger: {
-        hour: 12,
-        minute: 0,
-        repeats: true,
-      },
-    });
-  }, []);
+  // useEffect(() => {
+  //   // Set up push notification to trigger daily at 12:00 PM
+  //   Notifications.scheduleNotificationAsync({
+  //     content: {
+  //       title: "Don't know what to eat?",
+  //       body: "Let us help you find something delicious!",
+  //     },
+  //     trigger: {
+  //       hour: 12,
+  //       minute: 0,
+  //       repeats: true,
+  //     },
+  //   });
+  // }, []);
 
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true); // To manage loading state
+  const [notificationDate, setNotificationDate] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -72,6 +74,23 @@ export default function App() {
     // Cleanup function
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    const fetchNotificationDate = async () => {
+      try {
+        // Fetch notification date from Firebase only if user is logged in
+        if (userLoggedIn) {
+          const date = await readNotificationDateFromFirebase(auth.currentUser.uid);
+          setNotificationDate(date);
+          console.log("Notification date:", date);
+        }
+      } catch (error) {
+        console.error("Error fetching notification date:", error);
+      }
+    };
+
+    fetchNotificationDate();
+  }, [userLoggedIn]);
 
   const AuthStack = () => (
     <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: "#C08B5C" }, headerTintColor: "white" }}>

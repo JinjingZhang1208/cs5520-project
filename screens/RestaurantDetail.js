@@ -17,6 +17,8 @@ export default function RestaurantDetail({ navigation, route }) {
 	const [myReviews, setMyReviews] = useState([]);
 	const [otherReviews, setOtherReviews] = useState([]);
 
+	const userId = auth.currentUser.uid;
+
 	//get restaurant details from the route params
 	const restaurantId = route.params.item.bussiness_id;
 	const name = route.params.item.name;
@@ -97,7 +99,7 @@ export default function RestaurantDetail({ navigation, route }) {
 						{bookmark ? <MaterialIcons name="bookmark-added" size={24} color="black" /> :
 							<MaterialIcons name="bookmark-add" size={24} color="black" />}
 					</PressableButton>
-					<NotificationManager />
+					<NotificationManager userId={userId} />
 				</View>
 			)
 		});
