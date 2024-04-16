@@ -42,21 +42,6 @@ const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
 export default function App() {
-  // useEffect(() => {
-  //   // Set up push notification to trigger daily at 12:00 PM
-  //   Notifications.scheduleNotificationAsync({
-  //     content: {
-  //       title: "Don't know what to eat?",
-  //       body: "Let us help you find something delicious!",
-  //     },
-  //     trigger: {
-  //       hour: 12,
-  //       minute: 0,
-  //       repeats: true,
-  //     },
-  //   });
-  // }, []);
-
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true); // To manage loading state
   const [notificationDate, setNotificationDate] = useState(null);
@@ -83,6 +68,23 @@ export default function App() {
           const date = await readNotificationDateFromFirebase(auth.currentUser.uid);
           setNotificationDate(date);
           console.log("Notification date:", date);
+
+          // Calculate the trigger time one hour before the fetched date
+          const triggerTime = new Date(date);
+          triggerTime.setHours(triggerTime.getHours() - 1);
+
+          // Schedule notification 
+          if (triggerTime > new Date()) {
+            const schedulingOptions = {
+              content: {
+                title: "Time to try this!",
+                body: "Notification Body",
+              },
+              trigger: triggerTime,
+            };
+            await Notifications.scheduleNotificationAsync(schedulingOptions);
+            console.log("Notification scheduled successfully!");
+          }
         }
       } catch (error) {
         console.error("Error fetching notification date:", error);
@@ -91,6 +93,7 @@ export default function App() {
 
     fetchNotificationDate();
   }, [userLoggedIn]);
+
 
   const AuthStack = () => (
     <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: "#C08B5C" }, headerTintColor: "white" }}>

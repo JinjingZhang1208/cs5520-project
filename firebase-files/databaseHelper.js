@@ -3,7 +3,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { database } from "./firebaseSetup";
 import { auth } from "./firebaseSetup";
 import { manipulateAsync } from 'expo-image-manipulator';
-import { Alert } from "react-native";
+import { Timestamp } from "firebase/firestore";
 
 // function to fetch user data
 export const fetchUserData = async (userId) => {
@@ -262,7 +262,14 @@ export const readNotificationDateFromFirebase = async (userId) => {
         // Read the notification date from Firestore
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-            return new Date(docSnap.data().timestamp);
+            // Ensure the timestamp field is valid
+            const timestamp = docSnap.data().timestamp;
+            if (timestamp instanceof Timestamp) {
+                return timestamp.toDate(); // Convert Firestore Timestamp to Date
+            } else {
+                console.error("Invalid timestamp format:", timestamp);
+                return null;
+            }
         } else {
             console.error("Notification data not found");
             return null;
