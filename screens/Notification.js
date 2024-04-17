@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
 import CommonStyles from '../styles/CommonStyles';
 import { useNavigation } from '@react-navigation/native';
 import { readNotificationDateFromFirebase } from '../firebase-files/databaseHelper';
-import { auth } from '../firebase-files/firebaseSetup';
+import { auth, database } from '../firebase-files/firebaseSetup'; // Assuming you export database from firebaseSetup
+import { collection, getDocs } from 'firebase/firestore';
 
 const formatDate = (date) => {
   const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
@@ -12,27 +13,46 @@ const formatDate = (date) => {
 
 const Notification = () => {
   const navigation = useNavigation();
-  const [notificationDate, setNotificationDate] = useState(null);
+  const [notificationDates, setNotificationDates] = useState([]);
 
   useEffect(() => {
-    const fetchNotificationDate = async () => {
+    const fetchNotificationDates = async () => {
       try {
-        const date = await readNotificationDateFromFirebase(auth.currentUser.uid);
-        setNotificationDate(date);
+        const user = auth.currentUser;
+        if (!user) {
+          console.error('User not authenticated');
+          return;
+        }
+
+        const collectionRef = collection(database, "users", user.uid, "notificationData");
+        const snapshot = await getDocs(collectionRef);
+        const dates = snapshot.docs.map(doc => {
+          const timestamp = doc.data().timestamp;
+          return timestamp ? timestamp.toDate() : null;
+        });
+        setNotificationDates(dates.filter(date => date !== null));
       } catch (error) {
-        console.error('Error fetching notification date:', error);
+        console.error('Error fetching notification dates:', error);
       }
     };
 
-    fetchNotificationDate();
+    fetchNotificationDates();
   }, []);
+
 
   return (
     <View style={styles.container}>
-      {notificationDate ? (
-        <Text style={styles.notificationText}>Notification date: {formatDate(notificationDate)}</Text>
+      <Text style={styles.title}>Notification Dates:</Text>
+      {notificationDates.length > 0 ? (
+        <FlatList
+          data={notificationDates}
+          renderItem={({ item }) => (
+            <Text style={styles.notificationItem}>- {formatDate(item)}</Text>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
       ) : (
-        <Text style={styles.notificationText}>We will push your notifications here!</Text>
+        <Text style={styles.notificationText}>No notifications found!</Text>
       )}
       <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
         <Text style={styles.buttonText}>Go back</Text>
@@ -41,8 +61,6 @@ const Notification = () => {
   );
 };
 
-export default Notification;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -50,12 +68,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 80,
   },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  notificationItem: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
   notificationText: {
     fontSize: 18,
     marginBottom: 20,
   },
   button: {
-    backgroundColor: '#453F78',
+    backgroundColor: 'tomato',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 8,
@@ -66,3 +93,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+export default Notification;

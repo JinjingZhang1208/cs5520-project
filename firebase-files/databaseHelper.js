@@ -248,7 +248,6 @@ export const writeNotificationDateToFirebase = async (userId, date) => {
         throw error;
     }
 };
-
 export const readNotificationDateFromFirebase = async (userId) => {
     try {
         // Ensure user is authenticated
@@ -258,9 +257,12 @@ export const readNotificationDateFromFirebase = async (userId) => {
         }
 
         const docRef = doc(database, "users", userId, "notificationData", "selectedDate");
+        console.log("Document Reference:", docRef);
 
         // Read the notification date from Firestore
         const docSnap = await getDoc(docRef);
+        console.log("Document Snapshot:", docSnap);
+
         if (docSnap.exists()) {
             // Ensure the timestamp field is valid
             const timestamp = docSnap.data().timestamp;
