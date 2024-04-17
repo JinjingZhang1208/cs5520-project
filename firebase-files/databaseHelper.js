@@ -271,7 +271,6 @@ export const readNotificationDateFromFirebase = async (userId) => {
                 return null;
             }
         } else {
-            console.error("Notification data not found");
             return null;
         }
     } catch (error) {
