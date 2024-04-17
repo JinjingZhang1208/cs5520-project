@@ -72,6 +72,7 @@ export default function NotificationManager({ userId }) {
                 minimumDate={new Date()}
                 onConfirm={handleConfirm}
                 onCancel={hideDatePicker}
+                textColor="black"
             />
         </View>
     );
