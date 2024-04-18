@@ -86,7 +86,7 @@ const Notification = () => {
             renderItem={({ item }) => (
               <View style={styles.tableRow}>
                 <Text style={styles.cellText}>{formatDate(item.date)}</Text>
-                {/* <Text style={styles.cellText}>{item.restaurantName}</Text> */}
+                <Text style={styles.cellText}>{item.restaurantName}</Text>
                 <TouchableOpacity onPress={() => deleteNotificationHandler(item.id)}>
                   <AntDesign name="delete" size={24} color="red" />
                 </TouchableOpacity>
