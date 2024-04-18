@@ -99,7 +99,8 @@ export default function RestaurantDetail({ navigation, route }) {
 						{bookmark ? <MaterialIcons name="bookmark-added" size={24} color="black" /> :
 							<MaterialIcons name="bookmark-add" size={24} color="black" />}
 					</PressableButton>
-					<NotificationManager userId={userId} />
+					<NotificationManager userId={userId} restaurantId={restaurantId} restaurantName={name} />
+
 				</View>
 			)
 		});

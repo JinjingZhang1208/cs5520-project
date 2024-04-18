@@ -64,11 +64,17 @@ export default function App() {
       try {
         // Fetch notification date from Firebase only if user is logged in
         if (userLoggedIn) {
-          const date = await readNotificationDateFromFirebase(auth.currentUser.uid);
-          console.log("Notification date:", date);
+          const fetchedDate = await readNotificationDateFromFirebase(auth.currentUser?.uid);
+          console.log("Notification date:", fetchedDate);
 
-          if (!date || date.getTime() <= Date.now()) {
-            console.log("Invalid notification date or date is in the past.");
+          if (!fetchedDate || typeof fetchedDate !== 'object' || !(fetchedDate instanceof Date)) {
+            return;
+          }
+
+          const date = fetchedDate.toDate();
+
+          if (date.getTime() <= Date.now()) {
+            console.log("Notification date is in the past.");
             return;
           }
 
@@ -175,8 +181,6 @@ export default function App() {
     );
   };
 
-
-
   if (loading) {
     return (
       <View style={styles.container}>
@@ -189,7 +193,6 @@ export default function App() {
     <NavigationContainer>
       {userLoggedIn ? (
         <Stack.Navigator>
-          {/* <Stack.Screen name="Home" component={AppTabsScreen} options={{ headerShown: false }} /> */}
           <Stack.Screen
             name="DrawerHome"
             component={DrawerWithTabs}

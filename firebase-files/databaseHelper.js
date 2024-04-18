@@ -1,4 +1,4 @@
-import { getFirestore, collection, addDoc, deleteDoc, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, deleteDoc, doc, getDoc, getDocs, setDoc, arrayUnion, query, orderBy } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { database } from "./firebaseSetup";
 import { auth } from "./firebaseSetup";
@@ -226,7 +226,7 @@ export async function updateDB(data, collectionName, id, subCollection, subId) {
     }
 }
 
-export const writeNotificationDateToFirebase = async (userId, date) => {
+export const writeNotificationDateToFirebase = async (userId, date, restaurantId, restaurantName) => {
     try {
         // Ensure user is authenticated
         if (!userId) {
@@ -234,12 +234,14 @@ export const writeNotificationDateToFirebase = async (userId, date) => {
             return;
         }
 
-        // Construct the document path based on the user's ID
-        const docRef = doc(database, "users", userId, "notificationData", "selectedDate");
+        // Construct the collection reference based on the user's ID
+        const collectionRef = collection(database, "users", userId, "notificationData");
 
-        // Write the notification date to Firestore
-        await setDoc(docRef, {
+        // Add a new document to the collection
+        await addDoc(collectionRef, {
             timestamp: date,
+            restaurantId: restaurantId,
+            restaurantName: restaurantName,
         });
 
         console.log("Date saved to Firestore!: date", date);
@@ -248,35 +250,32 @@ export const writeNotificationDateToFirebase = async (userId, date) => {
         throw error;
     }
 };
+
 export const readNotificationDateFromFirebase = async (userId) => {
     try {
         // Ensure user is authenticated
         if (!userId) {
             console.error("User not authenticated");
-            return null;
+            return [];
         }
 
-        const docRef = doc(database, "users", userId, "notificationData", "selectedDate");
-        console.log("Document Reference:", docRef);
+        const collectionRef = collection(database, "users", userId, "notificationData");
+        const querySnapshot = await getDocs(collectionRef);
 
-        // Read the notification date from Firestore
-        const docSnap = await getDoc(docRef);
-        console.log("Document Snapshot:", docSnap);
+        const notifications = [];
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            notifications.push({
+                id: doc.id,
+                timestamp: data.timestamp.toDate(),
+                restaurantId: data.restaurantId || "",
+                restaurantName: data.restaurantName || ""
+            });
+        });
 
-        if (docSnap.exists()) {
-            // Ensure the timestamp field is valid
-            const timestamp = docSnap.data().timestamp;
-            if (timestamp instanceof Timestamp) {
-                return timestamp.toDate(); // Convert Firestore Timestamp to Date
-            } else {
-                console.error("Invalid timestamp format:", timestamp);
-                return null;
-            }
-        } else {
-            return null;
-        }
+        return notifications;
     } catch (error) {
-        console.error("Error fetching selected date:", error);
+        console.error("Error fetching notification dates:", error);
         throw error;
     }
 };

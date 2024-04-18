@@ -5,7 +5,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as Notifications from "expo-notifications";
 import { writeNotificationDateToFirebase } from "../firebase-files/databaseHelper";
 
-export default function NotificationManager({ userId }) {
+export default function NotificationManager({ userId, restaurantId, restaurantName }) {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [minimumDate, setMinimumDate] = useState(new Date());
 
@@ -54,7 +54,7 @@ export default function NotificationManager({ userId }) {
         hideDatePicker();
         localNotificationHandler();
         if (userId) {
-            await writeNotificationDateToFirebase(userId, date);
+            await writeNotificationDateToFirebase(userId, date, restaurantId, restaurantId);
         } else {
             Alert.alert("User not authenticated");
         }
