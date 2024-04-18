@@ -279,3 +279,13 @@ export const readNotificationDateFromFirebase = async (userId) => {
         throw error;
     }
 };
+
+export const deleteNotificationFromFirebase = async (userId, notificationId) => {
+    try {
+        const notificationRef = doc(database, 'users', userId, 'notificationData', notificationId);
+        await deleteDoc(notificationRef);
+        console.log('Notification deleted successfully!');
+    } catch (error) {
+        console.error('Error deleting notification:', error);
+    }
+};

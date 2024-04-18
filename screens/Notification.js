@@ -8,9 +8,11 @@ import {
 } from 'react-native';
 import CommonStyles from '../styles/CommonStyles';
 import { useNavigation } from '@react-navigation/native';
-import { readNotificationDateFromFirebase } from '../firebase-files/databaseHelper';
+import { readNotificationDateFromFirebase, deleteNotificationFromFirebase } from '../firebase-files/databaseHelper';
 import { auth, database } from '../firebase-files/firebaseSetup';
 import { collection, getDocs } from 'firebase/firestore';
+import { AntDesign } from '@expo/vector-icons';
+
 
 const formatDate = (date) => {
   const options = {
@@ -56,6 +58,14 @@ const Notification = () => {
     fetchNotifications();
   }, []);
 
+  const deleteNotificationHandler = async (id) => {
+    try {
+      await deleteNotificationFromFirebase(auth.currentUser.uid, id);
+      setNotifications(notifications.filter(notification => notification.id !== id));
+    } catch (error) {
+      console.error('Error deleting notification:', error);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -65,13 +75,17 @@ const Notification = () => {
           <View style={styles.tableHeader}>
             <Text style={styles.headerText}>Date</Text>
             <Text style={styles.headerText}>Restaurant Name</Text>
+            <Text style={styles.headerText}>Remove</Text>
           </View>
           <FlatList
             data={notifications}
             renderItem={({ item }) => (
               <View style={styles.tableRow}>
                 <Text style={styles.cellText}>{formatDate(item.date)}</Text>
-                <Text style={styles.cellText}>{item.restaurantName}</Text>
+                {/* <Text style={styles.cellText}>{item.restaurantName}</Text> */}
+                <TouchableOpacity onPress={() => deleteNotificationHandler(item.id)}>
+                  <AntDesign name="delete" size={24} color="red" />
+                </TouchableOpacity>
               </View>
             )}
             keyExtractor={(item, index) => item.id}
@@ -84,6 +98,7 @@ const Notification = () => {
       <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
         <Text style={styles.buttonText}>Go back</Text>
       </TouchableOpacity>
+
     </View>
   );
 };
