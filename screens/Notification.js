@@ -10,7 +10,7 @@ import CommonStyles from '../styles/CommonStyles';
 import { useNavigation } from '@react-navigation/native';
 import { readNotificationDateFromFirebase, deleteNotificationFromFirebase } from '../firebase-files/databaseHelper';
 import { auth, database } from '../firebase-files/firebaseSetup';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, onSnapshot } from 'firebase/firestore';
 import { AntDesign } from '@expo/vector-icons';
 
 
@@ -39,17 +39,20 @@ const Notification = () => {
         }
 
         const collectionRef = collection(database, "users", user.uid, "notificationData");
-        const snapshot = await getDocs(collectionRef);
-        const fetchedNotifications = snapshot.docs.map(doc => {
-          const data = doc.data();
-          const timestamp = data.timestamp;
-          return timestamp ? {
-            id: doc.id,
-            date: timestamp.toDate(),
-            restaurantName: data.restaurantName || ""
-          } : null;
+        const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+          const fetchedNotifications = snapshot.docs.map(doc => {
+            const data = doc.data();
+            const timestamp = data.timestamp;
+            return timestamp ? {
+              id: doc.id,
+              date: timestamp.toDate(),
+              restaurantName: data.restaurantName || ""
+            } : null;
+          });
+          setNotifications(fetchedNotifications.filter(notification => notification !== null));
         });
-        setNotifications(fetchedNotifications.filter(notification => notification !== null));
+
+        return () => unsubscribe();
       } catch (error) {
         console.error('Error fetching notifications:', error);
       }
@@ -57,6 +60,7 @@ const Notification = () => {
 
     fetchNotifications();
   }, []);
+
 
   const deleteNotificationHandler = async (id) => {
     try {
