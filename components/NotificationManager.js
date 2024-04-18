@@ -54,7 +54,7 @@ export default function NotificationManager({ userId, restaurantId, restaurantNa
         hideDatePicker();
         localNotificationHandler();
         if (userId) {
-            await writeNotificationDateToFirebase(userId, date, restaurantId, restaurantId);
+            await writeNotificationDateToFirebase(userId, date, restaurantId, restaurantName);
         } else {
             Alert.alert("User not authenticated");
         }
