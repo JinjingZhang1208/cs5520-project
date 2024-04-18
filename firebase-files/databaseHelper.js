@@ -225,7 +225,6 @@ export async function updateDB(data, collectionName, id, subCollection, subId) {
         console.error(err);
     }
 }
-
 export const writeNotificationDateToFirebase = async (userId, date, restaurantId, restaurantName) => {
     try {
         // Ensure user is authenticated

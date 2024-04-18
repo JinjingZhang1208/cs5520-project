@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
 import Discover from "./screens/Discover";
 import Start from "./screens/Start";
@@ -27,6 +27,7 @@ import Map from "./components/Map";
 import LocationManager from "./components/LocationManager";
 import * as Notifications from "expo-notifications";
 import { readNotificationDateFromFirebase } from "./firebase-files/databaseHelper";
+import { registerForPushNotifications, scheduleDailyNotification } from './components/PushNotificationManager';
 
 Notifications.setNotificationHandler({
   handleNotification: async function (notification) {
@@ -41,6 +42,11 @@ const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
 export default function App() {
+  useEffect(() => {
+    registerForPushNotifications();
+    scheduleDailyNotification(); // Schedule the daily notification
+  }, []);
+
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true); // To manage loading state
   const [notificationDate, setNotificationDate] = useState(null);

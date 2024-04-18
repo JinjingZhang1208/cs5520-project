@@ -5,6 +5,20 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as Notifications from "expo-notifications";
 import { writeNotificationDateToFirebase } from "../firebase-files/databaseHelper";
 
+export async function verifyPermission() {
+    try {
+        const status = await Notifications.getPermissionsAsync();
+        if (status.granted) {
+            return true;
+        }
+
+        const permissionResponse = await Notifications.requestPermissionsAsync();
+        return permissionResponse.granted;
+    } catch (error) {
+        console.error("Error verifying permission:", error);
+        return false;
+    }
+}
 export default function NotificationManager({ userId, restaurantId, restaurantName }) {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [minimumDate, setMinimumDate] = useState(new Date());
@@ -21,21 +35,6 @@ export default function NotificationManager({ userId, restaurantId, restaurantNa
     const hideDatePicker = () => {
         setDatePickerVisibility(false);
     };
-
-    async function verifyPermission() {
-        try {
-            const status = await Notifications.getPermissionsAsync();
-            if (status.granted) {
-                return true;
-            }
-
-            const permissionResponse = await Notifications.requestPermissionsAsync();
-            return permissionResponse.granted;
-        } catch (error) {
-            console.error("Error verifying permission:", error);
-            return false;
-        }
-    }
 
     async function localNotificationHandler() {
         try {
