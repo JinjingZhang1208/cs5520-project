@@ -26,7 +26,15 @@ import SearchResults from "./screens/SearchResults";
 import Map from "./components/Map";
 import LocationManager from "./components/LocationManager";
 import * as Notifications from "expo-notifications";
-import { Linking } from 'react-native';
+import { readNotificationDateFromFirebase } from "./firebase-files/databaseHelper";
+
+Notifications.setNotificationHandler({
+  handleNotification: async function (notification) {
+    return {
+      shouldShowAlert: true,
+    };
+  },
+});
 
 Notifications.setNotificationHandler({
   handleNotification: async function (notification) {
@@ -38,7 +46,6 @@ Notifications.setNotificationHandler({
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
-
 
 export default function App() {
   useEffect(() => {
@@ -57,6 +64,7 @@ export default function App() {
   }, []);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true); // To manage loading state
+  const [notificationDate, setNotificationDate] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -72,6 +80,51 @@ export default function App() {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    const fetchNotificationDate = async () => {
+      try {
+        // Fetch notification date from Firebase only if user is logged in
+        if (userLoggedIn) {
+          const fetchedDate = await readNotificationDateFromFirebase(auth.currentUser?.uid);
+          console.log("Notification date:", fetchedDate);
+
+          if (!fetchedDate || typeof fetchedDate !== 'object' || !(fetchedDate instanceof Date)) {
+            return;
+          }
+
+          const date = fetchedDate.toDate();
+
+          if (date.getTime() <= Date.now()) {
+            console.log("Notification date is in the past.");
+            return;
+          }
+
+          const triggerTime = date.getTime() - Date.now();
+          if (triggerTime <= 0) {
+            console.log("Trigger time is in the past.");
+            return;
+          }
+
+          const schedulingOptions = {
+            content: {
+              title: "Time to try!",
+              body: "Don't forget to try the restaurant!",
+            },
+            trigger: {
+              seconds: Math.floor(triggerTime / 1000), // Convert milliseconds to seconds
+            },
+          };
+
+          await Notifications.scheduleNotificationAsync(schedulingOptions);
+        }
+      } catch (error) {
+        console.error("Error fetching notification date:", error);
+      }
+    };
+
+    fetchNotificationDate();
+  }, [userLoggedIn]);
+
   const AuthStack = () => (
     <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: "#C08B5C" }, headerTintColor: "white" }}>
       <Stack.Screen name="Start" component={Start} options={{ headerShown: false }} />
@@ -83,15 +136,16 @@ export default function App() {
 
   const AppTabsScreen = () => {
     return (
-      <Tab.Navigator 
+      <Tab.Navigator
         screenOptions={{
           headerStyle: { backgroundColor: "tomato" },
           headerTintColor: "white",
-          tabBarActiveTintColor: "tomato", 
-          tabBarInactiveTintColor: "gray" }}>
-        <Tab.Screen 
-          name="Discover" 
-          component={Discover} 
+          tabBarActiveTintColor: "tomato",
+          tabBarInactiveTintColor: "gray"
+        }}>
+        <Tab.Screen
+          name="Discover"
+          component={Discover}
           options={{
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="home" size={size} color={color} />
@@ -116,7 +170,7 @@ export default function App() {
             ),
           }}
         />
-        <Tab.Screen 
+        <Tab.Screen
           name="Profile"
           component={Profile}
           options={{
@@ -132,8 +186,9 @@ export default function App() {
   // Function to return the App Tabs Screen with Drawer Navigation
   const DrawerWithTabs = () => {
     return (
-      <Drawer.Navigator initialRouteName="Home" 
-        screenOptions={{ headerShown: false,
+      <Drawer.Navigator initialRouteName="Home"
+        screenOptions={{
+          headerShown: false,
           drawerStyle: {
             backgroundColor: "white",
             width: 240,
@@ -141,13 +196,11 @@ export default function App() {
           drawerActiveTintColor: "tomato",
           drawerInactiveTintColor: "gray",
         }} >
-        <Drawer.Screen name="Home" component={AppTabsScreen} /> 
+        <Drawer.Screen name="Home" component={AppTabsScreen} />
         <Drawer.Screen name="Notifications" component={Notification} />
       </Drawer.Navigator>
     );
   };
-
-  
 
   if (loading) {
     return (
@@ -159,27 +212,26 @@ export default function App() {
 
   return (
     <NavigationContainer>
-        {userLoggedIn ? (
-          <Stack.Navigator>
-            {/* <Stack.Screen name="Home" component={AppTabsScreen} options={{ headerShown: false }} /> */}
-            <Stack.Screen 
-              name="DrawerHome" 
-              component={DrawerWithTabs} 
-              options={{ headerShown: false, title: "Back" }} />
-            <Stack.Screen 
-              name="Restaurant" 
-              component={RestaurantDetail}
-              options={({ route }) => ({ title: route.params.item.name })} />
-            <Stack.Screen name="Search Results" component={SearchResults} />
-            <Stack.Screen name="Add My Review" component={AddReview} />
-            <Stack.Screen name="Edit My Review" component={EditReview} />
-            <Stack.Screen name="My Reviews" component={MyReviews} />
-            <Stack.Screen name="Map" component={Map} />
-            <Stack.Screen name="LocationManager" component={LocationManager} />
-          </Stack.Navigator>
-        ) : (
-          AuthStack()
-        )}
+      {userLoggedIn ? (
+        <Stack.Navigator>
+          <Stack.Screen
+            name="DrawerHome"
+            component={DrawerWithTabs}
+            options={{ headerShown: false, title: "Back" }} />
+          <Stack.Screen
+            name="Restaurant"
+            component={RestaurantDetail}
+            options={({ route }) => ({ title: route.params.item.name })} />
+          <Stack.Screen name="Search Results" component={SearchResults} />
+          <Stack.Screen name="Add My Review" component={AddReview} />
+          <Stack.Screen name="Edit My Review" component={EditReview} />
+          <Stack.Screen name="My Reviews" component={MyReviews} />
+          <Stack.Screen name="Map" component={Map} />
+          <Stack.Screen name="LocationManager" component={LocationManager} />
+        </Stack.Navigator>
+      ) : (
+        AuthStack()
+      )}
     </NavigationContainer>
   );
 }

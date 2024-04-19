@@ -12,11 +12,12 @@ import * as Linking from "expo-linking";
 import { Rating } from 'react-native-ratings';
 import NotificationManager from '../components/NotificationManager';
 
-
 export default function RestaurantDetail({ navigation, route }) {
 	const [bookmark, setBookmark] = useState(false);
 	const [myReviews, setMyReviews] = useState([]);
 	const [otherReviews, setOtherReviews] = useState([]);
+
+	const userId = auth.currentUser.uid;
 
 	//get restaurant details from the route params
 	const restaurantId = route.params.item.bussiness_id;
@@ -72,8 +73,8 @@ export default function RestaurantDetail({ navigation, route }) {
 						review_count: review_count,
 						image_url: image_url,
 						owner: userId,
-						latitude: latitude,
-						longitude: longitude,
+						latitude: latitude || 0,
+						longitude: longitude || 0,
 						address: address,
 						phone: phone,
 						price: price,
@@ -89,7 +90,6 @@ export default function RestaurantDetail({ navigation, route }) {
 		}
 	}
 
-	
 	//set header right to buttons for both bookmark and notification manager
 	useEffect(() => {
 		navigation.setOptions({
@@ -99,7 +99,8 @@ export default function RestaurantDetail({ navigation, route }) {
 						{bookmark ? <MaterialIcons name="bookmark-added" size={24} color="black" /> :
 							<MaterialIcons name="bookmark-add" size={24} color="black" />}
 					</PressableButton>
-					<NotificationManager />
+					<NotificationManager userId={userId} restaurantId={restaurantId} restaurantName={name} />
+
 				</View>
 			)
 		});
@@ -130,7 +131,6 @@ export default function RestaurantDetail({ navigation, route }) {
 
 	return (
 		<View style={[{ marginTop: 10 }, CommonStyles.restaurantContainer]}>
-
 			<Card>
 				<View style={{ justifyContent: 'center', alignItems: 'center' }}>
 					<Image
