@@ -15,14 +15,21 @@ import { AntDesign } from '@expo/vector-icons';
 
 
 const formatDate = (date) => {
-  const options = {
+  const optionsDate = {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
+  };
+
+  const optionsTime = {
     hour: '2-digit',
     minute: '2-digit'
   };
-  return date.toLocaleDateString(undefined, options);
+
+  const formattedDate = date.toLocaleDateString(undefined, optionsDate);
+  const formattedTime = date.toLocaleTimeString(undefined, optionsTime);
+
+  return { date: formattedDate, time: formattedTime };
 };
 
 const Notification = () => {
@@ -78,14 +85,17 @@ const Notification = () => {
         <View style={styles.tableContainer}>
           <View style={styles.tableHeader}>
             <Text style={styles.headerText}>Date</Text>
-            <Text style={styles.headerText}>Restaurant Name</Text>
+            <Text style={styles.headerText1}>Restaurant Name</Text>
             <Text style={styles.headerText}>Remove</Text>
           </View>
           <FlatList
             data={notifications}
             renderItem={({ item }) => (
               <View style={styles.tableRow}>
-                <Text style={styles.cellText}>{formatDate(item.date)}</Text>
+                <View>
+                  <Text style={styles.cellText}>{formatDate(item.date).date}</Text>
+                  <Text style={styles.cellText}>{formatDate(item.date).time}</Text>
+                </View>
                 <Text style={styles.cellText}>{item.restaurantName}</Text>
                 <TouchableOpacity onPress={() => deleteNotificationHandler(item.id)}>
                   <AntDesign name="delete" size={24} color="red" />
@@ -95,6 +105,7 @@ const Notification = () => {
             keyExtractor={(item, index) => item.id}
             contentContainerStyle={styles.flatlistContent}
           />
+
         </View>
       ) : (
         <Text style={styles.notificationText}>No notifications found!</Text>
@@ -138,6 +149,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  headerText1: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginLeft: 80,
   },
   tableRow: {
     flexDirection: 'row',
