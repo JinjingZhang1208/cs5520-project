@@ -82,48 +82,58 @@ export default function App() {
 
   useEffect(() => {
     const fetchNotificationDate = async () => {
-      try {
-        // Fetch notification date from Firebase only if user is logged in
-        if (userLoggedIn) {
-          const fetchedDate = await readNotificationDateFromFirebase(auth.currentUser?.uid);
-          console.log("Notification date:", fetchedDate);
+        try {
+            // Fetch notification date from Firebase only if user is logged in
+            if (userLoggedIn) {
+                const fetchedDate = await readNotificationDateFromFirebase(auth.currentUser?.uid);
 
-          if (!fetchedDate || typeof fetchedDate !== 'object' || !(fetchedDate instanceof Date)) {
-            return;
-          }
+                if (!Array.isArray(fetchedDate)) {
+                    console.error("Invalid notification dates format.");
+                    return;
+                }
 
-          const date = fetchedDate.toDate();
+                fetchedDate.forEach(async (doc) => {
+                    const date = doc.timestamp;
 
-          if (date.getTime() <= Date.now()) {
-            console.log("Notification date is in the past.");
-            return;
-          }
+                    if (!date || typeof date !== 'object' || !(date instanceof Date)) {
+                        return;
+                    }
+                    
+                    if (date.getTime() <= Date.now()) {
+                        console.log("Notification date is in the past.");
+                        return;
+                    }
 
-          const triggerTime = date.getTime() - Date.now();
-          if (triggerTime <= 0) {
-            console.log("Trigger time is in the past.");
-            return;
-          }
+                    const triggerTime = date.getTime() - Date.now();
+                    if (triggerTime <= 0) {
+                        console.log("Trigger time is in the past.");
+                        return;
+                    }
 
-          const schedulingOptions = {
-            content: {
-              title: "Time to try!",
-              body: "Don't forget to try the restaurant!",
-            },
-            trigger: {
-              seconds: Math.floor(triggerTime / 1000), // Convert milliseconds to seconds
-            },
-          };
+                    const schedulingOptions = {
+                        content: {
+                            title: "Time to try!",
+                            body: "Don't forget to try the restaurant!",
+                        },
+                        trigger: {
+                            seconds: Math.floor(triggerTime / 1000), // Convert milliseconds to seconds
+                        },
+                    };
 
-          await Notifications.scheduleNotificationAsync(schedulingOptions);
+                    try {
+                        await Notifications.scheduleNotificationAsync(schedulingOptions);
+                    } catch (error) {
+                        console.error("Error scheduling notification:", error);
+                    }
+                });
+            }
+        } catch (error) {
+            console.error("Error fetching notification date:", error);
         }
-      } catch (error) {
-        console.error("Error fetching notification date:", error);
-      }
     };
 
     fetchNotificationDate();
-  }, [userLoggedIn]);
+}, [userLoggedIn]);
 
   const AuthStack = () => (
     <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: "#C08B5C" }, headerTintColor: "white" }}>
