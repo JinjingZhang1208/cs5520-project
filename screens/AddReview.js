@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet, Text, TextInput, View, FlatList } from 'react-native'
+import { Image, Pressable, StyleSheet, Text, TextInput, View, FlatList, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CommonStyles from '../styles/CommonStyles'
 import PressableButton from '../components/PressableButton'
@@ -153,7 +153,8 @@ export default function Review({navigation, route}) {
                 {/* Add a text input for the review content */}
                 <TextInput 
                     placeholder='Enter your review'
-                    style={CommonStyles.reviewInput}
+                    multiline={true}
+                    style={[CommonStyles.reviewInput, {width: Dimensions.get('window').width * 0.98}]}
                     value={reviewContent}
                     onChangeText={setReviewContent}/>
 
@@ -181,6 +182,5 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginTop: 5,
         width: 200,
-        alignSelf: 'center'
     },
 })
