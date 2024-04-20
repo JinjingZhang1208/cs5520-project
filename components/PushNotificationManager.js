@@ -3,7 +3,6 @@ import { Platform, Alert } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { format, setHours, setMinutes, setSeconds, isAfter } from 'date-fns';
 import { verifyPermission } from './NotificationManager';
-import { channel } from 'diagnostics_channel';
 
 export async function registerForPushNotifications() {
     try {
