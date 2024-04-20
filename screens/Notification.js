@@ -80,31 +80,34 @@ const Notification = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Notifications Scheduled</Text>
+      <Text style={styles.title}>My Schedules</Text>
       {notifications.length > 0 ? (
         <View style={styles.tableContainer}>
           <View style={styles.tableHeader}>
             <Text style={styles.headerText}>Date</Text>
-            <Text style={styles.headerText1}>Restaurant Name</Text>
-            <Text style={styles.headerText}>Remove</Text>
+            <Text style={styles.headerText1}>Restaurant</Text>
+            <Text style={styles.headerText}></Text>
           </View>
           <FlatList
             data={notifications}
             renderItem={({ item }) => (
-              <View style={styles.tableRow}>
-                <View>
-                  <Text style={styles.cellText}>{formatDate(item.date).date}</Text>
-                  <Text style={styles.cellText}>{formatDate(item.date).time}</Text>
+              item.date > new Date() && (
+                <View style={styles.tableRow}>
+                  <View>
+                    <Text style={styles.cellText}>{formatDate(item.date).date}</Text>
+                    <Text style={styles.cellText}>{formatDate(item.date).time}</Text>
+                  </View>
+                  <Text style={styles.cellText}>{item.restaurantName}</Text>
+                  <TouchableOpacity onPress={() => deleteNotificationHandler(item.id)}>
+                    <AntDesign name="delete" size={24} color="red" />
+                  </TouchableOpacity>
                 </View>
-                <Text style={styles.cellText}>{item.restaurantName}</Text>
-                <TouchableOpacity onPress={() => deleteNotificationHandler(item.id)}>
-                  <AntDesign name="delete" size={24} color="red" />
-                </TouchableOpacity>
-              </View>
+              )
             )}
             keyExtractor={(item, index) => item.id}
             contentContainerStyle={styles.flatlistContent}
           />
+
 
         </View>
       ) : (
@@ -154,7 +157,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
-    marginLeft: 80,
+    marginLeft: 43,
   },
   tableRow: {
     flexDirection: 'row',
