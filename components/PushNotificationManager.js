@@ -3,6 +3,7 @@ import { Platform, Alert } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { format, setHours, setMinutes, setSeconds, isAfter } from 'date-fns';
 import { verifyPermission } from './NotificationManager';
+import { channel } from 'diagnostics_channel';
 
 export async function registerForPushNotifications() {
     try {
@@ -19,7 +20,7 @@ export async function registerForPushNotifications() {
         }
         const pushToken = await Notifications.getExpoPushTokenAsync();
         console.log(pushToken.data);
-        // in a real life scenario, this token would be sent to your server for later use
+
     } catch (error) {
         console.error('Error registering for push notifications:', error);
     }
@@ -41,6 +42,16 @@ export async function scheduleDailyNotification() {
                     repeats: true,
                 },
             };
+
+            if (Platform.OS === 'android') {
+                schedulingOptions.content.sound = 'default';
+                schedulingOptions.content.andriod ={
+                    channelId: 'default',
+                    priority: 'max',
+                    sound: true,
+                    vibrate: true,
+                }
+            }
 
             await Notifications.scheduleNotificationAsync(schedulingOptions);
         }
