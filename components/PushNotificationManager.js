@@ -43,16 +43,6 @@ export async function scheduleDailyNotification() {
                 },
             };
 
-            if (Platform.OS === 'android') {
-                schedulingOptions.content.sound = 'default';
-                schedulingOptions.content.andriod ={
-                    channelId: 'default',
-                    priority: 'max',
-                    sound: true,
-                    vibrate: true,
-                }
-            }
-
             await Notifications.scheduleNotificationAsync(schedulingOptions);
         }
     } catch (error) {
