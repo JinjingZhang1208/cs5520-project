@@ -63,24 +63,21 @@ export default function ReviewItem({ review }) {
         <View style={[{ marginLeft: 10, marginRight: 10, padding: 5}]}>
           <View style={[{flexDirection: 'row', justifyContent: 'space-between'}, styles.reviewContainer]}>
             <Pressable
-              style={({ pressed }) => [{flexDirection: 'row', justifyContent: 'space-between'}, pressed && styles.pressed]}
+              style={({ pressed }) => [pressed && styles.pressed]}
               onPress={reviewPressHandler} andriod_ripple={{ color: '#e9e' }}>
-
-                  <View>
-                    <Text style={styles.boldText}>{review.restaurantName}</Text>
-                    {review.imageURLs && review.imageURLs.length > 0 && (
-                      <View style={styles.imagesContainer}>
-                        {renderImages(review.imageURLs)}
-                      </View>
-                    )}
-                    <Text style={styles.text}>{review.review}</Text>
-                  </View>
+                  <Text style={styles.boldText}>{review.restaurantName}</Text>
+                  {review.imageURLs && review.imageURLs.length > 0 && (
+                    <View style={styles.imagesContainer}>
+                      {renderImages(review.imageURLs)}
+                    </View>
+                  )}
+                  <Text style={styles.text}>{review.review}</Text>
             </Pressable>
             
             <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginRight: '2%'}}>
-                    <PressableButton onPress={deleteHandler} style={styles.d}>
-                      <MaterialIcons name="delete" size={24} color="black" />
-                    </PressableButton>
+                <PressableButton onPress={deleteHandler} style={styles.d}>
+                  <MaterialIcons name="delete" size={24} color="black" />
+                </PressableButton>
             </View>
           </View>
         </View>

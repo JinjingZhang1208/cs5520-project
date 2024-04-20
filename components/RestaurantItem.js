@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
 import Card from './Card';
@@ -11,14 +11,16 @@ export default function RestaurantItem({item}) {
   const navigation = useNavigation();
   //console.log('item:', item.image_url);
 
+  const screenWidth = Dimensions.get('screen').width;
+
   return (
     <PressableButton onPress={() => {navigation.navigate('Restaurant', {item: item})}}>
       <Card>
         <Text style={[CommonStyles.restauntName]}>{item.name}</Text>
         <Image 
-          resizeMode='cover'
+          // resizeMode='cover'
           source={{uri: item.image_url}}
-          style={{width: 325, height: 150, borderRadius: 5}} />
+          style={{width: screenWidth * 0.9, height: 150, borderRadius: 5}} />
         <View style={[CommonStyles.directionRow, {justifyContent:'start'}]}>
           <Text>Ratings: {item.rating}   </Text>
           <Text>Reviews: {item.review_count}</Text>
