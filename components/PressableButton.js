@@ -1,6 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import Colors from "../Colors";
 
 export default function PressableButton({
   customStyle,
@@ -43,6 +42,6 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   disabled: {
-    backgroundColor: Colors.inactiveBottomBarTab,
+    backgroundColor: '#E8DFE8',
   },
 });

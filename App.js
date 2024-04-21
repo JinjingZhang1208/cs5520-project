@@ -48,20 +48,7 @@ const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
 export default function App() {
-  useEffect(() => {
-    // Set up push notification to trigger daily at 12:00 PM
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Don't know what to eat?",
-        body: "Let us help you find something delicious!",
-      },
-      trigger: {
-        hour: 12,
-        minute: 0,
-        repeats: true,
-      },
-    });
-  }, []);
+
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true); // To manage loading state
   const [notificationDate, setNotificationDate] = useState(null);
@@ -207,7 +194,7 @@ export default function App() {
           drawerInactiveTintColor: "gray",
         }} >
         <Drawer.Screen name="Home" component={AppTabsScreen} />
-        <Drawer.Screen name="Notifications" component={Notification} />
+        <Drawer.Screen name="My Schedules" component={Notification} />
       </Drawer.Navigator>
     );
   };
