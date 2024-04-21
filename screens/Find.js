@@ -96,7 +96,47 @@ const Find = ({route, navigation}) => {
     return 'Location name not found';
   }
 
+  const verifyUserInput = () => {
+    if (!searchKeyword) {
+      Alert.alert('Please enter a keyword to search for');
+      return false;
+    }
+
+    if (!location) {
+      Alert.alert('Please choose a location');
+      return false;
+    }
+
+    if (!searchRating) {
+      Alert.alert('Please enter a rating to search for');
+      return false;
+    }
+
+    if (!searchDistance) {
+      Alert.alert('Please enter a distance to search within');
+      return false;
+    }
+
+    if (!minReviewCount) {
+      Alert.alert('Please enter a minimum review count');
+      return false;
+    }
+
+    if (isNaN(searchRating) || isNaN(searchDistance) || isNaN(minReviewCount)) {
+      Alert.alert('Rating, distance, and review count must be numbers');
+      return false;
+    }
+
+    return true;
+  }
+    
+
   const search = async () => {
+    //verify user input
+    if (!verifyUserInput()) {
+      return;
+    }
+
     const radius = searchDistance * 1000; // Convert km to meters
 
     Alert.alert('Searching for restaurants... This may take a few seconds...');
@@ -146,11 +186,11 @@ const Find = ({route, navigation}) => {
           placeholder='Rating'
           onChangeText={setSearchRating}
           value={searchRating}
-          onFocus={() => setShowRatingPicker(true)}
-          onBlur={() => setShowRatingPicker(false)}
+          // onFocus={() => setShowRatingPicker(true)}
+          // onBlur={() => setShowRatingPicker(false)}
         />
         <Text style={styles.text}> Stars</Text>
-        {showRatingPicker && (
+        {/* {showRatingPicker && (
           <Picker
             selectedValue={searchRating}
             onValueChange={(itemValue, itemIndex) => {
@@ -164,7 +204,7 @@ const Find = ({route, navigation}) => {
             <Picker.Item label="2 Stars & Up" value="2" />
             <Picker.Item label="1 Star & Up" value="1" />
           </Picker>
-        )}
+        )} */}
       </View>
 
       {/* Distance Picker */}
@@ -175,11 +215,11 @@ const Find = ({route, navigation}) => {
           placeholder='Distance in km'
           onChangeText={setSearchDistance}
           value={searchDistance}
-          onFocus={() => setShowDistancePicker(true)}
-          onBlur={() => setShowDistancePicker(false)}
+          // onFocus={() => setShowDistancePicker(true)}
+          // onBlur={() => setShowDistancePicker(false)}
         />
         <Text style={styles.text}> km</Text>
-        {showDistancePicker && (
+        {/* {showDistancePicker && (
           <Picker
             selectedValue={searchDistance}
             onValueChange={(itemValue, itemIndex) => {
@@ -193,7 +233,7 @@ const Find = ({route, navigation}) => {
             <Picker.Item label="10 km" value="10" />
             <Picker.Item label="15 km" value="15" />
           </Picker>
-        )}
+        )} */}
       </View>
 
       <View style={styles.horizontal}>
