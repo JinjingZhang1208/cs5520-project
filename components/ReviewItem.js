@@ -6,9 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { auth, database } from '../firebase-files/firebaseSetup';
 import { deleteFromDB } from '../firebase-files/databaseHelper';
 import { fetchUserData } from '../firebase-files/databaseHelper';
-import Card from '../components/Card';
 import CommonStyles from '../styles/CommonStyles';
-import { TouchableWithoutFeedback } from 'react-native';
 
 export default function ReviewItem({ review }) {
 
@@ -62,30 +60,25 @@ export default function ReviewItem({ review }) {
     // otherwise, just show the review
     <>
       {review.owner == userId && (
-        <View style={[{ marginLeft: 10, marginRight: 10, padding: 5 }, styles.contentContainer]}>
-          <View style={[styles.reviewContainer, flexDirection = 'row']}>
-          <Pressable
-            style={({ pressed }) => [pressed && styles.pressed]}
-            onPress={reviewPressHandler} andriod_ripple={{ color: '#e9e' }}>
-
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View>
-                <Text style={styles.boldText}>{review.restaurantName}</Text>
-                {review.imageURLs && review.imageURLs.length > 0 && (
-                  <View style={styles.imagesContainer}>
-                    {renderImages(review.imageURLs)}
-                  </View>
-                )}
-                <Text style={styles.text}>{review.review}</Text>
-              </View>
-
-              <PressableButton onPress={deleteHandler} style={styles.d}>
-                <MaterialIcons name="delete" size={24} color="black" />
-              </PressableButton>
-
+        <View style={[{ marginLeft: 10, marginRight: 10, padding: 5}]}>
+          <View style={[{flexDirection: 'row', justifyContent: 'space-between'}, styles.reviewContainer]}>
+            <Pressable
+              style={({ pressed }) => [{width: '90%'}, pressed && styles.pressed]}
+              onPress={reviewPressHandler} andriod_ripple={{ color: '#e9e' }}>
+                  <Text style={styles.boldText}>{review.restaurantName}</Text>
+                  {review.imageURLs && review.imageURLs.length > 0 && (
+                    <View style={styles.imagesContainer}>
+                      {renderImages(review.imageURLs)}
+                    </View>
+                  )}
+                  <Text style={styles.text}>{review.review}</Text>
+            </Pressable>
+            
+            <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginRight: '2%'}}>
+                <PressableButton onPress={deleteHandler} style={styles.d}>
+                  <MaterialIcons name="delete" size={24} color="black" />
+                </PressableButton>
             </View>
-
-          </Pressable>
           </View>
         </View>
       )}
@@ -135,10 +128,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     marginBottom: 5,
     padding: 10,
-    flexDirection: "column",
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    justifyContent: "space-between",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -178,8 +167,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 10,
   },
-  contentContainer: {
-    flex: 1,
-  }
 
 });

@@ -1,8 +1,9 @@
-import { getFirestore, collection, addDoc, deleteDoc, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, deleteDoc, doc, getDoc, getDocs, setDoc, arrayUnion, query, orderBy } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { database } from "./firebaseSetup";
 import { auth } from "./firebaseSetup";
 import { manipulateAsync } from 'expo-image-manipulator';
+import { Timestamp } from "firebase/firestore";
 
 // function to fetch user data
 export const fetchUserData = async (userId) => {
@@ -49,7 +50,7 @@ const uriToBlob = async (uri) => {
 const uploadImage = async (blob) => {
     const storage = getStorage();
     const storageRef = ref(storage, `images/${Date.now()}.jpeg`); // Creates a unique name for each image
-    
+
     console.log('Uploading blob:', blob);
     const uploadResult = await uploadBytes(storageRef, blob);
     console.log('Uploaded blob!');
@@ -119,28 +120,28 @@ export const setEmail = async (userId) => {
 
 export const fetchAllRestaurantsFromDB = async () => {
     try {
-      const querySnapshot = await getDocs(collection(database, 'restaurants'));
-      const restaurantList = [];
-      querySnapshot.forEach((doc) => {
-        restaurantList.push({ ...doc.data(), id: doc.id });
-      });
-      return restaurantList;
+        const querySnapshot = await getDocs(collection(database, 'restaurants'));
+        const restaurantList = [];
+        querySnapshot.forEach((doc) => {
+            restaurantList.push({ ...doc.data(), id: doc.id });
+        });
+        return restaurantList;
     } catch (error) {
-      console.error("Error fetching restaurants from DB:", error);
-      throw new Error('Failed to fetch restaurants');
+        console.error("Error fetching restaurants from DB:", error);
+        throw new Error('Failed to fetch restaurants');
     }
-  };
+};
 
-export async function writeToDB (data, collectionName, id, subCollection) {
+export async function writeToDB(data, collectionName, id, subCollection) {
     try {
         if (id) {
-            if (collectionName == 'allReviews'){
+            if (collectionName == 'allReviews') {
                 await addDoc(collection(database, collectionName), data);
             }
-            if (subCollection == 'reviews'){
+            if (subCollection == 'reviews') {
                 await addDoc(collection(database, collectionName, id, subCollection), data);
             }
-            if (subCollection == 'wishlists'){
+            if (subCollection == 'wishlists') {
                 await setDoc(doc(database, collectionName, id, subCollection, data.bussiness_id), data);
             }
         } else {
@@ -152,12 +153,12 @@ export async function writeToDB (data, collectionName, id, subCollection) {
 }
 
 // read user's own reviews from DB by restaurantId
-export async function readMyReviewsFromDB (restaurantId) {
+export async function readMyReviewsFromDB(restaurantId) {
     try {
         const querySnapshot = await getDocs(collection(database, 'allReviews'));
         const reviews = [];
         querySnapshot.forEach((doc) => {
-            if (doc.data().bussiness_id === restaurantId && doc.data().owner === auth.currentUser.uid){
+            if (doc.data().bussiness_id === restaurantId && doc.data().owner === auth.currentUser.uid) {
                 reviews.push({ ...doc.data(), id: doc.id });
             }
         });
@@ -168,12 +169,12 @@ export async function readMyReviewsFromDB (restaurantId) {
 }
 
 // read user's own reviews from DB by restaurantId
-export async function readOtherReviewsFromDB (restaurantId) {
+export async function readOtherReviewsFromDB(restaurantId) {
     try {
         const querySnapshot = await getDocs(collection(database, 'allReviews'));
         const reviews = [];
         querySnapshot.forEach((doc) => {
-            if (doc.data().bussiness_id === restaurantId && doc.data().owner !== auth.currentUser.uid){
+            if (doc.data().bussiness_id === restaurantId && doc.data().owner !== auth.currentUser.uid) {
                 reviews.push({ ...doc.data(), id: doc.id });
             }
         });
@@ -184,7 +185,7 @@ export async function readOtherReviewsFromDB (restaurantId) {
 }
 
 // read reviews from allReviews by owner ID
-export async function readUserReviewsFromDB (ownerId) {
+export async function readUserReviewsFromDB(ownerId) {
     try {
         const querySnapshot = await getDocs(collection(database, 'allReviews'));
         const reviews = [];
@@ -201,7 +202,7 @@ export async function readUserReviewsFromDB (ownerId) {
 }
 
 
-export async function deleteFromDB (collectionName, id, subCollection, subId) {
+export async function deleteFromDB(collectionName, id, subCollection, subId) {
     try {
         if (subCollection) {
             await deleteDoc(doc(database, collectionName, id, subCollection, subId));
@@ -211,11 +212,11 @@ export async function deleteFromDB (collectionName, id, subCollection, subId) {
     } catch (err) {
         console.error(err);
     }
- }
+}
 
- export async function updateDB (data, collectionName, id, subCollection, subId) {
+export async function updateDB(data, collectionName, id, subCollection, subId) {
     try {
-        if(subCollection){
+        if (subCollection) {
             await setDoc(doc(database, collectionName, id, subCollection, subId), data);
         } else {
             await setDoc(doc(database, collectionName, id), data);
@@ -223,4 +224,68 @@ export async function deleteFromDB (collectionName, id, subCollection, subId) {
     } catch (err) {
         console.error(err);
     }
- }
+}
+
+export const writeNotificationDateToFirebase = async (userId, date, restaurantId, restaurantName) => {
+    try {
+        // Ensure user is authenticated
+        if (!userId) {
+            console.error("User not authenticated");
+            return;
+        }
+
+        // Construct the collection reference based on the user's ID
+        const collectionRef = collection(database, "users", userId, "notificationData");
+
+        // Add a new document to the collection
+        await addDoc(collectionRef, {
+            timestamp: date,
+            restaurantId: restaurantId,
+            restaurantName: restaurantName,
+        });
+
+        console.log("Date saved to Firestore!: date", date);
+    } catch (error) {
+        console.error("Error writing document:", error);
+        throw error;
+    }
+};
+
+export const readNotificationDateFromFirebase = async (userId) => {
+    try {
+        // Ensure user is authenticated
+        if (!userId) {
+            console.error("User not authenticated");
+            return [];
+        }
+
+        const collectionRef = collection(database, "users", userId, "notificationData");
+        const querySnapshot = await getDocs(collectionRef);
+
+        const notifications = [];
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            notifications.push({
+                id: doc.id,
+                timestamp: data.timestamp.toDate(),
+                restaurantId: data.restaurantId || "",
+                restaurantName: data.restaurantName || ""
+            });
+        });
+
+        return notifications;
+    } catch (error) {
+        console.error("Error fetching notification dates:", error);
+        throw error;
+    }
+};
+
+export const deleteNotificationFromFirebase = async (userId, notificationId) => {
+    try {
+        const notificationRef = doc(database, 'users', userId, 'notificationData', notificationId);
+        await deleteDoc(notificationRef);
+        console.log('Notification deleted successfully!');
+    } catch (error) {
+        console.error('Error deleting notification:', error);
+    }
+};

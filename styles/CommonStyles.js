@@ -41,11 +41,8 @@ const CommonStyles = StyleSheet.create({
 
     reviewInput: {
         marginTop: 50,
-        // marginLeft: 30,
-        // marginRight: 30,
         marginBottom: 10,
         fontSize: 18,
-        // fontWeight: 'bold',
         height: 120,
         padding: 15,
         borderRadius: 5,
