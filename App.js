@@ -27,7 +27,8 @@ import Map from "./components/Map";
 import LocationManager from "./components/LocationManager";
 import * as Notifications from "expo-notifications";
 import { readNotificationDateFromFirebase } from "./firebase-files/databaseHelper";
-import { registerForPushNotifications, scheduleDailyNotification } from './components/PushNotificationManager ';
+import PushNotificationManager from './components/PushNotificationManager';
+import messaging from '@react-native-firebase/messaging';
 
 Notifications.setNotificationHandler({
   handleNotification: async function (notification) {
@@ -123,6 +124,17 @@ export default function App() {
     fetchNotificationDate();
 }, [userLoggedIn]);
 
+
+//push notification
+useEffect(() => {
+  const unsubscribe = messaging().onMessage(async remoteMessage => {
+    console.log('Received a foreground message:', remoteMessage);
+    // Handle the incoming message here, such as displaying a notification or updating UI.
+  });
+
+  return unsubscribe;
+}, []);
+
   const AuthStack = () => (
     <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: "#C08B5C" }, headerTintColor: "white" }}>
       <Stack.Screen name="Start" component={Start} options={{ headerShown: false }} />
@@ -210,6 +222,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
+      <PushNotificationManager />
       {userLoggedIn ? (
         <Stack.Navigator>
           <Stack.Screen

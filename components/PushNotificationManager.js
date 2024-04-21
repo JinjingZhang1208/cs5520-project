@@ -28,7 +28,7 @@ export async function registerForPushNotifications() {
 export async function scheduleDailyNotification() {
     try {
         const now = new Date();
-        const nextNotificationTime = setSeconds(setMinutes(setHours(now, 11), 30), 0); // Set time to 11:30 AM
+        const nextNotificationTime = setSeconds(setMinutes(setHours(now, 0), 0), 0); // Set time to 11:30 AM
 
         if (isAfter(nextNotificationTime, now)) {
             const schedulingOptions = {
@@ -49,3 +49,9 @@ export async function scheduleDailyNotification() {
     }
 }
 
+export default function PushNotificationManager() {
+    useEffect(() => {
+        registerForPushNotifications();
+        scheduleDailyNotification();
+    }, []);
+}
