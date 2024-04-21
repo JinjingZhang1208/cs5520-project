@@ -63,7 +63,7 @@ export default function ReviewItem({ review }) {
         <View style={[{ marginLeft: 10, marginRight: 10, padding: 5}]}>
           <View style={[{flexDirection: 'row', justifyContent: 'space-between'}, styles.reviewContainer]}>
             <Pressable
-              style={({ pressed }) => [pressed && styles.pressed]}
+              style={({ pressed }) => [{width: '90%'}, pressed && styles.pressed]}
               onPress={reviewPressHandler} andriod_ripple={{ color: '#e9e' }}>
                   <Text style={styles.boldText}>{review.restaurantName}</Text>
                   {review.imageURLs && review.imageURLs.length > 0 && (

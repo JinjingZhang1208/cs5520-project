@@ -1,4 +1,4 @@
-import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CommonStyles from '../styles/CommonStyles'
 import PressableButton from '../components/PressableButton'
@@ -130,6 +130,7 @@ export default function RestaurantDetail({ navigation, route }) {
 	};
 
 	return (
+		<ScrollView>
 		<View style={[{ marginTop: 10 }, CommonStyles.restaurantContainer]}>
 			<Card>
 				<View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -202,8 +203,8 @@ export default function RestaurantDetail({ navigation, route }) {
 					<ReviewList allReviews={otherReviews} />
 				</View>
 			</Card>
-
 		</View>
+		</ScrollView>
 	)
 }
 

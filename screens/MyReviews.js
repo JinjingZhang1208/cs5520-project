@@ -23,7 +23,7 @@ export default function MyReviews() {
 
   return (
     <View style={CommonStyles.container}>
-      <ReviewList allReviews={reviews} />
+      <ReviewList allReviews={reviews} myReview={true}/>
     </View>
   )
 }
