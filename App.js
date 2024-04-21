@@ -136,7 +136,7 @@ export default function App() {
 }, [userLoggedIn]);
 
   const AuthStack = () => (
-    <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: "#C08B5C" }, headerTintColor: "white" }}>
+    <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: "tomato" }, headerTintColor: "white" }}>
       <Stack.Screen name="Start" component={Start} options={{ headerShown: false }} />
       <Stack.Screen name="Signup" component={Signup} options={{ title: "Sign Up" }} />
       <Stack.Screen name="Login" component={Login} options={{ title: "Login" }} />
