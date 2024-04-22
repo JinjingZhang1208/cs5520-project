@@ -90,7 +90,7 @@ export default function App() {
         });
         
         if (userLoggedIn) {
-          updateUserField(userId, "pushToken", pushToken.data);
+          await updateUserField(userId, "pushToken", pushToken.data);
           console.log(pushToken.data);
         }
 
