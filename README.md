@@ -234,5 +234,8 @@ This subcollection stores the list of notifications that users have added to the
     - Make delete button only renders for users who have permission to delete.
   - Profile:
     - Fetch and show user’s reviews based on user ownership.
-
-
+- Iteration 3
+  - Restaurant Details:
+    - Debug for nested Views reltated bug.
+    - Render restaurant detail info like rating, price range and so on.
+    - Render users's reviews with photos.
