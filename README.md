@@ -111,7 +111,7 @@ This subcollection stores the list of notifications that users have added to the
 ## Find
 - Users can find restaurants based on their preference and distance.
 <div style="display:flex; flex-direction:row;">
-  <img src="images/discover_home.png" width="300">
+  <img src="images/discover_new.PNG" width="300">
   <img src="search_results.png" width="300">
 </div>
 
@@ -137,6 +137,10 @@ This subcollection stores the list of notifications that users have added to the
 - Users can write reviews with photos!
 <div style="display:flex; flex-direction:row;">
   <img src="images/add_photos_to_review.png" width="300">
+  <img src="images/add_my_review.PNG" width="300">
+  <img src="images/others_reviews.PNG" width="300">
+  <img src="images/my_reviews.PNG" width="300">
+  <img src="images/my_reviews_in_restaurants.PNG" width="300">
 </div>
 
 ## Drawer and Notification
