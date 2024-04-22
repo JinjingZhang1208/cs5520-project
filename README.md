@@ -1,9 +1,11 @@
 # Group Members
-- He Yang
+- Yang He
 - Jinjing Zhang
 - Yue Zhang
 
 # Iteration 3 Updates
+- Map
+  - Implemented choose location function on Discover page
 - Authentication
   - Updated Firebase rule and added related authentication in code to only allow for adding and deleting notificationdata when this data belongs to the user;
 - Notification
@@ -22,7 +24,9 @@ This collection stores information about users who interact with the app.
 - User ID (unique identifier)
 - Username
 - Email
-- Avatar image Url 
+- Avatar image Url
+- PushToken
+- notificationTimeoutID
 
 **CRUD Operations:**
 - Create: Allows the creation of a new user account.
@@ -180,11 +184,25 @@ This subcollection stores the list of notifications that users have added to the
     - Debug the map function for the location to be displayed on the review page correctly
     - Updated Yelp service to save longitude and latitude information for map use
   - Review Item:
-    - Updated review item to only show use’s own reviews in pressable area and others’ reviews in card
+    - Updated review item to only show use’s own reviews in the pressable area and others’ reviews in card
   - Style:
     - Refactor the image modal code to be re-useable
     - Clean up review list code
-
+- Iteration 3:
+- Notifications:
+    - Debug local notification for the local notification shown 
+    - Implement remote notifications for daily reminders
+- Map:
+    - Implement choose location in Discover page to locate user's current location and allow user to update location
+- Search Page:
+    - Add function to allow user to filter restaurant search page by count of reviews
+    - Added verification for user input 
+- Styling:
+    - Discover page's image width to be dynamically change
+    - Delete button position for reviews
+    - Textinput styling on Add a review page
+    - Changed the whole Restaurant page to be scrollable
+    - Login and Signin Page's colors
 
 **Jinjing Zhang**
 - Iteration 1
