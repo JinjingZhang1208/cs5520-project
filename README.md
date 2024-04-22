@@ -136,7 +136,6 @@ This subcollection stores the list of notifications that users have added to the
 ## Review
 - Users can write reviews with photos!
 <div style="display:flex; flex-direction:row;">
-  <img src="images/add_photos_to_review.png" width="300">
   <img src="images/add_my_review.PNG" width="300">
   <img src="images/others_reviews.PNG" width="300">
   <img src="images/my_reviews.PNG" width="300">
