@@ -36,13 +36,7 @@ Notifications.setNotificationHandler({
   },
 });
 
-Notifications.setNotificationHandler({
-  handleNotification: async function (notification) {
-    return {
-      shouldShowAlert: true,
-    };
-  },
-});
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -108,6 +102,7 @@ export default function App() {
             };
 
             try {
+                console.log("Scheduling notification for:", date, "with trigger time:", triggerTime);
                 await Notifications.scheduleNotificationAsync(schedulingOptions);
             } catch (error) {
                 console.error("Error scheduling notification:", error);
