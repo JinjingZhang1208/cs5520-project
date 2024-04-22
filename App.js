@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Discover from "./screens/Discover";
 import Start from "./screens/Start";
 import Find from "./screens/Find";
@@ -27,6 +27,8 @@ import Map from "./components/Map";
 import LocationManager from "./components/LocationManager";
 import * as Notifications from "expo-notifications";
 import { readNotificationDateFromFirebase } from "./firebase-files/databaseHelper";
+import PushNotificationManager from "./components/PushNotificationManager";
+import { registerForPushNotificationsAsync, sendPushNotif } from "./components/PushNotificationManager";
 
 Notifications.setNotificationHandler({
   handleNotification: async function (notification) {
@@ -36,13 +38,7 @@ Notifications.setNotificationHandler({
   },
 });
 
-Notifications.setNotificationHandler({
-  handleNotification: async function (notification) {
-    return {
-      shouldShowAlert: true,
-    };
-  },
-});
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -87,7 +83,7 @@ export default function App() {
                     }
                     
                     if (date.getTime() <= Date.now()) {
-                        console.log("Notification date is in the past.");
+                      
                         return;
                     }
 
@@ -209,6 +205,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
+      <PushNotificationManager />
       {userLoggedIn ? (
         <Stack.Navigator>
           <Stack.Screen

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "658974672901",
+    "project_id": "android-b9a5a",
+    "storage_bucket": "android-b9a5a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:658974672901:android:eddf97104682624159f46c",
+        "android_client_info": {
+          "package_name": "com.popozjj.cs5520project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhRKpxcAK30RX18STBDgBzj0745IxAvEA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
