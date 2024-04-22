@@ -127,7 +127,7 @@ export default function App() {
         // If current time is before 12 pm
         if (currentHour < 12) {
             // Calculate milliseconds until 12 pm
-            const millisecondsUntil12pm = (12 - currentHour) * millisecondsInHour -
+            const millisecondsUntil12pm = (24 - currentHour) * millisecondsInHour -
                                           (currentMinute * millisecondsInMinute) -
                                           (currentSecond * millisecondsInSecond);
             
@@ -138,7 +138,7 @@ export default function App() {
                                                (currentMinute * millisecondsInMinute) -
                                                (currentSecond * millisecondsInSecond);
         
-            millisecondsUntilNotification = millisecondsUntilNext12pm;
+            millisecondsUntilNotification = millisecondsUntilNext12pm ;
         }
         
         console.log("Milliseconds until notification:", millisecondsUntilNotification);
