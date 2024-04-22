@@ -10,8 +10,6 @@ const Find = ({route, navigation}) => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchDistance, setSearchDistance] = useState("3");
   const [searchRating, setSearchRating] = useState("4");
-  const [showDistancePicker, setShowDistancePicker] = useState(false);
-  const [showRatingPicker, setShowRatingPicker] = useState(false);
   const [minReviewCount, setMinReviewCount] = useState('0');
   // const [searchResults, setSearchResults] = useState([]);
 
@@ -102,6 +100,7 @@ const Find = ({route, navigation}) => {
       return false;
     }
 
+    console.log('Location:', location);
     if (!location) {
       Alert.alert('Please choose a location');
       return false;

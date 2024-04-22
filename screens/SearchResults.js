@@ -47,7 +47,8 @@ const SearchResults = () => {
   return (
     <View style={CommonStyles.container}>
       <View style={{ marginTop: 10 }}>
-        <RestaurantList fetchedRestaurants={resultRestaurant.savedInDB} collectionName='restaurants' />
+        {results.length === 0 && <Text>No Restaurants found</Text>}
+        {results.length != 0 && <RestaurantList fetchedRestaurants={resultRestaurant.savedInDB} collectionName='restaurants' />}
       </View>
     </View>
   )
