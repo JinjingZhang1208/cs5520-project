@@ -95,9 +95,9 @@ This subcollection stores the list of notifications that users have added to the
 ## Auth Stack Screens
 - Login, Sign up, and reset password.
 <div style="display:flex; flex-direction:row;">
-  <img src="images/start_screen_new.png" width="300">
-  <img src="images/login_new.png" width="300">
-  <img src="images/sign_up_new.png" width="300">
+  <img src="images/start_screen_new.PNG" width="300">
+  <img src="images/login_new.PNG" width="300">
+  <img src="images/sign_up_new.PNG" width="300">
   <img src="images/forgot_password.png" width="300">
 </div>
 
@@ -111,7 +111,7 @@ This subcollection stores the list of notifications that users have added to the
 ## Find
 - Users can find restaurants based on their preference and distance.
 <div style="display:flex; flex-direction:row;">
-  <img src="images/find_new.png" width="300">
+  <img src="images/find_new.PNG" width="300">
   <img src="search_results.png" width="300">
 </div>
 
@@ -142,8 +142,8 @@ This subcollection stores the list of notifications that users have added to the
 ## Drawer and Notification
 - Users can find pushed notifications(My Schedules) here and delete if they want.
 <div style="display:flex; flex-direction:row;">
-  <img src="images/drawer_new.png" width="300">
-  <img src="images/my_schedules.png" width="300">
+  <img src="images/drawer_new.PNG" width="300">
+  <img src="images/my_schedules.PNG" width="300">
   
 </div>
 
