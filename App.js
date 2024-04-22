@@ -72,7 +72,7 @@ export default function App() {
   }
 
   useEffect(() => {
-    async function getPushToken () {
+    const getPushToken = async () => {
       try {
         const havePermission = await verifyPermission();
         if (!havePermission) {
@@ -88,18 +88,19 @@ export default function App() {
         const pushToken = await Notifications.getExpoPushTokenAsync({
           projectId: "deda0622-00e7-4dbc-bf9b-ecb94ccab9dd",
         });
-        
-        if (userLoggedIn) {
-          await updateUserField(userId, "pushToken", pushToken.data);
-          console.log(pushToken.data);
-        }
-
+    
+        await updateUserField(userId, "pushToken", pushToken.data);
+        console.log(pushToken.data);
       } catch (err) {
         console.log(err);
       }
+    };
+
+    if (userLoggedIn){
+      console.log("Getting push token...");
+      getPushToken();
     }
-    getPushToken();
-  }, []);
+  }, [userLoggedIn]);
 
   useEffect(() => {
     // Function to send push notification every Friday at 5 pm
