@@ -3,24 +3,15 @@
 - Jinjing Zhang
 - Yue Zhang
 
-# Iteration 2 Updates
+# Iteration 3 Updates
 - Authentication
-  - Updated Firebase rule and added related authentication in code to only allow for editing and deleting reviews when the review belongs to the user;
-  - Updated Firebase rule and added related authentication in code to only allow for editing the user’s profile picture
-- Camera use
-  - Added function to allow the user to take pictures or upload from camera roll for their reviews
-- Location use
-  - Get user’s location for search restaurants according to user’s distance preference
-  - Display restaurant location addresses when the user adds/edits the review
+  - Updated Firebase rule and added related authentication in code to only allow for adding and deleting notificationdata when this data belongs to the user;
 - Notification
-  - Not implemented yet.
-- External API use
-  - Use Yelp API to fetch restaurants based on query parameters
-  - Make location parameter automatically get user current location, which incorporate the use of Location package and verifying user permission to use location
-  - Add a new function to fetch yelp’s reviews which is not actually being called in our app. The reason to give up using it is that the review search is for commercial use and is not free.
+  - Implemented it into the My Schedules part. Let the user be able to put the restaurants into their schedules and book the time. When the time comes, it will give users notifications.
+- Styling
+  - Reformatted the app pages
 
-
-# Data Models and 4 Collections
+# Data Models and 5 Collections
 
 ## Collection 1: Users Collection
 
@@ -84,6 +75,21 @@ This collection stores information about restaurants that users can interact wit
 - Create: Allows adding a new restaurant to the list.
 - Read: Enables fetching restaurant information based on restaurant ID or other identifiers.
 
+## Collection 5: Notification Collection (Subcollection of Users)
+
+This subcollection stores the list of notifications that users have added to their schedules.
+
+**Fields:**
+- Notification ID (unique identifier)
+- User ID: References the user who added the notification.
+- Restaurant Name: Name of the restaurant associated with the notification.
+- Timestamp : date and time 
+
+**CRUD Operations:**
+- Create: Allows users to create a new notification data.
+- Read: Enables fetching notification information based on user ID.
+- Delete: Permits users to delete their notification schedules.
+
 # Screens
 
 ## Auth Stack Screens
@@ -134,7 +140,7 @@ This collection stores information about restaurants that users can interact wit
 </div>
 
 ## Drawer and Notification
-- Users can find pushed notifications here.
+- Users can find pushed notifications(My Schedules) here and delete if they want.
 <div style="display:flex; flex-direction:row;">
   <img src="images/drawer.png" width="300">
 </div>
@@ -184,6 +190,13 @@ This collection stores information about restaurants that users can interact wit
   - Implement the interactive map and static map
   - Style:
   - Fix the unmatched style problem
+ 
+- Iteration 3
+  - Local Notification:
+  - Implement the notications to let the users store their preference date and time to get notifications for their bookmarked restaurants.
+  - Users are able to remove the notifications from the My Schedules screen.
+  - Style:
+  - Fix the unmatched style problem and removes unnecessary codes 
 
 **Yue Zhang**
 - Iteration 1
