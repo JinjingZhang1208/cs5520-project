@@ -100,7 +100,7 @@ export default function App() {
             const schedulingOptions = {
                 content: {
                     title: "Time to try!",
-                    body: "Don't forget to try the restaurant!",
+                    body: `Don't forget to try ${doc.restaurantName}!`,
                 },
                 trigger: {
                     seconds: Math.floor(triggerTime / 1000), // Convert milliseconds to seconds
