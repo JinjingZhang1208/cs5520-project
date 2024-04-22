@@ -98,13 +98,13 @@ This subcollection stores the list of notifications that users have added to the
   <img src="images/start_screen_new.PNG" width="300">
   <img src="images/login_new.PNG" width="300">
   <img src="images/sign_up_new.PNG" width="300">
-  <img src="images/forgot_password.png" width="300">
+  <img src="images/change_password_new.PNG" width="300">
 </div>
 
 ## Discover
 - Users can find our recommended restaurants and tap in to view restaurants details & reviews.
 <div style="display:flex; flex-direction:row;">
-  <img src="images/discover_home.png" width="300">
+  <img src="images/find_new.PNG" width="300">
   <img src="images/restaurant_detail.png" width="300">
 </div>
 
