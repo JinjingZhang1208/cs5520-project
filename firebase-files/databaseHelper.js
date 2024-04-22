@@ -289,3 +289,35 @@ export const deleteNotificationFromFirebase = async (userId, notificationId) => 
         console.error('Error deleting notification:', error);
     }
 };
+
+export const updateUserField = async (userId, fieldName, newData) => {
+    try {
+        const userRef = doc(database, "users", userId);
+        const userData = {
+            [fieldName]: newData,
+        };
+
+        await setDoc(userRef, userData, { merge: true });
+        console.log(`user ${fieldName} updated successfully in Firestore.`);
+        return "User information updated successfully"; // This value is resolved with the promise
+    } catch (error) {
+        console.error("Error updating pushtoken:", error);
+        throw error; // This will reject the promise with the error
+    }
+};
+
+export const getUserField = async (userId, fieldName) => {
+    try {
+        const userRef = doc(database, "users", userId);
+        const docSnap = await getDoc(userRef);
+
+        if (docSnap.exists()) {
+            return docSnap.data()[fieldName]; // Contains userData including pushToken
+        } else {
+            return null; // Handle case where user data does not exist
+        }
+    } catch (error) {
+        console.error(`Error fetching user ${fieldName}:", error`);
+        throw error; // This will reject the promise with the error
+    }
+};
