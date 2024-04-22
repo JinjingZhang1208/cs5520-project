@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import Discover from "./screens/Discover";
 import Start from "./screens/Start";
@@ -36,13 +36,6 @@ Notifications.setNotificationHandler({
   },
 });
 
-Notifications.setNotificationHandler({
-  handleNotification: async function (notification) {
-    return {
-      shouldShowAlert: true,
-    };
-  },
-});
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -52,6 +45,96 @@ export default function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true); // To manage loading state
   const [notificationDate, setNotificationDate] = useState(null);
+
+  // add notificaiton listener
+  useEffect(() => {
+    const sunscription = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        console.log("received listener", notification);
+      }
+    );
+    return () => {
+      sunscription.remove();
+    };
+  }, []);
+
+  // send push notification
+  function sendPushNotif() {
+    fetch("https://exp.host/--/api/v2/push/send", {
+        method: "POST",
+        headers: {
+            "content-type": "application/json",
+        },
+        body: JSON.stringify({
+            // in a real-life scenario, the push token will be read from users collection in firestore
+            to: "ExponentPushToken[4I3tsqIN2XdcKqzmX0LCuS]",
+            title: "Check out new restaurants!",
+            body: "Discover exciting new places to dine this weekend.",
+        }),
+    });
+  }
+  
+  // useEffect(() => {
+  //   const scheduleWeeklyNotification = () => {
+  //       // Get the current date
+  //       const currentDate = new Date();
+  
+  //       // Calculate milliseconds until next Friday at 5pm
+  //       const millisecondsUntilFriday = (7 - currentDate.getDay() + 7) % 7 * 24 * 60 * 60 * 1000; // Next Friday
+  //       const millisecondsUntil5pm = (19 - currentDate.getHours()) * 60 * 60 * 1000; // 5pm
+  
+  //       // Calculate total milliseconds until next Friday at 5pm
+  //       const totalMilliseconds = millisecondsUntilFriday + millisecondsUntil5pm;
+  
+  //       // Schedule notification
+  //       setTimeout(() => {
+  //           sendPushNotif();
+  //           // Schedule next week's notification
+  //           scheduleWeeklyNotification();
+  //       }, totalMilliseconds);
+  //   };
+  
+  //   // Start the cycle
+  //   scheduleWeeklyNotification();
+  // }, [userLoggedIn]);
+
+  const verifyPermission = async () => {
+    const status = await Notifications.getPermissionsAsync();
+    if (status.status !== "granted") {
+      const result = await Notifications.requestPermissionsAsync();
+      if (result.status !== "granted") {
+        Alert.alert("Permission required", "You need to grant notification permissions to use the app");
+        return false;
+      }
+    }
+    return true;
+  }
+
+  useEffect(() => {
+    async function getPushToken () {
+      try {
+        const havePermission = await verifyPermission();
+        if (!havePermission) {
+          Alert.alert("Permission required", "You need to grant notification permissions to use the app")
+          return;
+        }
+        if (Platform.OS === "android") {
+          await Notifications.setNotificationChannelAsync("default", {
+            name: "default",
+            importance: Notifications.AndroidImportance.MAX,
+          });
+        } 
+        const pushToken = await Notifications.getExpoPushTokenAsync({
+          projectId: "deda0622-00e7-4dbc-bf9b-ecb94ccab9dd",
+        }); 
+        console.log(pushToken.data);
+
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    getPushToken();
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
