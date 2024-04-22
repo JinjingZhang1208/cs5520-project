@@ -26,7 +26,8 @@ import SearchResults from "./screens/SearchResults";
 import Map from "./components/Map";
 import LocationManager from "./components/LocationManager";
 import * as Notifications from "expo-notifications";
-import { readNotificationDateFromFirebase } from "./firebase-files/databaseHelper";
+import { getUserField,  updateUserField, readNotificationDateFromFirebase } from "./firebase-files/databaseHelper";
+import { get, update } from "firebase/database";
 
 Notifications.setNotificationHandler({
   handleNotification: async function (notification) {
@@ -44,7 +45,7 @@ export default function App() {
 
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true); // To manage loading state
-  const [notificationDate, setNotificationDate] = useState(null);
+  const userId = auth.currentUser?.uid;
 
   // add notificaiton listener
   useEffect(() => {
@@ -57,46 +58,6 @@ export default function App() {
       sunscription.remove();
     };
   }, []);
-
-  // send push notification
-  function sendPushNotif() {
-    fetch("https://exp.host/--/api/v2/push/send", {
-        method: "POST",
-        headers: {
-            "content-type": "application/json",
-        },
-        body: JSON.stringify({
-            // in a real-life scenario, the push token will be read from users collection in firestore
-            to: "ExponentPushToken[4I3tsqIN2XdcKqzmX0LCuS]",
-            title: "Check out new restaurants!",
-            body: "Discover exciting new places to dine this weekend.",
-        }),
-    });
-  }
-  
-  // useEffect(() => {
-  //   const scheduleWeeklyNotification = () => {
-  //       // Get the current date
-  //       const currentDate = new Date();
-  
-  //       // Calculate milliseconds until next Friday at 5pm
-  //       const millisecondsUntilFriday = (7 - currentDate.getDay() + 7) % 7 * 24 * 60 * 60 * 1000; // Next Friday
-  //       const millisecondsUntil5pm = (19 - currentDate.getHours()) * 60 * 60 * 1000; // 5pm
-  
-  //       // Calculate total milliseconds until next Friday at 5pm
-  //       const totalMilliseconds = millisecondsUntilFriday + millisecondsUntil5pm;
-  
-  //       // Schedule notification
-  //       setTimeout(() => {
-  //           sendPushNotif();
-  //           // Schedule next week's notification
-  //           scheduleWeeklyNotification();
-  //       }, totalMilliseconds);
-  //   };
-  
-  //   // Start the cycle
-  //   scheduleWeeklyNotification();
-  // }, [userLoggedIn]);
 
   const verifyPermission = async () => {
     const status = await Notifications.getPermissionsAsync();
@@ -126,8 +87,12 @@ export default function App() {
         } 
         const pushToken = await Notifications.getExpoPushTokenAsync({
           projectId: "deda0622-00e7-4dbc-bf9b-ecb94ccab9dd",
-        }); 
-        console.log(pushToken.data);
+        });
+        
+        if (userLoggedIn) {
+          updateUserField(userId, "pushToken", pushToken.data);
+          console.log(pushToken.data);
+        }
 
       } catch (err) {
         console.log(err);
@@ -135,6 +100,85 @@ export default function App() {
     }
     getPushToken();
   }, []);
+
+  useEffect(() => {
+    // Function to send push notification every Friday at 5 pm
+    const sendWeeklyNotification = async () => {
+      try {
+        const havePermission = await verifyPermission();
+        if (!havePermission) {
+          console.log("Permission not granted for sending push notifications.");
+          return;
+        }
+
+        const now = new Date();
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+        const currentSecond = now.getSeconds();
+        console.log("Current time:", currentHour + ":" + currentMinute + ":" + currentSecond);
+        
+        const millisecondsInHour = 60 * 60 * 1000;
+        const millisecondsInMinute = 60 * 1000;
+        const millisecondsInSecond = 1000;
+        
+        let millisecondsUntilNotification;
+        
+        // If current time is before 12 pm
+        if (currentHour < 12) {
+            // Calculate milliseconds until 12 pm
+            const millisecondsUntil12pm = (12 - currentHour) * millisecondsInHour -
+                                          (currentMinute * millisecondsInMinute) -
+                                          (currentSecond * millisecondsInSecond);
+            
+            millisecondsUntilNotification = millisecondsUntil12pm;
+        } else { // If current time is after 12 pm
+            // Calculate milliseconds until 12 pm tomorrow
+            const millisecondsUntilNext12pm = (24 - currentHour + 12) * millisecondsInHour -
+                                               (currentMinute * millisecondsInMinute) -
+                                               (currentSecond * millisecondsInSecond);
+        
+            millisecondsUntilNotification = millisecondsUntilNext12pm;
+        }
+        
+        console.log("Milliseconds until notification:", millisecondsUntilNotification);
+        
+        // Clear previous notification timeout
+        const notificationTimeoutID = await getUserField(userId, "notificationTimeoutID");
+        if (notificationTimeoutID) {
+          clearTimeout(notificationTimeoutID);
+          console.log("Cleared previous notification timeout.");
+        }
+
+        // Schedule the notification
+        const newID = setTimeout(sendPushNotif, millisecondsUntilNotification);
+        updateUserField(userId, "notificationTimeoutID", newID);
+
+      } catch (error) {
+        console.error("Error sending weekly push notification:", error);
+      }
+    };
+
+    // Send the weekly notification when user is logged in
+    if (userLoggedIn) {
+      sendWeeklyNotification();
+    }
+  }, [userLoggedIn]);
+
+  async function sendPushNotif() {
+    const pushToken = await getUserField(userId, "pushToken");
+    console.log("Sending push notification to:", pushToken);
+    fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        to: pushToken,
+        title: "Daily Reminder",
+        body: "Don't forget to try a new restaurant this weekend!",
+      }),
+    });
+  }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
