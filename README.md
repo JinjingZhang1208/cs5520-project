@@ -192,16 +192,16 @@ This subcollection stores the list of notifications that users have added to the
 
 - Iteration 2
   - Map:
-  - Implement the interactive map and static map
+    - Implement the interactive map and static map
   - Style:
-  - Fix the unmatched style problem
+    - Fix the unmatched style problem
  
 - Iteration 3
   - Local Notification:
-  - Implement the notications to let the users store their preference date and time to get notifications for their bookmarked restaurants.
-  - Users are able to remove the notifications from the My Schedules screen.
+    - Implement the notications to let the users store their preference date and time to get notifications for their bookmarked restaurants.
+    - Users are able to remove the notifications from the My Schedules screen.
   - Style:
-  - Fix the unmatched style problem and removes unnecessary codes 
+    - Fix the unmatched style problem and removes unnecessary codes 
 
 **Yue Zhang**
 - Iteration 1
