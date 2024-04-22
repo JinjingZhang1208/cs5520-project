@@ -69,54 +69,54 @@ export default function App() {
 
   useEffect(() => {
     const fetchNotificationDate = async () => {
-        try {
-            // Fetch notification date from Firebase only if user is logged in
-            if (userLoggedIn) {
-                const fetchedDate = await readNotificationDateFromFirebase(auth.currentUser?.uid);
+      try {
+        // Fetch notification date from Firebase only if user is logged in
+        if (userLoggedIn) {
+            const fetchedDate = await readNotificationDateFromFirebase(auth.currentUser?.uid);
 
-                if (!Array.isArray(fetchedDate)) {
-                    console.error("Invalid notification dates format.");
-                    return;
-                }
+          if (!Array.isArray(fetchedDate)) {
+              console.error("Invalid notification dates format.");
+              return;
+          }
 
-                fetchedDate.forEach(async (doc) => {
-                    const date = doc.timestamp;
+          fetchedDate.forEach(async (doc) => {
+            const date = doc.timestamp;
 
-                    if (!date || typeof date !== 'object' || !(date instanceof Date)) {
-                        return;
-                    }
-                    
-                    if (date.getTime() <= Date.now()) {
-                        console.log("Notification date is in the past.");
-                        return;
-                    }
-
-                    const triggerTime = date.getTime() - Date.now();
-                    if (triggerTime <= 0) {
-                        console.log("Trigger time is in the past.");
-                        return;
-                    }
-
-                    const schedulingOptions = {
-                        content: {
-                            title: "Time to try!",
-                            body: "Don't forget to try the restaurant!",
-                        },
-                        trigger: {
-                            seconds: Math.floor(triggerTime / 1000), // Convert milliseconds to seconds
-                        },
-                    };
-
-                    try {
-                        await Notifications.scheduleNotificationAsync(schedulingOptions);
-                    } catch (error) {
-                        console.error("Error scheduling notification:", error);
-                    }
-                });
+            if (!date || typeof date !== 'object' || !(date instanceof Date)) {
+                return;
             }
-        } catch (error) {
-            console.error("Error fetching notification date:", error);
+            
+            if (date.getTime() <= Date.now()) {
+                //console.log("Notification date is in the past.");
+                return;
+            }
+
+            const triggerTime = date.getTime() - Date.now();
+            if (triggerTime <= 0) {
+                console.log("Trigger time is in the past.");
+                return;
+            }
+
+            const schedulingOptions = {
+                content: {
+                    title: "Time to try!",
+                    body: "Don't forget to try the restaurant!",
+                },
+                trigger: {
+                    seconds: Math.floor(triggerTime / 1000), // Convert milliseconds to seconds
+                },
+            };
+
+            try {
+                await Notifications.scheduleNotificationAsync(schedulingOptions);
+            } catch (error) {
+                console.error("Error scheduling notification:", error);
+            }
+          });
         }
+      } catch (error) {
+          console.error("Error fetching notification date:", error);
+      }
     };
 
     fetchNotificationDate();
