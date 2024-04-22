@@ -8,6 +8,7 @@
   - Updated Firebase rule and added related authentication in code to only allow for adding and deleting notificationdata when this data belongs to the user;
 - Notification
   - Implemented it into the My Schedules part. Let the user be able to put the restaurants into their schedules and book the time. When the time comes, it will give users notifications.
+  - Implemented push-notification using firebase. Let the user get daily notification.
 - Styling
   - Reformatted the app pages
 
@@ -148,6 +149,10 @@ This subcollection stores the list of notifications that users have added to the
   <img src="images/drawer_new.PNG" width="300">
   <img src="images/my_schedules.PNG" width="300">
   <img src="images/local_notification.JPG" width="300">
+- Users can get daily notification at certain time.
+<div style="display:flex; flex-direction:row;">
+  <img src="images/push_notification.PNG" width="300">
+
   
 </div>
 
