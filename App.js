@@ -236,6 +236,7 @@ export default function App() {
             };
 
             try {
+                console.log("Scheduling notification for:", date, "with trigger time:", triggerTime);
                 await Notifications.scheduleNotificationAsync(schedulingOptions);
             } catch (error) {
                 console.error("Error scheduling notification:", error);

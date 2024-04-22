@@ -1,26 +1,20 @@
 # Group Members
-- He Yang
+- Yang He
 - Jinjing Zhang
 - Yue Zhang
 
-# Iteration 2 Updates
+# Iteration 3 Updates
+- Map
+  - Implemented choose location function on Discover page
 - Authentication
-  - Updated Firebase rule and added related authentication in code to only allow for editing and deleting reviews when the review belongs to the user;
-  - Updated Firebase rule and added related authentication in code to only allow for editing the user’s profile picture
-- Camera use
-  - Added function to allow the user to take pictures or upload from camera roll for their reviews
-- Location use
-  - Get user’s location for search restaurants according to user’s distance preference
-  - Display restaurant location addresses when the user adds/edits the review
+  - Updated Firebase rule and added related authentication in code to only allow for adding and deleting notificationdata when this data belongs to the user;
 - Notification
-  - Not implemented yet.
-- External API use
-  - Use Yelp API to fetch restaurants based on query parameters
-  - Make location parameter automatically get user current location, which incorporate the use of Location package and verifying user permission to use location
-  - Add a new function to fetch yelp’s reviews which is not actually being called in our app. The reason to give up using it is that the review search is for commercial use and is not free.
+  - Implemented it into the My Schedules part. Let the user be able to put the restaurants into their schedules and book the time. When the time comes, it will give users notifications.
+  - Implemented push-notification using firebase. Let the user get daily notification.
+- Styling
+  - Reformatted the app pages
 
-
-# Data Models and 4 Collections
+# Data Models and 5 Collections
 
 ## Collection 1: Users Collection
 
@@ -30,7 +24,9 @@ This collection stores information about users who interact with the app.
 - User ID (unique identifier)
 - Username
 - Email
-- Avatar image Url 
+- Avatar image Url
+- PushToken
+- notificationTimeoutID
 
 **CRUD Operations:**
 - Create: Allows the creation of a new user account.
@@ -84,29 +80,44 @@ This collection stores information about restaurants that users can interact wit
 - Create: Allows adding a new restaurant to the list.
 - Read: Enables fetching restaurant information based on restaurant ID or other identifiers.
 
+## Collection 5: Notification Collection (Subcollection of Users)
+
+This subcollection stores the list of notifications that users have added to their schedules.
+
+**Fields:**
+- Notification ID (unique identifier)
+- User ID: References the user who added the notification.
+- Restaurant Name: Name of the restaurant associated with the notification.
+- Timestamp : date and time 
+
+**CRUD Operations:**
+- Create: Allows users to create a new notification data.
+- Read: Enables fetching notification information based on user ID.
+- Delete: Permits users to delete their notification schedules.
+
 # Screens
 
 ## Auth Stack Screens
 - Login, Sign up, and reset password.
 <div style="display:flex; flex-direction:row;">
-  <img src="images/start.png" width="300">
-  <img src="images/log_in.png" width="300">
-  <img src="images/sign_up.png" width="300">
-  <img src="images/forgot_password.png" width="300">
+  <img src="images/start_screen_new.PNG" width="300">
+  <img src="images/login_new.PNG" width="300">
+  <img src="images/sign_up_new.PNG" width="300">
+  <img src="images/change_password_new.PNG" width="300">
 </div>
 
 ## Discover
 - Users can find our recommended restaurants and tap in to view restaurants details & reviews.
 <div style="display:flex; flex-direction:row;">
-  <img src="images/discover_home.png" width="300">
+  <img src="images/find_new.PNG" width="300">
   <img src="images/restaurant_detail.png" width="300">
 </div>
 
 ## Find
 - Users can find restaurants based on their preference and distance.
 <div style="display:flex; flex-direction:row;">
-  <img src="images/search.png" width="300">
-  <img src="search_results.png" width="300">
+  <img src="images/discover_new.PNG" width="300">
+  <img src="images/search_results.png" width="300">
 </div>
 
 ## WishList
@@ -130,13 +141,22 @@ This collection stores information about restaurants that users can interact wit
 ## Review
 - Users can write reviews with photos!
 <div style="display:flex; flex-direction:row;">
-  <img src="images/add_photos_to_review.png" width="300">
+  <img src="images/add_my_review.PNG" width="300">
+  <img src="images/my_reviews.PNG" width="300">
+  <img src="images/others_reviews.PNG" width="300">
+  <img src="images/my_reviews_in_restaurants.PNG" width="300">
 </div>
 
 ## Drawer and Notification
-- Users can find pushed notifications here.
+- Users can find pushed notifications(My Schedules) here and delete if they want.
+- - Users can get daily notification at certain time.
 <div style="display:flex; flex-direction:row;">
-  <img src="images/drawer.png" width="300">
+  <img src="images/drawer_new.PNG" width="300">
+  <img src="images/my_schedules.PNG" width="300">
+  <img src="images/local_notification.JPG" width="300">
+  <img src="images/push_notification.JPG" width="300">
+
+  
 </div>
 
 # Group Member Contribution
@@ -164,11 +184,25 @@ This collection stores information about restaurants that users can interact wit
     - Debug the map function for the location to be displayed on the review page correctly
     - Updated Yelp service to save longitude and latitude information for map use
   - Review Item:
-    - Updated review item to only show use’s own reviews in pressable area and others’ reviews in card
+    - Updated review item to only show use’s own reviews in the pressable area and others’ reviews in card
   - Style:
     - Refactor the image modal code to be re-useable
     - Clean up review list code
-
+- Iteration 3:
+- Notifications:
+    - Debug local notification for the local notification shown 
+    - Implement remote notifications for daily reminders
+- Map:
+    - Implement choose location in Discover page to locate user's current location and allow user to update location
+- Search Page:
+    - Add function to allow user to filter restaurant search page by count of reviews
+    - Added verification for user input 
+- Styling:
+    - Discover page's image width to be dynamically change
+    - Delete button position for reviews
+    - Textinput styling on Add a review page
+    - Changed the whole Restaurant page to be scrollable
+    - Login and Signin Page's colors
 
 **Jinjing Zhang**
 - Iteration 1
@@ -181,9 +215,16 @@ This collection stores information about restaurants that users can interact wit
 
 - Iteration 2
   - Map:
-  - Implement the interactive map and static map
+    - Implement the interactive map and static map
   - Style:
-  - Fix the unmatched style problem
+    - Fix the unmatched style problem
+ 
+- Iteration 3
+  - Local Notification:
+    - Implement the notications to let the users store their preference date and time to get notifications for their bookmarked restaurants.
+    - Users are able to remove the notifications from the My Schedules screen.
+  - Style:
+    - Fix the unmatched style problem and removes unnecessary codes 
 
 **Yue Zhang**
 - Iteration 1
@@ -219,5 +260,8 @@ This collection stores information about restaurants that users can interact wit
     - Make delete button only renders for users who have permission to delete.
   - Profile:
     - Fetch and show user’s reviews based on user ownership.
-
-
+- Iteration 3
+  - Restaurant Details:
+    - Debug for nested Views reltated bug.
+    - Render restaurant detail info like rating, price range and so on.
+    - Render users's reviews with photos.
