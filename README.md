@@ -147,7 +147,7 @@ This subcollection stores the list of notifications that users have added to the
 <div style="display:flex; flex-direction:row;">
   <img src="images/drawer_new.PNG" width="300">
   <img src="images/my_schedules.PNG" width="300">
-  <img src="images/local_notification.PNG" width="300">
+  <img src="images/local_notification.JPG" width="300">
   
 </div>
 
