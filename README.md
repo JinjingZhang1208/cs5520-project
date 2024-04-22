@@ -145,13 +145,12 @@ This subcollection stores the list of notifications that users have added to the
 
 ## Drawer and Notification
 - Users can find pushed notifications(My Schedules) here and delete if they want.
+- - Users can get daily notification at certain time.
 <div style="display:flex; flex-direction:row;">
   <img src="images/drawer_new.PNG" width="300">
   <img src="images/my_schedules.PNG" width="300">
   <img src="images/local_notification.JPG" width="300">
-- Users can get daily notification at certain time.
-<div style="display:flex; flex-direction:row;">
-  <img src="images/push_notification.PNG" width="300">
+  <img src="images/push_notification.JPG" width="300">
 
   
 </div>
