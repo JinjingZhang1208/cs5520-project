@@ -3,16 +3,7 @@
 - Jinjing Zhang
 - Yue Zhang
 
-# Iteration 3 Updates
-- Map
-  - Implemented choose location function on Discover page
-- Authentication
-  - Updated Firebase rule and added related authentication in code to only allow for adding and deleting notificationdata when this data belongs to the user;
-- Notification
-  - Implemented it into the My Schedules part. Let the user be able to put the restaurants into their schedules and book the time. When the time comes, it will give users notifications.
-  - Implemented push-notification using firebase. Let the user get daily notification.
-- Styling
-  - Reformatted the app pages
+Demo: https://youtu.be/qwIeWgyYvAI?si=MLeTYB0pUnvixavg
 
 # Data Models and 5 Collections
 
